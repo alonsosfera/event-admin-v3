@@ -1,24 +1,35 @@
-import axios from "axios"
+import bcrypt from "bcrypt"
 import NextAuth from "next-auth"
 import CredentialsProvider from "next-auth/providers/credentials"
+import { prisma } from "../../../lib/prisma"
 
 export const authOptions = {
   providers: [
     CredentialsProvider({
       async authorize(credentials) {
-        // If no error and we have user data, return it
         try {
-          // Use absolute URL to avoid issues with relative paths in production
-          const baseUrl = process.env.NEXTAUTH_URL || process.env.NEXT_PUBLIC_APP_URI
-          const { data } = await axios.post(`${baseUrl}/api/auth/login`, credentials)
-          return data.user
+          const { phone, password } = credentials
+          
+          // Find the user directly from the database
+          const user = await prisma.user.findUnique({ where: { phone } })
+          
+          if (!user) {
+            throw new Error("invalid_credentials")
+          }
+          
+          // Compare passwords
+          const isValid = await bcrypt.compare(password, user.password)
+          
+          if (isValid) {
+            // Return only the necessary user data (don't include password)
+            const { id, name, phone, role } = user
+            return { id, name, phone, role }
+          } else {
+            throw new Error("invalid_credentials")
+          }
         } catch (e) {
           console.error("NextAuth authorize error:", e.message)
-          if (e.response && e.response.status === 401) {
-            throw new Error("invalid_credentials")
-          } else {
-            throw new Error("server_error")
-          }
+          throw new Error("server_error")
         }
       }
     })
@@ -48,6 +59,5 @@ export const authOptions = {
   secret: process.env.NEXTAUTH_SECRET,
   debug: process.env.NODE_ENV === 'development'
 }
-
 
 export default NextAuth(authOptions)
