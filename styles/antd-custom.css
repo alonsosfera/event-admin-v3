@@ -1,0 +1,13 @@
+/* Custom Ant Design styles */
+.ant-btn-primary {
+  background-color: #88C9DB;
+  border-color: #88C9DB;
+}
+
+.ant-btn-primary:hover,
+.ant-btn-primary:focus {
+  background-color: #6BABC0;
+  border-color: #6BABC0;
+}
+
+/* Add any other Ant Design customizations here */ 

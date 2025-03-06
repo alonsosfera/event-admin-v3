@@ -40,3 +40,6 @@ a {
     color-scheme: dark;
   }
 }
+
+/* Import our custom Ant Design styles */
+@import './antd-custom.css';

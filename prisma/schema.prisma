@@ -1,0 +1,131 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("NEXT_PUBLIC_DATABASE_URL")
+}
+
+model Event {
+  id                 String             @id @default(uuid())
+  name               String
+  eventDate          DateTime           @default(now())
+  assistance         Int
+  hostId             String
+  mainTable          Boolean?           @default(false)
+  tablesDistribution Json?
+  roomId             String
+  room               Room               @relation(fields: [roomId], references: [id])
+  Invitation         Invitation[]
+  type               String?
+  design             String?
+  arrivedGuests      Int                @default(0)
+  digitalInvitation  DigitalInvitation?
+  digitalPass        DigitalPass?
+  roomMap            RoomMap?
+}
+
+model Room {
+  id       String  @id @default(uuid())
+  name     String
+  address  String
+  capacity Int
+  events   Event[]
+}
+
+model Invitation {
+  id               String   @id @default(uuid())
+  numberGuests     Int      @default(1)
+  arrivedGuests    Int      @default(0)
+  invitationName   String
+  email            String?
+  phone            String   @default("")
+  eventId          String
+  invitationTables Json[]   @default([])
+  event            Event    @relation(fields: [eventId], references: [id], onDelete: Cascade)
+  deliveryStatus   Boolean? @default(false)
+  confirmed        Int      @default(0)
+}
+
+model RoomMap {
+  id           String    @id @default(uuid())
+  name         String
+  canvaMap     CanvaMap?
+  creationDate DateTime? @default(now())
+  eventId      String?   @unique
+  event        Event?    @relation(fields: [eventId], references: [id], onDelete: Cascade)
+}
+
+model DigitalPass {
+  id         String    @id @default(uuid())
+  fileName   String
+  fileUrl    String
+  uploadTime DateTime  @default(now())
+  canvaMap   CanvaMap?
+  eventId    String?   @unique
+  event      Event?    @relation(fields: [eventId], references: [id], onDelete: Cascade)
+}
+
+model DigitalInvitation {
+  id         String    @id @default(uuid())
+  fileName   String
+  fileUrl    String
+  uploadTime DateTime  @default(now())
+  canvaMap   CanvaMap?
+  eventId    String?   @unique
+  event      Event?    @relation(fields: [eventId], references: [id], onDelete: Cascade)
+}
+
+model CanvaMap {
+  id           String        @id @default(uuid())
+  name         String?
+  creationDate DateTime?     @default(now())
+  coordinates  Coordinates[]
+
+  roomMapId String?  @unique
+  roomMap   RoomMap? @relation(fields: [roomMapId], references: [id])
+
+  digitalPassId String?      @unique
+  digitalPass   DigitalPass? @relation(fields: [digitalPassId], references: [id])
+
+  digitalInvitationId String?            @unique
+  digitalInvitation   DigitalInvitation? @relation(fields: [digitalInvitationId], references: [id])
+}
+
+model Coordinates {
+  id           String   @id @default(uuid())
+  key          String?
+  label        String?
+  customConfig String?
+  creationDate DateTime @default(now())
+  coordinateX  Int?
+  coordinateY  Int?
+
+  canvaMapId String?
+  canvaMap   CanvaMap? @relation(fields: [canvaMapId], references: [id], onDelete: Cascade)
+}
+
+enum UserRole {
+  ADMIN
+  HOST
+}
+
+model User {
+  id               String            @id @default(uuid())
+  name             String
+  phone            String            @unique
+  phoneVerified    DateTime?
+  role             UserRole
+  password         String
+  createdAt        DateTime          @default(now()) @db.Timestamp(6)
+  passwordRecovery PasswordRecovery?
+}
+
+model PasswordRecovery {
+  id        String   @id @default(uuid())
+  createdAt DateTime @default(now()) @db.Timestamp(6)
+
+  userId String @unique
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+} 

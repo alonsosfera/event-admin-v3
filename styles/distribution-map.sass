@@ -1,0 +1,81 @@
+.event.distribution.map
+  width: 100%
+  padding: 1rem
+  background-color: lightgray
+
+  &.joya
+    >.ant-col
+      height: 36rem
+      display: flex
+      align-items: center
+      flex-direction: column
+      justify-content: space-around
+
+      &.stage-area
+        .stage
+          width: 60%
+          height: 80%
+          display: flex
+          margin-top: 3rem
+          align-items: center
+          background-color: gray
+          justify-content: center
+          clip-path: polygon(50px 0%, calc(100% - 50px) 0%, 100% 80px, 100% calc(100% - 80px), calc(100% - 50px) 100%, 50px 100%, 0% calc(100% - 80px), 0% 80px)
+
+        .table
+          margin-top: 1rem
+
+  .lobby
+    width: 100%
+    height: 6rem
+    margin-top: 2rem
+    border-radius: 5px
+    border: 1px solid black
+
+    >.ant-col
+      display: flex
+      padding: 2rem 0
+      align-items: center
+      justify-content: center
+      border-right: 1px solid black
+
+      .ant-typography
+        margin: 0
+        text-align: center
+
+      .bar
+        top: 0
+        right: 0
+        width: 70%
+        padding: 5px
+        border-radius: 0 0 0 5px
+        position: absolute
+        border-left: 1px solid black
+        border-bottom: 1px solid black
+
+      .kitchen
+        top: 50%
+        position: absolute
+
+  .table
+    max-width: none
+    text-align: center
+    .ant-btn
+      width: 4rem
+      height: 4rem
+      color: black
+      opacity: 0.5
+      background: gray
+
+    &.active
+      .ant-btn
+        background: green
+
+    &.selected
+      .ant-btn
+        opacity: 1
+
+    &.main
+      .ant-btn
+        width: 8rem
+        height: 3rem 

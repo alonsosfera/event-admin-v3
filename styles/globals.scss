@@ -1,0 +1,34 @@
+/* Import the existing global SASS file */
+@use './_global.sass' as global;
+
+/* Import dashboard styles */
+@use './dashboard.sass' as dashboard;
+
+/* Import auth styles */
+@use './auth.sass' as auth;
+
+/* Import designs styles */
+@use './designs.sass' as designs;
+
+/* Import events styles */
+@use './events.sass' as events;
+
+/* Import host styles */
+@use './host.sass' as host;
+
+/* Import distribution-map styles */
+@use './distribution-map.sass' as distribution-map;
+
+/* Import invitation styles */
+@use './invitation.sass' as invitation;
+
+/* Import layout styles */
+@use './layout.sass' as layout;
+
+/* Import rooms styles */
+@use './rooms.sass' as rooms;
+
+/* Import users styles */
+@use './users.sass' as users;
+
+/* Add any additional global styles here */ 

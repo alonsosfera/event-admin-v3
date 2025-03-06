@@ -1,0 +1,30 @@
+.event.host.events
+  .ant-table
+    .ant-table-tbody
+      .ant-table-row
+        &:hover
+          cursor: pointer
+
+  .event-info
+    padding: 5px
+    .ant-row
+      padding: 10px 15px
+      background-color: white
+
+    .mobile-alert
+      @media(min-width: 768px)
+        display: none
+
+    .invitations-table
+      .invite-btn
+        display: none
+        @media(min-width: 768px)
+          display: inline
+
+.invitation-modal
+  .map-col
+    display: flex
+    justify-content: center
+
+    .ant-alert
+      width: 100% 
