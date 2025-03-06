@@ -8,10 +8,13 @@ export const authOptions = {
       async authorize(credentials) {
         // If no error and we have user data, return it
         try {
-          const { data } = await axios.post(`${process.env.NEXT_PUBLIC_APP_URI}/api/auth/login`, credentials)
+          // Use absolute URL to avoid issues with relative paths in production
+          const baseUrl = process.env.NEXTAUTH_URL || process.env.NEXT_PUBLIC_APP_URI
+          const { data } = await axios.post(`${baseUrl}/api/auth/login`, credentials)
           return data.user
         } catch (e) {
-          if (e.response.status === 401) {
+          console.error("NextAuth authorize error:", e.message)
+          if (e.response && e.response.status === 401) {
             throw new Error("invalid_credentials")
           } else {
             throw new Error("server_error")
@@ -42,7 +45,8 @@ export const authOptions = {
     }
   },
   pages: { signIn: "/", error: "/" },
-  secret: process.env.NEXTAUTH_SECRET
+  secret: process.env.NEXTAUTH_SECRET,
+  debug: process.env.NODE_ENV === 'development'
 }
 
 
