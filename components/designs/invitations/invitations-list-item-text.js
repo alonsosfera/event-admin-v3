@@ -1,7 +1,7 @@
 import React, { useEffect, useLayoutEffect, useRef, useState } from "react"
 import WebFont from "webfontloader"
 
-const InvitationsListItemText = ({ item, scaleFactor }) => {
+const InvitationsListItemText = ({ item, scaleFactor, inDigitalInvitation }) => {
   const elementRef = useRef(null)
   const [position, setPosition] = useState({ x: 0, y: 0 })
 
@@ -67,7 +67,7 @@ const InvitationsListItemText = ({ item, scaleFactor }) => {
         cursor: customConfig.link ? "pointer" : ""
       }}
       onClick={handleClick}>
-      {item.label || item.key}
+      {inDigitalInvitation ? item.label : item.label || item.key }
     </div>
   )
 }
