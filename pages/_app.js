@@ -1,8 +1,4 @@
-// Import Ant Design styles
 import '../styles/antd-global.css';
-
-// Import global styles
-import '../styles/globals.css'
 import '../styles/globals.scss'
 
 // Import Ant Design components without CSS (handled by babel-plugin-import)
