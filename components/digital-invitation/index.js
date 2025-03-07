@@ -97,6 +97,7 @@ export const DigitalInvitation = ({ event, invitationId, invitation, isFullscree
           }} />
         {digitalInvitation.canvaMap.coordinates.map(coordinate => (
           <InvitationsListItemText
+            inDigitalInvitation={true}
             key={coordinate.key}
             item={coordinate}
             scaleFactor={scaleFactor} />
