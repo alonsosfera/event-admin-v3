@@ -1,5 +1,4 @@
-import { ImagePool } from "@squoosh/lib"
-import { cpus } from "os"
+import sharp from 'sharp'
 
 export const config = {
   api: {
@@ -12,24 +11,24 @@ export const config = {
 export default async function handler(req, res) {
   if (req.method === "POST") {
     const { bufferString } = req.body
-    const imagePool = new ImagePool(cpus().length)
+    
     try {
-      const image = imagePool.ingestImage(Buffer.from(bufferString, "base64"))
+      
+      const imageBuffer = Buffer.from(bufferString, "base64")
+      
+      const optimizedImage = await sharp(imageBuffer)
+        .webp({ quality: 80 })
+        .toBuffer()
 
-      await image.encode({
-        webp: {}
-      })
+      const optimizedString = optimizedImage.toString('base64')
 
-      const optimizedImage = await image.encodedWith.webp
       res.status(200).json({
-        binary: optimizedImage.binary.toString(),
-        extension: optimizedImage.extension
+        binary: optimizedString,
+        extension: 'webp'
       })
     } catch (error) {
       console.error(error)
       res.status(500).json({ error: "Failed to optimize image" })
-    } finally {
-      await imagePool.close()
     }
   } else {
     res.status(405).json({ error: "Method not allowed" })

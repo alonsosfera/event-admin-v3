@@ -23,8 +23,7 @@ export const UploadImage = ({ folder, onSubmit }) => {
       const base64String = arrayBufferToBase64(arrayBuffer)
       const { data: optimizedData } = await axios.post("/api/storage/optimize", { bufferString: base64String })
 
-      const numArray = optimizedData.binary.split(",").map(Number)
-      const binaryArray = new Uint8Array(numArray)
+      const binaryArray = Buffer.from(optimizedData.binary, 'base64')
       const blob = new Blob([binaryArray], { type: `image/${optimizedData.extension}` })
       const { data } = await axios.post("/api/storage/upload", {
         fileName: file.name,
