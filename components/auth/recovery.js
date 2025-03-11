@@ -1,4 +1,4 @@
-import { Button, Form, Input, Select } from "antd"
+import { Button, Form, Input, Select, Space } from "antd"
 import { Recover } from "../../helpers/auth/recovery"
 import Link from "next/link"
 
@@ -12,10 +12,15 @@ export const Recovery = () => {
     <Form
       name="basic"
       layout="vertical"
+      initialValues={{
+        phone: {
+          countryCode: "52"
+        }
+      }}
       onFinish={onFinish}>
-      <Input.Group compact style={{ display: "flex" }}>
+      <Space.Compact compact="true" style={{ display: "flex" }}>
         <Form.Item name={["phone", "countryCode"]}>
-          <Select showSearch defaultValue="52">
+          <Select showSearch>
             <Select.Option value="52">MX +52</Select.Option>
             <Select.Option value="1">US +1</Select.Option>
           </Select>
@@ -29,7 +34,7 @@ export const Recovery = () => {
             autoComplete="off"
             placeholder="WhatsApp (10 dígitos)" />
         </Form.Item>
-      </Input.Group>
+      </Space.Compact>
       <Button type="primary" htmlType="submit">
         Enviar
       </Button>
@@ -37,7 +42,7 @@ export const Recovery = () => {
         ¿Iniciar sesión?
         &nbsp;
         <Link href="/">
-          <a>Click aquí</a>
+          Click aquí
         </Link>
       </small>
     </Form>

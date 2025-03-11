@@ -1,4 +1,4 @@
-import { Button, Form, Input, message, Select } from "antd"
+import { Button, Form, Input, message, Select, Space } from "antd"
 import Link from "next/link"
 import { useRouter } from "next/router"
 import { useEffect, useState } from "react"
@@ -39,10 +39,15 @@ export const Login = () => {
     <Form
       name="basic"
       layout="vertical"
+      initialValues={{
+        phone: {
+          countryCode: "52"
+        }
+      }}
       onFinish={onFinish}>
-      <Input.Group compact style={{ display: "flex" }}>
+      <Space.Compact compact="true" style={{ display: "flex" }}>
         <Form.Item name={["phone", "countryCode"]}>
-          <Select showSearch defaultValue="52">
+          <Select showSearch>
             <Select.Option value="52">MX +52</Select.Option>
             <Select.Option value="1">US +1</Select.Option>
           </Select>
@@ -56,7 +61,7 @@ export const Login = () => {
             autoComplete="off"
             placeholder="WhatsApp (10 dígitos)" />
         </Form.Item>
-      </Input.Group>
+      </Space.Compact>
       <Form.Item
         name="password"
         rules={[{ required: true, message: "Por favor ingresa tu contraseña!" }]}>
@@ -72,7 +77,7 @@ export const Login = () => {
         ¿Olvidaste tu contraseña?
         &nbsp;
         <Link href="/recovery">
-          <a>Click aqui</a>
+          Click aqui
         </Link>
       </small>
     </Form>

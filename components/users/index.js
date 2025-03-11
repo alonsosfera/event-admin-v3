@@ -68,7 +68,7 @@ export const Users = () => {
           inviteUser={inviteUser}
           onCancel={onCancel}
           onSuccess={onSuccess}
-          visible={state.isModalOpen} />
+          open={state.isModalOpen} />
       }
       <Heading
         isLoading={state.isLoading}

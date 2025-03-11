@@ -36,7 +36,7 @@ export const DigitalInvitation = ({ event, invitationId, invitation, isFullscree
         <div>
           <p>¿Confirmar invitados para {invitation?.invitationName}?</p>
           <InputNumber
-            defaultValue={invitation?.numberGuests}
+            value={currentConfirmed}
             min={1}
             max={invitation?.numberGuests}
             type="number"

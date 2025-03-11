@@ -3,18 +3,27 @@ import { PutObjectCommand } from "@aws-sdk/client-s3"
 import { getSignedUrl } from "@aws-sdk/s3-request-presigner"
 import { v4 as uuidv4 } from "uuid"
 import { CONFIG } from "../../../constants/config"
+import sharp from "sharp";
 
-async function uploadFile(fileName, fileType, folder) {
+export const config = {
+  api: {
+    bodyParser: {
+      sizeLimit: "80mb"
+    }
+  }
+}
+
+async function uploadFile(fileName, folder, fileBuffer) {
   try {
     const [name] = fileName.split(".")
-    const fileKey = `EventAdminV2/${folder}/${name}_${uuidv4()}.${fileType}`
+    const fileKey = `EventAdminV2/${folder}/${name}_${uuidv4()}.webp`
 
     const signedUrl = await getSignedUrl(
       s3Client,
       new PutObjectCommand({
         Bucket: CONFIG.storage.DCM_AWS_BUCKET_NAME,
         Key: fileKey,
-        ContentType: fileType
+        ContentType: "webp"
       }),
       {
         expiresIn: 3600
@@ -22,6 +31,16 @@ async function uploadFile(fileName, fileType, folder) {
     )
     const fileUrl =
       `https://${CONFIG.storage.DCM_AWS_BUCKET_NAME}.${CONFIG.storage.DCM_AWS_REGION}.digitaloceanspaces.com/${fileKey}`
+
+    await s3Client.send(
+      new PutObjectCommand({
+        Bucket: process.env.DCM_AWS_BUCKET_NAME,
+        Key: fileKey,
+        Body: fileBuffer,
+        ContentType: "webp",
+        ACL: "public-read"
+      })
+    )
 
     return { signedUrl, fileUrl }
   } catch (error) {
@@ -32,9 +51,13 @@ async function uploadFile(fileName, fileType, folder) {
 
 export default async function POST(request, res) {
   try {
-    const { folder, fileName, fileType } = request.body
+    const { fileName, folder, fileBuffer } = request.body
 
-    const { signedUrl, fileUrl } = await uploadFile(fileName, fileType, folder)
+    const compressedBuffer = await sharp(Buffer.from(fileBuffer, "base64"))
+      .webp({ quality: 60 })
+      .toBuffer()
+
+    const { signedUrl, fileUrl } = await uploadFile(fileName, folder, compressedBuffer)
 
     res.status(200).json({ signedUrl, fileUrl })
   } catch (error) {

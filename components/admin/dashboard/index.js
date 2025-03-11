@@ -12,35 +12,29 @@ export const AdminDashboard = () => {
           <Typography.Title level={1}>Dashboard</Typography.Title>
         </Card>
         <Card className="links">
-          <Link href="/design">
-            <a>
-              <Card.Grid>
-                <Space direction="vertical">
-                  <FileImageOutlined />
-                  <Typography.Text>Diseños</Typography.Text>
-                </Space>
-              </Card.Grid>
-            </a>
+          <Link href="/design" passHref>
+            <Card.Grid className="grid-link">
+              <Space direction="vertical">
+                <FileImageOutlined />
+                <Typography.Text>Diseños</Typography.Text>
+              </Space>
+            </Card.Grid>
           </Link>
-          <Link href="/events">
-            <a>
-              <Card.Grid>
-                <Space direction="vertical">
-                  <CalendarTwoTone />
-                  <Typography.Text>Eventos</Typography.Text>
-                </Space>
-              </Card.Grid>
-            </a>
+          <Link href="/events" passHref>
+            <Card.Grid className="grid-link">
+              <Space direction="vertical">
+                <CalendarTwoTone />
+                <Typography.Text>Eventos</Typography.Text>
+              </Space>
+            </Card.Grid>
           </Link>
-          <Link href="/users">
-            <a>
-              <Card.Grid>
-                <Space direction="vertical">
-                  <UsergroupAddOutlined />
-                  <Typography.Text>Usuarios</Typography.Text>
-                </Space>
-              </Card.Grid>
-            </a>
+          <Link href="/users" passHref>
+            <Card.Grid className="grid-link">
+              <Space direction="vertical">
+                <UsergroupAddOutlined />
+                <Typography.Text>Usuarios</Typography.Text>
+              </Space>
+            </Card.Grid>
           </Link>
         </Card>
       </Col>

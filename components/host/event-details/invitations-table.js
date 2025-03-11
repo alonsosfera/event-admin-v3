@@ -152,7 +152,7 @@ const InvitationsTable = ({
       </Table>
       <DigitalInvitationModal
         event={event}
-        isVisible={openModalInvitation}
+        isOpen={openModalInvitation}
         onCancel={handleDigitalModalToggle}
         onSubmit={handleDigitalModalToggle} />
       <EditRoomMap
