@@ -142,7 +142,7 @@ const EventDetails = ({ data, refetchEvent, fullSize, fetchedEvent }) => {
               invitations={invitations}
               refetchEvent={refetchEvent}
               onCancel={onCancel}
-              visible={state.isModalOpen}
+              open={state.isModalOpen}
               refetchInvitations={refetchInvitations}
               invitedGuests={invitedGuests} />
           )}

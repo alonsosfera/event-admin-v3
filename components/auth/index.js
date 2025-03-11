@@ -80,7 +80,7 @@ export const Auth = ({ login }) => {
       <Modal
         okText="Restablecer"
         cancelText="Cancelar"
-        visible={!!recoveryId}
+        open={!!recoveryId}
         onOk={onPasswordRecovery}
         okButtonProps={{ loading }}
         title="Restablecer contraseña"

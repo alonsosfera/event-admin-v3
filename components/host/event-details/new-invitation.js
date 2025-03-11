@@ -1,4 +1,4 @@
-import { Col, Form, Input, InputNumber, message, Modal, Row, Select, Typography } from "antd"
+import { Col, Form, Input, InputNumber, message, Modal, Row, Select, Typography, Space } from "antd"
 import { useEffect, useState } from "react"
 
 import { handleSaveHelper, generatePDF } from "./helpers"
@@ -76,7 +76,14 @@ export const NewInvitation = ({
       title="Generar invitación"
       width={950}
       {...props}>
-      <Form form={form} layout="horizontal">
+      <Form
+        form={form}
+        layout="horizontal"
+        initialValues={{
+          phone: {
+            countryCode: "52"
+          }
+        }}>
         <Row gutter={[10, 8]} align="center">
           <Col span={24} md={10}>
             <Form.Item
@@ -100,9 +107,9 @@ export const NewInvitation = ({
           </Col>
           <Col span={24} md={8}>
             <Form.Item>
-              <Input.Group compact>
+              <Space.Compact compact="true">
                 <Form.Item name={["phone", "countryCode"]}>
-                  <Select showSearch defaultValue="52">
+                  <Select showSearch>
                     <Select.Option value="52">MX +52</Select.Option>
                     <Select.Option value="1">US +1</Select.Option>
                   </Select>
@@ -113,7 +120,7 @@ export const NewInvitation = ({
                     autoComplete="off"
                     placeholder="WhatsApp (10 dígitos)" />
                 </Form.Item>
-              </Input.Group>
+              </Space.Compact>
             </Form.Item>
           </Col>
           {guests.amount !== undefined && (
