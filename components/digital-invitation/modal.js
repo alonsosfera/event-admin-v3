@@ -134,7 +134,7 @@ export const DigitalInvitationModal = ({ isOpen, onCancel, onSubmit, event }) =>
   return (
     <Modal
       centered
-      width={630}
+      width={800}
       title={modalTitle}
       open={isOpen}
       onCancel={onCancel}
