@@ -31,7 +31,10 @@ export const createUser = async (req, res) => {
           code: "es_MX"
         },
         components: [
-          { type: "body", parameters: [{ type: "text", text: name }] },
+          {
+            type: "body",
+            parameters: [{ type: "text", text: name }, { type: "text", text: randomPassword }]
+          },
           {
             index: "0",
             type: "button",
