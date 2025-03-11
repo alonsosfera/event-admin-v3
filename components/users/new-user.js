@@ -1,5 +1,5 @@
 import { useState } from "react"
-import { Col, Form, Input, Modal, Row, Select, message } from "antd"
+import { Col, Form, Input, Modal, Row, Select, Space, message } from "antd"
 
 export const NewUser = ({ inviteUser, onSuccess, ...props }) => {
   const [form] = Form.useForm()
@@ -33,7 +33,12 @@ export const NewUser = ({ inviteUser, onSuccess, ...props }) => {
       title="Invitar usuario"
       width={400}
       {...props}>
-      <Form form={form} layout="horizontal">
+      <Form 
+        form={form}
+        initialValues={{ 
+          phone: { countryCode: "52" }
+        }}
+        layout="horizontal">
         <Row gutter={[10, 8]}>
           <Col span={24}>
             <Form.Item
@@ -53,9 +58,9 @@ export const NewUser = ({ inviteUser, onSuccess, ...props }) => {
             </Form.Item>
           </Col>
           <Col span={24}>
-            <Input.Group style={{ display: "flex", gap: 8 }}>
+            <Space.Compact style={{ display: "flex", gap: 8 }}>
               <Form.Item name={["phone", "countryCode"]}>
-                <Select showSearch defaultValue="52">
+                <Select showSearch>
                   <Select.Option value="52">MX +52</Select.Option>
                   <Select.Option value="1">US +1</Select.Option>
                 </Select>
@@ -66,7 +71,7 @@ export const NewUser = ({ inviteUser, onSuccess, ...props }) => {
                   autoComplete="off"
                   placeholder="WhatsApp (10 dígitos)" />
               </Form.Item>
-            </Input.Group>
+            </Space.Compact>
           </Col>
         </Row>
       </Form>

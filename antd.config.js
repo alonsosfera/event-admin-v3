@@ -1,18 +1,19 @@
 export const antdConfig = {
   theme: {
-    primaryColor: '#88C9DB',
-    linkColor: '#88C9DB',
-    successColor: '#52c41a',
-    warningColor: '#faad14',
-    errorColor: '#f5222d',
-    fontSizeBase: '14px',
-    headingColor: 'rgba(0, 0, 0, 0.85)',
-    textColor: 'rgba(0, 0, 0, 0.65)',
-    textColorSecondary: 'rgba(0, 0, 0, 0.45)',
-    disabledColor: 'rgba(0, 0, 0, 0.25)',
-    borderRadiusBase: '2px',
-    borderColorBase: '#d9d9d9',
-    boxShadowBase: '0 3px 6px -4px rgba(0, 0, 0, 0.12), 0 6px 16px 0 rgba(0, 0, 0, 0.08), 0 9px 28px 8px rgba(0, 0, 0, 0.05)'
+    token: {
+      colorPrimary: '#88C9DB',
+      colorLink: '#88C9DB',
+      colorSuccess: '#52c41a',
+      colorWarning: '#faad14',
+      colorError: '#f5222d',
+      fontSize: 14,
+      colorText: 'rgba(0, 0, 0, 0.65)',
+      colorTextSecondary: 'rgba(0, 0, 0, 0.45)',
+      colorTextDisabled: 'rgba(0, 0, 0, 0.25)',
+      borderRadius: 2,
+      colorBorder: '#d9d9d9',
+      boxShadow: '0 3px 6px -4px rgba(0, 0, 0, 0.12), 0 6px 16px 0 rgba(0, 0, 0, 0.08), 0 9px 28px 8px rgba(0, 0, 0, 0.05)'
+    }
   },
   form: {
     validateMessages: {

@@ -7,7 +7,7 @@ import { CopyOutlined } from "@ant-design/icons"
 import InvitationField from "./input-modal"
 import { InvitationConfigMapHost } from "./invitation-config-map-host"
 
-export const DigitalInvitationModal = ({ isVisible, onCancel, onSubmit, event }) => {
+export const DigitalInvitationModal = ({ isOpen, onCancel, onSubmit, event }) => {
   const translator = short()
   const [isSaving, setIsSaving] = useState(false)
   const [state, setState] = useState({})
@@ -136,7 +136,7 @@ export const DigitalInvitationModal = ({ isVisible, onCancel, onSubmit, event })
       centered
       width={630}
       title={modalTitle}
-      visible={isVisible}
+      open={isOpen}
       onCancel={onCancel}
       okText="Guardar"
       confirmLoading={isSaving}

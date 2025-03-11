@@ -1,9 +1,7 @@
-import '../styles/antd-global.css';
 import '../styles/globals.scss'
 
-// Import Ant Design components without CSS (handled by babel-plugin-import)
+// Import Ant Design components
 import { ConfigProvider } from 'antd'
-import { antdConfig } from '../antd.config'
 import { SessionProvider } from 'next-auth/react'
 import Head from 'next/head'
 
@@ -13,7 +11,7 @@ export default function App({ Component, pageProps: { session, ...pageProps } })
       <Head>
         <title>Salón La Joya</title>
       </Head>
-      <ConfigProvider {...antdConfig}>
+      <ConfigProvider>
         <SessionProvider session={session}>
           <Component {...pageProps} />
         </SessionProvider>

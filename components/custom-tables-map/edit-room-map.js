@@ -75,7 +75,7 @@ export const EditRoomMap = ({
       destroyOnClose
       okText="Guardar"
       title="Editar Mapa"
-      visible={openEditMapModal}
+      open={openEditMapModal}
       onCancel={handleEditMapModalToggle}
       confirmLoading={loading || loadingRoomMap}
       okButtonProps={{ loading: loading || loadingRoomMap }}>

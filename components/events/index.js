@@ -100,7 +100,7 @@ export const Events = () => {
           onCancel={onCancel}
           hosts={hosts}
           updateEvent={onUpdate}
-          visible={state.isModalOpen} />
+          open={state.isModalOpen} />
       }
       <Heading
         customActions={[

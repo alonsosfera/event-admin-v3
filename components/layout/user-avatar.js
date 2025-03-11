@@ -12,18 +12,18 @@ export const UserAvatar = () => {
       <Menu.Item disabled>{user?.name}</Menu.Item>
       <Menu.Item>
         <Link href="/dashboard">
-          <a>Home</a>
+          Home
         </Link>
       </Menu.Item>
       {user?.role === ROLES.ADMIN && (
         <Menu.Item>
           <Link href="/users">
-            <a>Usuarios</a>
+            Usuarios
           </Link>
         </Menu.Item>,
           <Menu.Item>
             <Link href="/events">
-              <a>Eventos</a>
+              Eventos
             </Link>
           </Menu.Item>
       )}

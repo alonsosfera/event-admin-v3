@@ -54,7 +54,7 @@ export const Rooms = () => {
           edit={state.edit}
           onCancel={onCancel}
           updateRoom={onUpdate}
-          visible={state.isModalOpen} />
+          open={state.isModalOpen} />
       }
       <Heading
         isLoading={state.isLoading}

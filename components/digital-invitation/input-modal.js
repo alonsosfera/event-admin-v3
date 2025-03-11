@@ -38,8 +38,8 @@ const InvitationField = ({ label, value, onChange, onLinkChange, linkValue }) =>
               onClick={handleLinkChange} />
           </div>
         }
-        visible={isTooltipVisible}
-        onVisibleChange={setIsTooltipVisible}
+        open={isTooltipVisible}
+        onOpenChange={setIsTooltipVisible}
         trigger="click"
         placement="topRight">
         <Button

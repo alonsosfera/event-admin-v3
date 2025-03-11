@@ -87,7 +87,7 @@ export const InvitationConfigModal = ({ onClose, onSuccess, selectedFile }) => {
       onOk={onSave}
       okText="Guardar"
       onCancel={onClose}
-      visible={!!selectedFile}
+      open={!!selectedFile}
       confirmLoading={loading}
       title={<EditableModalTitle title={fileName} onChange={setFileName} />}
       footer={[

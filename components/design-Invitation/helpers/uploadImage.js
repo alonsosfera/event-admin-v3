@@ -69,7 +69,7 @@ export const UploadImage = () => {
         </div>
       </Upload>
       <Modal
-        visible={previewOpen}
+        open={previewOpen}
         title={previewTitle}
         footer={null}
         onCancel={handleCancel}>
