@@ -1,11 +1,11 @@
 import { Col, Modal, Row, notification, Tooltip, Button } from "antd"
-import { DigitalInvitation } from "./index"
 import { useMemo, useState, useEffect } from "react"
 import axios from "axios"
 import { parseCookies } from "nookies"
 import short from "short-uuid"
 import { CopyOutlined } from "@ant-design/icons"
 import InvitationField from "./input-modal"
+import { InvitationConfigMapHost } from "./invitation-config-map-host"
 
 export const DigitalInvitationModal = ({ isVisible, onCancel, onSubmit, event }) => {
   const translator = short()
@@ -14,6 +14,7 @@ export const DigitalInvitationModal = ({ isVisible, onCancel, onSubmit, event })
   const coordinates = event?.digitalInvitation?.canvaMap?.coordinates || []
   const { token } = parseCookies()
   const [customConfig, setCustomConfig] = useState({})
+  const [updatedCoordinates, setUpdatedCoordinates] = useState(coordinates)
 
   useEffect(() => {
     if (coordinates.length > 0) {
@@ -25,9 +26,37 @@ export const DigitalInvitationModal = ({ isVisible, onCancel, onSubmit, event })
     }
   }, [coordinates])
 
+  const handlePositionChange = (key, newX, newY) => {
+    setUpdatedCoordinates(prevCoordinates =>
+      prevCoordinates.map(coord =>
+        coord.key === key
+          ? { ...coord, coordinateX: newX, coordinateY: newY }
+          : coord
+      )
+    )
+  }
+
   const onValueChange = (event, key) => {
-    event.persist()
-    setState(prevState => ({ ...prevState, [key]: event.target?.value }))
+    const newValue = event.target.value
+    setState(prevState => ({
+      ...prevState,
+      [key]: newValue
+    }))
+
+    setUpdatedCoordinates(prevCoordinates =>
+      prevCoordinates.map(coord =>
+        coord.key === key
+          ? {
+              ...coord,
+              label: newValue,
+              customConfig: JSON.stringify({
+                ...JSON.parse(coord.customConfig || "{}"),
+                label: newValue
+              })
+            }
+          : coord
+      )
+    )
   }
 
   const onLinkChange = (key, link) => {
@@ -80,7 +109,7 @@ export const DigitalInvitationModal = ({ isVisible, onCancel, onSubmit, event })
       ...event?.digitalInvitation,
       canvaMap: {
         ...event?.digitalInvitation?.canvaMap,
-        coordinates: coordinates.map(coordinate => {
+        coordinates: updatedCoordinates.map(coordinate => {
           const coordCustomConfig = JSON.parse(coordinate.customConfig || "{}")
           return {
             ...coordinate,
@@ -104,27 +133,43 @@ export const DigitalInvitationModal = ({ isVisible, onCancel, onSubmit, event })
 
   return (
     <Modal
-      width={900}
+      centered
+      width={630}
       title={modalTitle}
       visible={isVisible}
       onCancel={onCancel}
       okText="Guardar"
       confirmLoading={isSaving}
       onOk={handleSubmit}>
-      <Row style={{ marginBottom: "1rem" }}>
-        <Col span={7}>
-          {coordinates.sort(sortCoordinates).map(coordinate => (
+      <Row gutter={24}>
+        <Col span={8}>
+          {updatedCoordinates.sort(sortCoordinates).map(coordinate => (
             <InvitationField
               key={coordinate.key}
               label={coordinate.key}
               value={state[coordinate.key] || ""}
-              linkValue={JSON.parse(coordinate.customConfig || "{}").link || ""}
+              linkValue={
+                customConfig[coordinate.key] ||
+                JSON.parse(coordinate.customConfig || "{}").link ||
+                ""
+              }
               onChange={event => onValueChange(event, coordinate.key)}
               onLinkChange={link => onLinkChange(coordinate.key, link)} />
             ))}
         </Col>
-        <Col span={17}>
-          <DigitalInvitation event={{ ...event, digitalInvitation: getDigitalInvitation() }} />
+        <Col span={16}>
+          <InvitationConfigMapHost
+            event={{
+              ...event,
+              digitalInvitation: {
+                ...event.digitalInvitation,
+                canvaMap: {
+                  ...event.digitalInvitation?.canvaMap,
+                  coordinates: updatedCoordinates
+                }
+              }
+            }}
+            onPositionChange={handlePositionChange} />
         </Col>
       </Row>
     </Modal>
