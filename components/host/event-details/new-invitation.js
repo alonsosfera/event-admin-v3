@@ -60,7 +60,7 @@ export const NewInvitation = ({
 
   const spacesDisable = () => {
     if ((event.assistance - invitedGuests) <= 10) {
-      message.warn(`Solo puedes invitar ${calculateRemainingGuests()} persona más`)
+      message.warning(`Solo puedes invitar ${calculateRemainingGuests()} persona más`)
     }
   }
   useEffect(() => {

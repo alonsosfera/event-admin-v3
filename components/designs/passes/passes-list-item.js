@@ -6,6 +6,7 @@ import PassListItemText from "./passes-list-item-text"
 export const PassesListItem = ({ item, onClick, showTitle = false }) => {
   const [qrImage, setQRImage] = useState("")
   const [scaleFactor, setScaleFactor] = useState(1)
+  const [displayHeight, setDisplayHeight] = useState(0)
 
   const loadImage = async () => {
     const imageUrl = await QRCode.toDataURL(crypto.randomUUID())
@@ -19,8 +20,10 @@ export const PassesListItem = ({ item, onClick, showTitle = false }) => {
   const handleImageLoad = e => {
     const naturalWidth = e.target.naturalWidth
     const displayWidth = e.target.width
+    const displayHeight = e.target.height
 
     setScaleFactor(displayWidth / naturalWidth)
+    setDisplayHeight(displayHeight)
   }
 
   const { texts, qr } = useMemo(() => {
@@ -66,7 +69,7 @@ export const PassesListItem = ({ item, onClick, showTitle = false }) => {
             height={250 * scaleFactor}
             style={{
               position: "absolute",
-              top: `${qr.coordinateY * scaleFactor}px`,
+              top: `${qr.coordinateY * scaleFactor - displayHeight}px`,
               left: `${qr.coordinateX * scaleFactor}px`
             }}
             src={qrImage} />

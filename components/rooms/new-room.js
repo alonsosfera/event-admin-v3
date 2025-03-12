@@ -23,7 +23,7 @@ export const NewRoom = ({ createRoom, updateRoom, edit, ...props }) => {
       }
       message.success("Salón guardado")
     } catch (e) {
-      message.warn("Error")
+      message.warning("Error")
       console.error(e)
     }
     loading()
