@@ -1,4 +1,3 @@
-import moment from "moment"
 import React, { useEffect, useState } from "react"
 import { Col, DatePicker, Form, Input, InputNumber, Modal, Row, Select, message, Tabs, Spin } from "antd"
 
@@ -7,6 +6,9 @@ import { PassesListItem } from "../designs/passes/passes-list-item"
 import { InvitationsListItem } from "../designs/invitations/invitations-list-item"
 import { useService } from "../../hooks/use-service"
 import { getEventById } from "./helpers"
+import dayjs from "dayjs"
+import customParseFormat from "dayjs/plugin/customParseFormat"
+dayjs.extend(customParseFormat)
 
 export const NewEvent = ({ createEvent, updateEvent, edit, hosts, invitationsDesigns, passDesigns, roomMaps, ...props }) => {
   const [form] = Form.useForm()
@@ -21,7 +23,7 @@ export const NewEvent = ({ createEvent, updateEvent, edit, hosts, invitationsDes
 
   useEffect(() => {
     if (edit) {
-      edit.eventDate = moment(edit.eventDate)
+      edit.eventDate = dayjs(edit.eventDate)
       form.setFieldsValue(edit)
       eventRefetch(edit.id).then()
     }
@@ -40,7 +42,7 @@ export const NewEvent = ({ createEvent, updateEvent, edit, hosts, invitationsDes
     try {
       await form.validateFields()
       const values = await form.getFieldsValue()
-      values.eventDate = moment(values.eventDate).format()
+      values.eventDate =  values.eventDate ? values.eventDate.toISOString() : dayjs().toISOString()
 
       const { id, ...roomMap } = selectedRoom
       const { id: _1, ...digitalPass } = selectedPass
@@ -110,10 +112,10 @@ export const NewEvent = ({ createEvent, updateEvent, edit, hosts, invitationsDes
                 <Col span={24}>
                   <Form.Item name="eventDate" rules={[{ required: true }]}>
                     <DatePicker
-                      disabledDate={date => date < moment().subtract(1, "day")}
-                      format="DD/MM/YYYY hh:mm a"
+                      disabledDate={date => date && date.isBefore(dayjs(), "day")}
+                      format="DD/MM/YYYY hh:mm A"
                       placeholder="Fecha"
-                      showTime={{ format: "hh:mm a" }}
+                      showTime={{ format: "hh:mm A" }}
                       style={{ width: "100%" }} />
                   </Form.Item>
                 </Col>
