@@ -135,8 +135,8 @@ export const PassConfigModal = ({ onClose, onSuccess, selectedFile }) => {
       title={<EditableModalTitle title={fileName} onChange={setFileName} />}
       footer={[
         <Button
-          key="delete" type="danger"
-          onClick={onDelete}>
+          key="delete" type="primary"
+          danger onClick={onDelete}>
           Eliminar
         </Button>,
         <Button key="back" onClick={onClose}>
