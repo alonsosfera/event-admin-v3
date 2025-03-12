@@ -58,7 +58,7 @@ export const NewEvent = ({ createEvent, updateEvent, edit, hosts, invitationsDes
       }
       message.success("Evento guardado")
     } catch (e) {
-      message.warn("Error")
+      message.warning("Error")
       console.error(e)
     }
     loading()
