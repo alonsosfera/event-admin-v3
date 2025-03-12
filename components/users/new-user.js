@@ -15,7 +15,7 @@ export const NewUser = ({ inviteUser, onSuccess, ...props }) => {
       message.success("Invitación enviada")
       onSuccess(user)
     } catch (e) {
-      message.warn("Error al enviar invitación")
+      message.warning("Error al enviar invitación")
       console.error(e)
     } finally {
       setLoading(false)
