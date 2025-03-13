@@ -2,8 +2,9 @@ import { message } from "antd"
 import axios from "axios"
 import JsPDF from "jspdf"
 import QRCode from "qrcode"
-import moment from "moment"
-moment.locale("es")
+import dayjs from "dayjs"
+import "dayjs/locale/es"
+dayjs.locale("es")
 import { createInvitation } from "../../events/helpers"
 
 export const centerTextValue = (text, pixelsByLetter, length = 500, start = 150) => {
@@ -181,7 +182,7 @@ export const invitationPDF = async (event, invitation, pdf, dimensions) => {
   pdf.text(tables, table ? getCenteredXCoordinate(tables, pdf.getTextWidth(tables), table?.coordinateX) : centerTextValue(tables, 15) + dayX, table ? getCenteredYCoordinate(table?.coordinateY) : 320 + dayY)
 
   const dateCoordinate = itemsByKey?.Fecha
-  const momentDate = moment(eventDate)
+  const momentDate = dayjs(eventDate)
   const date = momentDate.format("DD [de] MMMM")
   const dateX = dateCoordinate ? getCenteredXCoordinate(date, pdf.getTextWidth(date), dateCoordinate?.coordinateX) : centerTextValue(date, 15) + subtitleX - 100
   pdf.setFont("helvetica", "bold")

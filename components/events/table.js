@@ -1,5 +1,5 @@
 import "jspdf-autotable"
-import moment from "moment"
+import dayjs from "dayjs"
 import { useRef, useState } from "react"
 import { Button, Col, Popconfirm, Space, Table } from "antd"
 import { EditOutlined, DeleteOutlined, DownloadOutlined  } from "@ant-design/icons"
@@ -45,17 +45,17 @@ const EventsTable = ({ data, edit, remove, hosts }) => {
     )
   }
 
-  const now = moment()
+  const now = dayjs()
 
   const sortedData = data.sort((a, b) => {
-    const dateA = moment(a.eventDate)
-    const dateB = moment(b.eventDate)
+    const dateA = dayjs(a.eventDate)
+    const dateB = dayjs(b.eventDate)
 
     if (dateA.isAfter(now) && dateB.isBefore(now)) return -1
     if (dateA.isBefore(now) && dateB.isAfter(now)) return 1
 
     return dateA.diff(now) - dateB.diff(now)
-  })
+})
 
   return (
     <Col span={24}>
@@ -70,7 +70,7 @@ const EventsTable = ({ data, edit, remove, hosts }) => {
           render={renderEvent} />
         <Table.Column
           dataIndex="eventDate"
-          render={text => moment(text).format("DD/MM/YYYY hh:mm a")}
+          render={text => dayjs(text).format("DD/MM/YYYY hh:mm a")}
           sorter={(a, b) => (a.eventDate || "").localeCompare(b.eventDate || "")}
           title="Fecha" />
         <Table.Column

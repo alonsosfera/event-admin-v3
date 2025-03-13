@@ -1,6 +1,6 @@
 import { Alert, Col, Row } from "antd"
 import { useEffect, useState } from "react"
-import Moment from "moment"
+import dayjs from "dayjs"
 import JsPDF from "jspdf"
 import { withForm } from "../../../helpers"
 import { NewInvitation } from "./new-invitation"
@@ -111,7 +111,7 @@ const EventDetails = ({ data, refetchEvent, fullSize, fetchedEvent }) => {
             <Col span={24}><h1>Detalles de evento</h1></Col>
             <Col span={12} lg={8}><b>Nombre: </b>{fetchedEvent.name}</Col>
             <Col span={12} lg={8}><b>Salón: </b>{fetchedEvent.room_name}</Col>
-            <Col span={12} lg={8}><b>Fecha: </b>{Moment(fetchedEvent.eventDate).format("DD/MM/YYYY hh:mm a")}</Col>
+            <Col span={12} lg={8}><b>Fecha: </b>{dayjs(fetchedEvent.eventDate).format("DD/MM/YYYY hh:mm a")}</Col>
             <Col span={12} lg={8}><b>Capacidad: </b>{fetchedEvent.assistance}</Col>
             <Col span={12} lg={8}><b>Invitados: </b>{invitedGuests}</Col>
             <Col span={12} lg={8}><b>Confirmados: </b>{addConfirmed}</Col>

@@ -1,7 +1,8 @@
 import { Button, Col, Card, Form, InputNumber, Row, Typography, message, Skeleton } from "antd"
 import { useState, useEffect } from "react"
-import moment from "moment"
-moment.locale("es")
+import dayjs from "dayjs"
+import "dayjs/locale/es"
+dayjs.locale("es")
 import { getInvitation } from "./helpers"
 import { checkInGuests } from "../events/helpers"
 
@@ -30,7 +31,7 @@ export const Invitation = ({ id }) => {
   }
 
   const dateApproved = () => {
-    if (invitation && moment(invitation.event.eventDate).isSame(moment(), "day")) {
+    if (invitation && dayjs(invitation.event.eventDate).isSame(dayjs(), "day")) {
       return true
     } else {
       return false
@@ -47,7 +48,7 @@ export const Invitation = ({ id }) => {
         <Card>
           {invitation ? (
             <>
-              {moment(invitation?.eventDate).isSame(moment(), "day") ? (
+              {dayjs(invitation?.eventDate).isSame(dayjs(), "day") ? (
                 <>
                   <Typography.Title className="title" level={1}>Detalles de la invitación</Typography.Title>
                   <Row
@@ -60,7 +61,7 @@ export const Invitation = ({ id }) => {
                     <Col>
                       <Typography.Paragraph type="secondary">Fecha</Typography.Paragraph>
                       <Typography.Title level={4}>
-                        {moment(invitation.event.eventDate).format("DD MMMM, YYYY")}
+                        {dayjs(invitation.event.eventDate).format("DD MMMM, YYYY")}
                       </Typography.Title>
                     </Col>
                     <Col>
@@ -105,7 +106,7 @@ export const Invitation = ({ id }) => {
                 </>
               ) : (
                 <Typography.Title className="title" level={1}>
-                  La fecha de este evento es: {moment(invitation?.eventDate).format("DD MMMM, YYYY")}
+                  La fecha de este evento es: {dayjs(invitation?.eventDate).format("DD MMMM, YYYY")}
                 </Typography.Title>
               )}
             </>
