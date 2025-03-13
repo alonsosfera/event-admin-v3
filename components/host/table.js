@@ -1,5 +1,5 @@
 import { Col, Table } from "antd"
-import moment from "moment"
+import dayjs from "dayjs"
 import { withForm } from "../../helpers"
 
 const EventsTable = ({ data, rooms, selectRow }) => {
@@ -17,7 +17,7 @@ const EventsTable = ({ data, rooms, selectRow }) => {
           title="Nombre" />
         <Table.Column
           dataIndex="eventDate"
-          render={text => moment(text).format("DD/MM/YYYY hh:mm a")}
+          render={text => dayjs(text).format("DD/MM/YYYY hh:mm a")}
           sorter={(a, b) => (a.eventDate || "").localeCompare(b.eventDate || "")}
           title="Fecha" />
         <Table.Column
