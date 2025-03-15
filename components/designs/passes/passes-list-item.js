@@ -41,7 +41,6 @@ export const PassesListItem = ({ item, onClick, showTitle = false }) => {
     }, { texts: [], qr: {} })
   }, [item])
 
-
   return (
     <Card
       onClick={onClick}
@@ -69,8 +68,8 @@ export const PassesListItem = ({ item, onClick, showTitle = false }) => {
           >
             <Image
               preview={false}
-              width={250 * scaleFactor}
-              height={250 * scaleFactor}
+              width={qr.customConfig?.qrSize * scaleFactor || 250 * scaleFactor}
+              height={qr.customConfig?.qrSize * scaleFactor || 250 * scaleFactor}
               src={qrImage} />
           </div>
         </div>

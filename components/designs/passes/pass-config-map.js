@@ -122,8 +122,8 @@ const PassConfigMap = ({ items, selectedFile, scaleFactor, setScaleFactor, onUpd
           <KonImage
             draggable
             image={qrImage}
-            width={250 * scaleFactor}
-            height={250 * scaleFactor}
+            width={(qr.customConfig.qrSize || 250) * scaleFactor}
+            height={(qr.customConfig.qrSize || 250) * scaleFactor}
             x={qr.coordinateX * scaleFactor}
             y={qr.coordinateY * scaleFactor}
             dragBoundFunc={pos => dragBoundFunc(pos, qr)}
