@@ -23,10 +23,19 @@ export const PassConfigModal = ({ onClose, onSuccess, selectedFile }) => {
       return currCustomConfig.fontSize && currCustomConfig.fontColor
     })
     return JSON.parse(itemWithCustomConfig?.customConfig || "{}")
-  },[selectedFile])
+  }, [selectedFile])
 
   const [fontColor, setFontColor] = useState(generalCustomConfig.fontColor || "#000")
   const [fontSize, setFontSize] = useState(generalCustomConfig.fontSize || 30)
+
+  const qrSizeFromConfig = useMemo(() => {
+    if (!selectedFile?.canvaMap?.coordinates?.length) return 250
+    const qrItem = selectedFile.canvaMap.coordinates.find(item => item.key === "QR_CODE")
+    return qrItem ? JSON.parse(qrItem.customConfig || "{}").qrSize || 250 : 250
+  }, [selectedFile])
+
+  const [qrSize, setQrSize] = useState(qrSizeFromConfig)
+
   const defaultItems = [
     { key: "Nombre del evento", coordinateX: 80, coordinateY: 15, customConfig: { fontColor, fontSize } },
     { key: "Nombre de invitado", coordinateX: 80, coordinateY: 60, customConfig: { fontColor, fontSize } },
@@ -34,7 +43,7 @@ export const PassConfigModal = ({ onClose, onSuccess, selectedFile }) => {
     { key: "Mesa", coordinateX: 80, coordinateY: 150, customConfig: { fontColor, fontSize } },
     { key: "Fecha", coordinateX: 80, coordinateY: 195, customConfig: { fontColor, fontSize } },
     { key: "Hora", coordinateX: 80, coordinateY: 240, customConfig: { fontColor, fontSize } },
-    { key: "QR_CODE", coordinateX: 250, coordinateY: 150 }
+    { key: "QR_CODE", coordinateX: 250, coordinateY: 150, customConfig: { qrSize } }
   ]
 
   const [items, setItems] = useState(() => {
@@ -46,7 +55,8 @@ export const PassConfigModal = ({ onClose, onSuccess, selectedFile }) => {
           customConfig: {
             ...currCustomConfig,
             fontColor,
-            fontSize
+            fontSize,
+            qrSize: coordinate.key === "QR_CODE" ? currCustomConfig.qrSize || 250 : undefined
           }
         }
       })
@@ -61,30 +71,34 @@ export const PassConfigModal = ({ onClose, onSuccess, selectedFile }) => {
         customConfig: {
           ...item.customConfig,
           fontColor,
-          fontSize
+          fontSize,
+          qrSize: item.key === "QR_CODE" ? qrSize : item.customConfig.qrSize
         }
       }))
     )
-  }, [fontColor, fontSize])
+  }, [fontColor, fontSize, qrSize])
 
   const onSave = async () => {
     setLoading(true)
     try {
-      const coordinates = items.map(coordinate => {
-        const customConfig = coordinate.customConfig || {}
-        return {
-          ...coordinate,
-          customConfig: JSON.stringify({ ...customConfig, fontSize, fontColor })
-        }
-      })
+      const updatedItems = items.map(coordinate => ({
+        ...coordinate,
+        customConfig: JSON.stringify({
+          ...coordinate.customConfig,
+          qrSize: coordinate.key === "QR_CODE" ? qrSize : coordinate.customConfig.qrSize,
+          fontColor
+        })
+      }))
+
       await axios.put("/api/design/passes", {
         ...selectedFile,
         fileName,
         canvaMap: {
           ...selectedFile.canvaMap,
-          coordinates
+          coordinates: updatedItems
         }
       })
+
       onSuccess()
       message.success("Diseño guardado correctamente")
       onClose()
@@ -111,11 +125,8 @@ export const PassConfigModal = ({ onClose, onSuccess, selectedFile }) => {
     }
   }
 
-
-
   const onFontSizeChange = value => {
-    const fontSizeValue = typeof value === "number" ? value.toString() : "30"
-    setFontSize(fontSizeValue)
+    setFontSize(typeof value === "number" ? value.toString() : "30")
   }
 
   const onUpdateItemPosition = (item, coordinates) => {
@@ -134,54 +145,62 @@ export const PassConfigModal = ({ onClose, onSuccess, selectedFile }) => {
       confirmLoading={loading}
       title={<EditableModalTitle title={fileName} onChange={setFileName} />}
       footer={[
-        <Button
-          key="delete" type="primary"
+        <Button key="delete" type="primary" 
           danger onClick={onDelete}>
           Eliminar
         </Button>,
         <Button key="back" onClick={onClose}>
           Cancelar
         </Button>,
-        <Button
-          key="submit" type="primary"
+        <Button 
+          key="submit" type="primary" 
           loading={loading} onClick={onSave}>
           Guardar
         </Button>
-      ]}>
+      ]}
+    >
       <Row gutter={12}>
         <Col span={24}>
-          <Form.Item
-            label="Color de letra">
+          <Form.Item label="Color de letra">
             <Tooltip
               color="white"
               trigger="click"
-              title={
-                <SketchPicker
-                  color={fontColor}
-                  onChangeComplete={color => setFontColor(color.hex)} />
-              }>
+              title={<SketchPicker color={fontColor} onChangeComplete={color => setFontColor(color.hex)} />}
+            >
               <Button type="primary" style={{ marginBottom: "5px" }}>
                 Seleccionar color de fuente
               </Button>
             </Tooltip>
           </Form.Item>
           <Form.Item label="Tamaño de letra">
-            <Slider
-              min={12}
-              max={120}
-              onChange={onFontSizeChange}
+            <Slider 
+              min={12} 
+              max={120} 
+              onChange={onFontSizeChange} 
               value={parseInt(fontSize)} />
-            <InputNumber
-              min={12}
-              max={120}
-              value={fontSize}
+            <InputNumber 
+              min={12} 
+              max={120} 
+              value={fontSize} 
               onChange={onFontSizeChange} />
           </Form.Item>
-          <PassConfigMap
-            items={items}
-            scaleFactor={scaleFactor}
-            selectedFile={selectedFile}
-            setScaleFactor={setScaleFactor}
+          <Form.Item label="Tamaño del QR">
+            <Slider 
+              min={100}
+              max={800} 
+              onChange={setQrSize} 
+              value={qrSize} />
+            <InputNumber 
+              min={100} 
+              max={800} 
+              value={qrSize} 
+              onChange={setQrSize} />
+          </Form.Item>
+          <PassConfigMap 
+            items={items} 
+            scaleFactor={scaleFactor} 
+            selectedFile={selectedFile} 
+            setScaleFactor={setScaleFactor} 
             onUpdateItemPosition={onUpdateItemPosition} />
         </Col>
       </Row>

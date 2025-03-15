@@ -62,9 +62,10 @@ const InvitationsListItemText = ({ item, scaleFactor, inDigitalInvitation }) => 
         top: `${position.y}px`,
         left: `${position.x}px`,
         fontFamily: customConfig.fontFamily || "Merienda, cursive",
-        color: customConfig.link ? "#0000EE" : customConfig?.fontColor || "black",
+        color: customConfig?.fontColor || "black",
         fontSize: `${customConfig?.fontSize * scaleFactor}px`,
-        cursor: customConfig.link ? "pointer" : ""
+        cursor: customConfig.link ? "pointer" : "",
+        textDecoration: customConfig.link ? "underline" : ""
       }}
       onClick={handleClick}>
       {inDigitalInvitation ? item.label : item.label || item.key }

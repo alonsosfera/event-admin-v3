@@ -201,9 +201,21 @@ export const invitationPDF = async (event, invitation, pdf, dimensions) => {
 
   const QR = await QRCode.toDataURL(
     `${process.env.NEXT_PUBLIC_APP_URI}/qr/${id}`
-  )
+  );
   const QR_COORD = itemsByKey?.QR_CODE
-  pdf.addImage(QR, "PNG", QR_COORD?.coordinateX || 755 + qrCodeX, QR_COORD?.coordinateY || 320 + qrCodeY, itemsByKey ? 250 : 180, itemsByKey ? 250 : 180)
+  const qrCustomConfig = JSON.parse(QR_COORD?.customConfig || "{}")
+  
+  const qrSize = qrCustomConfig.qrSize 
+    ? qrCustomConfig.qrSize
+    : (itemsByKey ? 250 : 180)
+  
+  pdf.addImage(QR, "PNG", 
+    QR_COORD?.coordinateX || 755 + qrCodeX, 
+    QR_COORD?.coordinateY || 320 + qrCodeY, 
+    qrSize,
+    qrSize
+  );
+  
 
   return pdf
 }
