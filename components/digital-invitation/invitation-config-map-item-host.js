@@ -1,9 +1,20 @@
-import React, { useLayoutEffect, useRef, useState } from "react"
+import React, { useLayoutEffect, useRef, useState, useEffect } from "react"
 import { Group, Text } from "react-konva"
+import WebFont from "webfontloader"
 
 const InvitationConfigMapItemHost = ({ item, scaleFactor, dragBoundFunc, onDragEnd, onDragMove }) => {
   const elementRef = useRef(null)
   const [position, setPosition] = useState({ x: 0, y: 0 })
+
+  const loadFont = font => {
+    WebFont.load({ google: { families: [font] } })
+  }
+
+  useEffect(() => {
+    if (WebFont && item.customConfig.fontFamily ) {
+      loadFont(item.customConfig.fontFamily)
+    }
+  }, [item.customConfig.fontFamily])
 
   useLayoutEffect(() => {
     if (elementRef.current) {
