@@ -1,4 +1,4 @@
-import { Alert, Col, Row } from "antd"
+import { Alert, Col, Row, Flex } from "antd"
 import { useEffect, useState } from "react"
 import dayjs from "dayjs"
 import JsPDF from "jspdf"
@@ -9,11 +9,15 @@ import { getInvitations, deleteInvitation, updateEvent, getRoomMapByEvent } from
 import { COORDINATES_BY_EVENT_TYPE, invitationPDF, sendInvitation } from "./helpers"
 import { useService } from "../../../hooks/use-service"
 import { useImageSize } from "react-image-size"
+import { PassesListItem } from "@/components/designs/passes/passes-list-item"
+import { InvitationsListItem } from "@/components/designs/invitations/invitations-list-item"
 
 const EventDetails = ({ data, refetchEvent, fullSize, fetchedEvent }) => {
   const [state, setState] = useState({ isModalOpen: false })
   const [invitations, setInvitations] = useState([])
   const [dimensions] = useImageSize(data.digitalPass?.fileUrl)
+  console.log(data.digitalPass?.fileUrl);
+  
   const isPassLoading = data.digitalPass && !dimensions
 
   const { designH = 540, designW = 960 } = COORDINATES_BY_EVENT_TYPE[fetchedEvent.type] || {}
@@ -109,13 +113,37 @@ const EventDetails = ({ data, refetchEvent, fullSize, fetchedEvent }) => {
         <>
           <Row>
             <Col span={24}><h1>Detalles de evento</h1></Col>
-            <Col span={12} lg={8}><b>Nombre: </b>{fetchedEvent.name}</Col>
-            <Col span={12} lg={8}><b>Salón: </b>{fetchedEvent.room_name}</Col>
-            <Col span={12} lg={8}><b>Fecha: </b>{dayjs(fetchedEvent.eventDate).format("DD/MM/YYYY hh:mm a")}</Col>
-            <Col span={12} lg={8}><b>Capacidad: </b>{fetchedEvent.assistance}</Col>
-            <Col span={12} lg={8}><b>Invitados: </b>{invitedGuests}</Col>
-            <Col span={12} lg={8}><b>Confirmados: </b>{addConfirmed}</Col>
           </Row>
+            <Row>
+              <Col xs={24} lg={16}>
+                <Row style={{ padding: "0" }} >
+                  <Col xs={24} sm={8} md={8}><b>Nombre: </b>{fetchedEvent.name}</Col>
+                  <Col xs={24} sm={8} md={8}><b>Salón: </b>{fetchedEvent.room_name}</Col>
+                  <Col xs={24} sm={8} md={8}><b>Fecha: </b>{dayjs(fetchedEvent.eventDate).format("DD/MM/YYYY hh:mm a")}</Col>
+                </Row>
+                <Row style={{ padding: "0" }} >
+                  <Col xs={24} sm={8} md={8}><b>Capacidad: </b>{fetchedEvent.assistance}</Col>
+                  <Col xs={24} sm={8} md={8}><b>Invitados: </b>{invitedGuests} </Col>
+                  <Col xs={24} sm={8} md={8}><b>Confirmados: </b>{addConfirmed}</Col>
+                </Row>
+              </Col>
+              <Col xs={24} lg={8}>
+                <Row gutter={12}>
+                  <Col sm={12}>
+                    <h4>Pase digital</h4>
+                      <PassesListItem 
+                        item={data.digitalPass}  
+                      />
+                  </Col>
+                  <Col sm={12}>
+                    <h4>Invitación digital</h4>
+                      <InvitationsListItem
+                        item={data.digitalPass}
+                      />
+                  </Col>
+                </Row>
+              </Col>
+            </Row>
           <Alert
             className="mobile-alert"
             message="Favor de utilizar un dispositivo de escritorio para crear invitaciones"
