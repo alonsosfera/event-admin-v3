@@ -31,4 +31,5 @@
 /* Import users styles */
 @use './users.sass' as users;
 
+@use './advanced-invitation.scss' as advancedInvitation;
 /* Add any additional global styles here */ 
