@@ -67,7 +67,7 @@ const CounterInvitation = ({ date }) => {
             <div style={{ textAlign: "center", margin: "0 10px" }}>
               <span
                 style={{
-              fontSize: "30px",
+              fontSize: "25px",
               fontWeight: "bold",
               color: "#03150A",
               fontFamily: "Merienda, cursive",
@@ -77,7 +77,7 @@ const CounterInvitation = ({ date }) => {
               </span>
               <span
                 style={{
-              fontSize: "20px",
+              fontSize: "17px",
               color: "#666",
               textShadow: "3px 3px 6px rgba(0, 0, 0, 0.3)"
             }}>
@@ -89,7 +89,7 @@ const CounterInvitation = ({ date }) => {
             <div style={{ textAlign: "center", margin: "0 10px" }}>
               <span
                 style={{
-                fontSize: "30px",
+                fontSize: "25px",
                 fontWeight: "bold",
                 color: "#03150A",
                 fontFamily: "Merienda, cursive",
@@ -99,7 +99,7 @@ const CounterInvitation = ({ date }) => {
               </span>
               <span
                 style={{
-                fontSize: "20px",
+                fontSize: "17px",
                 color: "#666",
                 textShadow: "3px 3px 6px rgba(0, 0, 0, 0.3)"
               }}>
@@ -111,7 +111,7 @@ const CounterInvitation = ({ date }) => {
             <div style={{ textAlign: "center", margin: "0 10px" }}>
               <span
                 style={{
-                fontSize: "30px",
+                fontSize: "25px",
                 fontWeight: "bold",
                 color: "#03150A",
                 fontFamily: "Merienda, cursive",
@@ -121,7 +121,7 @@ const CounterInvitation = ({ date }) => {
               </span>
               <span
                 style={{
-                fontSize: "20px",
+                fontSize: "17px",
                 color: "#666",
                 textShadow: "3px 3px 6px rgba(0, 0, 0, 0.3)"
               }}>
@@ -132,7 +132,7 @@ const CounterInvitation = ({ date }) => {
           <div style={{ textAlign: "center", margin: "0 10px" }}>
             <span
               style={{
-              fontSize: "30px",
+              fontSize: "25px",
               fontWeight: "bold",
               color: "#03150A",
               fontFamily: "Merienda, cursive",
@@ -142,7 +142,7 @@ const CounterInvitation = ({ date }) => {
             </span>
             <span
               style={{
-              fontSize: "20px",
+              fontSize: "17px",
               color: "#666",
               textShadow: "3px 3px 6px rgba(0, 0, 0, 0.3)"
             }}>
