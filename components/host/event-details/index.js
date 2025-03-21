@@ -16,7 +16,6 @@ const EventDetails = ({ data, refetchEvent, fullSize, fetchedEvent }) => {
   const [state, setState] = useState({ isModalOpen: false })
   const [invitations, setInvitations] = useState([])
   const [dimensions] = useImageSize(data.digitalPass?.fileUrl)
-  console.log(data.digitalPass?.fileUrl);
   
   const isPassLoading = data.digitalPass && !dimensions
 
@@ -113,34 +112,33 @@ const EventDetails = ({ data, refetchEvent, fullSize, fetchedEvent }) => {
         <>
           <Row>
             <Col xs={24} lg={16}><h1>Detalles de evento</h1>
-                <Row style={{ padding: "0" }} >
-                  <Col xs={24} sm={8} md={8}><b>Nombre: </b>{fetchedEvent.name}</Col>
-                  <Col xs={24} sm={8} md={8}><b>Salón: </b>{fetchedEvent.room_name}</Col>
-                  <Col xs={24} sm={8} md={8}><b>Fecha: </b>{dayjs(fetchedEvent.eventDate).format("DD/MM/YYYY hh:mm a")}</Col>
-                </Row>
-                <Row style={{ padding: "0" }} >
-                  <Col xs={24} sm={8} md={8}><b>Capacidad: </b>{fetchedEvent.assistance}</Col>
-                  <Col xs={24} sm={8} md={8}><b>Invitados: </b>{invitedGuests} </Col>
-                  <Col xs={24} sm={8} md={8}><b>Confirmados: </b>{addConfirmed}</Col>
-                </Row>
+              <Row style={{ padding: "0" }} >
+                <Col xs={24} sm={8} md={8}><b>Nombre: </b>{fetchedEvent.name}</Col>
+                <Col xs={24} sm={8} md={8}><b>Salón: </b>{fetchedEvent.room_name}</Col>
+                <Col xs={24} sm={8} md={8}><b>Fecha: </b>{dayjs(fetchedEvent.eventDate).format("DD/MM/YYYY hh:mm a")}</Col>
+              </Row>
+              <Row style={{ padding: "0" }} >
+                <Col xs={24} sm={8} md={8}><b>Capacidad: </b>{fetchedEvent.assistance}</Col>
+                <Col xs={24} sm={8} md={8}><b>Invitados: </b>{invitedGuests} </Col>
+                <Col xs={24} sm={8} md={8}><b>Confirmados: </b>{addConfirmed}</Col>
+              </Row>
             </Col>
               <Col xs={24} lg={8}>
                 <Row gutter={12}>
                   <Col sm={12}>
+                    <PassesListItem 
+                      item={data.digitalPass}  
+                    />
                     <h4>Pase digital</h4>
-                      <PassesListItem 
-                        item={data.digitalPass}  
-                      />
                   </Col>
-                  <Col sm={12}>
+                  <Col sm={12}>                    
+                    <InvitationsListItem
+                      item={data.digitalInvitation}                     
+                    />
                     <h4>Invitación digital</h4>
-                      <InvitationsListItem
-                        item={data.digitalPass}
-                      />
                   </Col>
                 </Row>
-              </Col>
-            
+              </Col>            
             </Row>
           <Alert
             className="mobile-alert"
