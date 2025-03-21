@@ -31,4 +31,6 @@
 /* Import users styles */
 @use './users.sass' as users;
 
+@use './catalog.scss' as catalog;
+
 /* Add any additional global styles here */ 
