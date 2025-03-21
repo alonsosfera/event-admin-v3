@@ -8,7 +8,7 @@ import { useSession } from "next-auth/react"
 
 const InvitationsTable = ({
   data, onNew, onDownload, onSingleDownload, loadingRoomMap, roomMapRefetch, roomMapData, refetchEvent,
-  onResendInvitation, remove, event, invitedGuests, handleDigitalModalToggle, openModalInvitation, showAlert
+  onResendInvitation, remove, event, invitedGuests, handleDigitalModalToggle, openModalInvitation, setOpenModalInvitation, showAlert
 }) => {
   const [isInviteButtonDisabled, setIsInviteButtonDisabled] = useState(false)
   const [openEditMapModal, setOpenEditMapModal] = useState(false)
@@ -77,9 +77,6 @@ const InvitationsTable = ({
                 Invitar
               </Button>
             </Tooltip>
-            <Button onClick={handleDigitalModalToggle}>
-              Invitación Digital
-            </Button>
             <Dropdown
               overlay={menuDropDown}
               trigger={["click"]}>
@@ -142,8 +139,8 @@ const InvitationsTable = ({
       <DigitalInvitationModal
         event={event}
         isOpen={openModalInvitation}
-        onCancel={handleDigitalModalToggle}
-        onSubmit={handleDigitalModalToggle} />
+        onCancel={() => setOpenModalInvitation(false)}
+        onSubmit={() => setOpenModalInvitation(false)} />
       <EditRoomMap
         event={event}
         eventId={event.id}

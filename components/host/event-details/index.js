@@ -140,7 +140,7 @@ const EventDetails = ({ data, refetchEvent, fullSize, fetchedEvent }) => {
                     <PassesListItem 
                       item={data.digitalPass}  
                     />
-                    <h4>Pase digital</h4>
+                    <h4>Editar pase</h4>
                   </Col>
                   <Col 
                     onClick={handleDigitalModalToggle} sm={12}
@@ -148,7 +148,7 @@ const EventDetails = ({ data, refetchEvent, fullSize, fetchedEvent }) => {
                     <InvitationsListItem
                       item={data.digitalInvitation}                     
                     />
-                    <h4>Invitación digital</h4>
+                    <h4>Editar invitación</h4>
                   </Col>
                 </Row>
               </Col>            
@@ -173,6 +173,7 @@ const EventDetails = ({ data, refetchEvent, fullSize, fetchedEvent }) => {
             invitedGuests={invitedGuests}
             handleDigitalModalToggle={handleDigitalModalToggle}
             openModalInvitation={openModalInvitation}
+            setOpenModalInvitation={setOpenModalInvitation}
             showAlert={showAlert} />
           {state.isModalOpen && (
             <NewInvitation
