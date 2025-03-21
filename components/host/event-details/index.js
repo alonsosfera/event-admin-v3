@@ -112,10 +112,7 @@ const EventDetails = ({ data, refetchEvent, fullSize, fetchedEvent }) => {
       {fetchedEvent.name ? (
         <>
           <Row>
-            <Col span={24}><h1>Detalles de evento</h1></Col>
-          </Row>
-            <Row>
-              <Col xs={24} lg={16}>
+            <Col xs={24} lg={16}><h1>Detalles de evento</h1>
                 <Row style={{ padding: "0" }} >
                   <Col xs={24} sm={8} md={8}><b>Nombre: </b>{fetchedEvent.name}</Col>
                   <Col xs={24} sm={8} md={8}><b>Salón: </b>{fetchedEvent.room_name}</Col>
@@ -126,7 +123,7 @@ const EventDetails = ({ data, refetchEvent, fullSize, fetchedEvent }) => {
                   <Col xs={24} sm={8} md={8}><b>Invitados: </b>{invitedGuests} </Col>
                   <Col xs={24} sm={8} md={8}><b>Confirmados: </b>{addConfirmed}</Col>
                 </Row>
-              </Col>
+            </Col>
               <Col xs={24} lg={8}>
                 <Row gutter={12}>
                   <Col sm={12}>
@@ -143,6 +140,7 @@ const EventDetails = ({ data, refetchEvent, fullSize, fetchedEvent }) => {
                   </Col>
                 </Row>
               </Col>
+            
             </Row>
           <Alert
             className="mobile-alert"
