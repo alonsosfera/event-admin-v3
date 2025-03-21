@@ -107,8 +107,10 @@ const EventDetails = ({ data, refetchEvent, fullSize, fetchedEvent }) => {
   return (
     <Col
       className="event-info"
-      span={!fullSize ? 12 : 18}
-      offset={!fullSize ? 0 : 3}>
+      xs={24}
+      sm={24}
+      lg={fullSize ? 18 : 12}
+      offset={fullSize ? 3 : 0}>
       {fetchedEvent.name ? (
         <>
           <Row>
