@@ -8,21 +8,10 @@ import { useSession } from "next-auth/react"
 
 const InvitationsTable = ({
   data, onNew, onDownload, onSingleDownload, loadingRoomMap, roomMapRefetch, roomMapData, refetchEvent,
-  onResendInvitation, remove, event, invitedGuests
+  onResendInvitation, remove, event, invitedGuests, handleDigitalModalToggle, openModalInvitation, showAlert
 }) => {
-  const [openModalInvitation, setOpenModalInvitation] = useState(false)
   const [isInviteButtonDisabled, setIsInviteButtonDisabled] = useState(false)
   const [openEditMapModal, setOpenEditMapModal] = useState(false)
-  const [showAlert, setShowAlert] = useState(false)
-
-  const handleDigitalModalToggle = () => {
-    const coordinates = event?.digitalInvitation?.canvaMap?.coordinates || []
-    if (coordinates.length === 0) {
-      setShowAlert(true)
-    } else {
-      setOpenModalInvitation(!openModalInvitation)
-    }
-  }
 
   const handleEditMapModalToggle = () => {
     setOpenEditMapModal(!openEditMapModal)

@@ -1,4 +1,4 @@
-import { Alert, Col, Row, Flex } from "antd"
+import { Alert, Col, Row, Flex, Button } from "antd"
 import { useEffect, useState } from "react"
 import dayjs from "dayjs"
 import JsPDF from "jspdf"
@@ -16,10 +16,21 @@ const EventDetails = ({ data, refetchEvent, fullSize, fetchedEvent }) => {
   const [state, setState] = useState({ isModalOpen: false })
   const [invitations, setInvitations] = useState([])
   const [dimensions] = useImageSize(data.digitalPass?.fileUrl)
+  const [openModalInvitation, setOpenModalInvitation] = useState(false)
+  const [showAlert, setShowAlert] = useState(false)
   
   const isPassLoading = data.digitalPass && !dimensions
 
   const { designH = 540, designW = 960 } = COORDINATES_BY_EVENT_TYPE[fetchedEvent.type] || {}
+
+  const handleDigitalModalToggle = () => {
+    const coordinates = data?.digitalInvitation?.canvaMap?.coordinates || []
+    if (coordinates.length === 0) {
+      setShowAlert(true)
+    } else {
+      setOpenModalInvitation(true)
+    }
+  }
 
   useEffect(() => {
     if (data.id) {
@@ -131,7 +142,9 @@ const EventDetails = ({ data, refetchEvent, fullSize, fetchedEvent }) => {
                     />
                     <h4>Pase digital</h4>
                   </Col>
-                  <Col sm={12}>                    
+                  <Col 
+                    onClick={handleDigitalModalToggle} sm={12}
+                    style={{ cursor: "pointer" }}>         
                     <InvitationsListItem
                       item={data.digitalInvitation}                     
                     />
@@ -157,7 +170,10 @@ const EventDetails = ({ data, refetchEvent, fullSize, fetchedEvent }) => {
             onResendInvitation={onResendInvitation}
             onNew={onNew}
             isPassLoading={isPassLoading}
-            invitedGuests={invitedGuests} />
+            invitedGuests={invitedGuests}
+            handleDigitalModalToggle={handleDigitalModalToggle}
+            openModalInvitation={openModalInvitation}
+            showAlert={showAlert} />
           {state.isModalOpen && (
             <NewInvitation
               event={fetchedEvent}
