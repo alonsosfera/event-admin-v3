@@ -1,4 +1,4 @@
-import { Alert, Col, Row, Flex, Button } from "antd"
+import { Alert, Col, Row, Image} from "antd"
 import { useEffect, useState } from "react"
 import dayjs from "dayjs"
 import JsPDF from "jspdf"
@@ -9,8 +9,7 @@ import { getInvitations, deleteInvitation, updateEvent, getRoomMapByEvent } from
 import { COORDINATES_BY_EVENT_TYPE, invitationPDF, sendInvitation } from "./helpers"
 import { useService } from "../../../hooks/use-service"
 import { useImageSize } from "react-image-size"
-import { PassesListItem } from "@/components/designs/passes/passes-list-item"
-import { InvitationsListItem } from "@/components/designs/invitations/invitations-list-item"
+import Link from "next/link"
 
 const EventDetails = ({ data, refetchEvent, fullSize, fetchedEvent }) => {
   const [state, setState] = useState({ isModalOpen: false })
@@ -122,33 +121,46 @@ const EventDetails = ({ data, refetchEvent, fullSize, fetchedEvent }) => {
       {fetchedEvent.name ? (
         <>
           <Row>
-            <Col xs={24} lg={16}><h1>Detalles de evento</h1>
-              <Row style={{ padding: "0" }} >
+            <Col xs={24} lg={14}><h1>Detalles de evento</h1>
+              <Row style={{ padding: "0", marginBottom: "10px", marginTop: "10px" }} >
                 <Col xs={24} sm={8} md={8}><b>Nombre: </b>{fetchedEvent.name}</Col>
-                <Col xs={24} sm={8} md={8}><b>Salón: </b>{fetchedEvent.room_name}</Col>
                 <Col xs={24} sm={8} md={8}><b>Fecha: </b>{dayjs(fetchedEvent.eventDate).format("DD/MM/YYYY hh:mm a")}</Col>
-              </Row>
-              <Row style={{ padding: "0" }} >
                 <Col xs={24} sm={8} md={8}><b>Capacidad: </b>{fetchedEvent.assistance}</Col>
+              </Row>
+              <Row style={{ padding: "0" }} >               
                 <Col xs={24} sm={8} md={8}><b>Invitados: </b>{invitedGuests} </Col>
                 <Col xs={24} sm={8} md={8}><b>Confirmados: </b>{addConfirmed}</Col>
               </Row>
             </Col>
-              <Col xs={24} lg={8}>
-                <Row gutter={12}>
+              <Col xs={24} lg={10} style={{ textAlign: "center" }}>
+                <Row gutter={12} style={{ display: "flex", justifyContent: "center"}}>
                   <Col sm={12}>
-                    <PassesListItem 
-                      item={data.digitalPass}  
-                    />
-                    <h4>Editar pase</h4>
+                    <Image
+                      alt="pass"
+                      preview={false}
+                      placeholder={true}
+                      src={data.digitalPass.fileUrl}/>
+                    <Link
+                      href="#"
+                      passHref
+                      onClick={handleDigitalModalToggle}
+                      style={{ display: "block" }}
+                      >Editar pase</Link>
                   </Col>
                   <Col 
                     onClick={handleDigitalModalToggle} sm={12}
                     style={{ cursor: "pointer" }}>         
-                    <InvitationsListItem
-                      item={data.digitalInvitation}                     
-                    />
-                    <h4>Editar invitación</h4>
+                    <Image
+                      alt="pass"
+                      preview={false}
+                      placeholder={true}
+                      src={data.digitalInvitation.fileUrl}/>
+                    <Link
+                      href="#"
+                      passHref
+                      onClick={handleDigitalModalToggle}
+                      style={{ display: "block" }}
+                      >Editar invitación</Link>
                   </Col>
                 </Row>
               </Col>            
