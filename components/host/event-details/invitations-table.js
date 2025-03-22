@@ -37,18 +37,11 @@ const InvitationsTable = ({
 
   const menuDropDown = (
     <Menu>
-      {user?.role === "ADMIN" && (
         <Menu.Item key="1">
           <a className="invite-btn" onClick={handleEditMapModalToggle}>
             Editar Mapa
           </a>
         </Menu.Item>
-      )}
-      <Menu.Item key="2">
-        <a onClick={onDownload}>
-          Descargar invitaciones
-        </a>
-      </Menu.Item>
     </Menu>
   )
 
@@ -77,6 +70,10 @@ const InvitationsTable = ({
                 Invitar
               </Button>
             </Tooltip>
+            <Button onClick={onDownload}>
+              Descargar Invitaciones
+            </Button>
+            {user?.role === "ADMIN" && (
             <Dropdown
               overlay={menuDropDown}
               trigger={["click"]}>
@@ -84,6 +81,7 @@ const InvitationsTable = ({
                 <SmallDashOutlined />
               </Button>
             </Dropdown>
+            )}
           </Space>
         )}
         rowKey={row => row.id}
