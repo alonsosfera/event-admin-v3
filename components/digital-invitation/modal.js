@@ -28,6 +28,15 @@ export const DigitalInvitationModal = ({ isOpen, onCancel, onSubmit, event }) =>
     }
   }, [coordinates])
 
+  const [selectedInvitationId, setSelectedInvitationId] = useState(null)
+  const [selectedInvitationUrl, setSelectedInvitationUrl] = useState(null)
+
+  const handleSelectInvitation = (id) => {
+    const selected = allInvitations.find(inv => inv.id === id)
+    setSelectedInvitationId(id)
+    setSelectedInvitationUrl(selected?.fileUrl || null)
+  }
+
   useEffect(() => {
     const fetchAllInvitations = async () => {
       try {
@@ -156,14 +165,20 @@ export const DigitalInvitationModal = ({ isOpen, onCancel, onSubmit, event }) =>
             />   
               <Row gutter={[16, 16]} style={{ flex: 1, justifyContent: "center" }}>
                 {paginatedInvitations.map(invite => (
-                  <Col key={invite.id} xs={12} sm={8} md={6}>
+                  <Col key={invite.id} xs={12} sm={6} md={6}>
                     <Card
                       hoverable
+                      onClick={() => handleSelectInvitation(invite.id)}
+                      style={{
+                        border: invite.id === selectedInvitationId ? '1px solid #1890ff' : '1px solid #f0f0f0',
+                        boxShadow: invite.id === selectedInvitationId ? '0 0px 30px rgba(24,144,255,0.6)' : 'none',
+                      }}
                       cover={
                          <Image 
+                         preview={false}
                          alt={invite.fileName}
                          src={invite.fileUrl}
-                         style={{ height: 200, objectFit: "cover", borderRadius: "4px" }} />                        
+                         style={{ height: 200, objectFit: "contain", borderRadius: "4px" }} />                        
                       }
                     >
                       <Card.Meta title={invite.fileName} />
@@ -242,6 +257,7 @@ export const DigitalInvitationModal = ({ isOpen, onCancel, onSubmit, event }) =>
         </Col>
         <Col span={16}>
           <InvitationConfigMapHost
+            selectedInvitationUrl={selectedInvitationUrl}
             event={{
               ...event,
               digitalInvitation: {
