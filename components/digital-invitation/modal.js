@@ -1,11 +1,12 @@
-import { Col, Modal, Row, notification, Tooltip, Button } from "antd"
+import { Col, Modal, Row, notification, Tooltip, Button, Card } from "antd"
 import { useMemo, useState, useEffect } from "react"
 import axios from "axios"
 import { parseCookies } from "nookies"
 import short from "short-uuid"
-import { CopyOutlined } from "@ant-design/icons"
+import { CopyOutlined, LeftOutlined, RightOutlined } from "@ant-design/icons"
 import InvitationField from "./input-modal"
 import { InvitationConfigMapHost } from "./invitation-config-map-host"
+import { Image } from "antd"
 
 export const DigitalInvitationModal = ({ isOpen, onCancel, onSubmit, event }) => {
   const translator = short()
@@ -15,6 +16,7 @@ export const DigitalInvitationModal = ({ isOpen, onCancel, onSubmit, event }) =>
   const { token } = parseCookies()
   const [customConfig, setCustomConfig] = useState({})
   const [updatedCoordinates, setUpdatedCoordinates] = useState(coordinates)
+  const [allInvitations, setAllInvitations] = useState([])
 
   useEffect(() => {
     if (coordinates.length > 0) {
@@ -25,6 +27,24 @@ export const DigitalInvitationModal = ({ isOpen, onCancel, onSubmit, event }) =>
       setState(initialState)
     }
   }, [coordinates])
+
+  useEffect(() => {
+    const fetchAllInvitations = async () => {
+      try {
+        const response = await axios.get("/api/design/invitations", {
+          headers: {
+            Authorization: `Bearer ${token}`
+          }
+        })
+        setAllInvitations(response.data?.invitations || [])
+      } catch (error) {
+        console.error("Error al obtener las invitaciones digitales:", error)
+      }
+    }
+  
+    fetchAllInvitations()
+  }, [])
+  
 
   const handlePositionChange = (key, newX, newY) => {
     setUpdatedCoordinates(prevCoordinates =>
@@ -91,18 +111,81 @@ export const DigitalInvitationModal = ({ isOpen, onCancel, onSubmit, event }) =>
       .finally(() => setIsSaving(false))
   }
 
+  const [currentPage, setCurrentPage] = useState(0)
+  const pageSize = 4
+
+  const paginatedInvitations = allInvitations.slice(
+    currentPage * pageSize,
+    currentPage * pageSize + pageSize
+  )
+
+  const totalPages = Math.ceil(allInvitations.length / pageSize)
+
+  const handlePrev = () => {
+    if (currentPage > 0) setCurrentPage(prev => prev - 1)
+  }
+  
+  const handleNext = () => {
+    if (currentPage < totalPages - 1) setCurrentPage(prev => prev + 1)
+  }
+  
   const modalTitle = useMemo(() => (
-    <div>
-      Invitación Digital&nbsp;
-      <Tooltip title="Copiar link a portapapeles">
-        <Button
-          type="text"
-          size="small"
-          icon={<CopyOutlined />}
-          onClick={handleCopyDigitalInviteToClipboard} />
-      </Tooltip>
-    </div>
-  ), [])
+    <>
+      <Row>
+        <Col xs={24}>
+          Invitación Digital&nbsp;
+          <Tooltip title="Copiar link a portapapeles">
+            <Button
+              type="text"
+              size="small"
+              icon={<CopyOutlined />}
+              onClick={handleCopyDigitalInviteToClipboard}
+            />
+          </Tooltip>
+        </Col>
+  
+        <Col xs={24}>
+          <Row justify="center" align="middle" style={{ marginTop: 8 }}>
+            <Button
+              shape="circle"
+              icon={<LeftOutlined />}
+              size="large"
+              style={{ marginRight: 16 }}
+              onClick={handlePrev}
+              disabled={currentPage === 0}
+            />   
+              <Row gutter={[16, 16]} style={{ flex: 1, justifyContent: "center" }}>
+                {paginatedInvitations.map(invite => (
+                  <Col key={invite.id} xs={12} sm={8} md={6}>
+                    <Card
+                      hoverable
+                      cover={
+                         <Image 
+                         alt={invite.fileName}
+                         src={invite.fileUrl}
+                         style={{ height: 200, objectFit: "cover", borderRadius: "4px" }} />                        
+                      }
+                    >
+                      <Card.Meta title={invite.fileName} />
+                    </Card>
+                  </Col>
+                ))}
+              </Row>
+    
+              <Button
+                shape="circle"
+                icon={<RightOutlined />}
+                size="large"
+                style={{ marginLeft: 16 }}
+                onClick={handleNext}
+                disabled={currentPage >= totalPages - 1}
+              />
+            </Row>
+          </Col>
+        </Row>
+    </>
+  ), [allInvitations, paginatedInvitations, currentPage])
+  
 
   const getDigitalInvitation = () => {
     return {
