@@ -1,4 +1,4 @@
-import { Col, Modal, Row, notification, Tooltip, Button, Card } from "antd"
+import { Col, Modal, Row, notification, Tooltip, Button, Collapse } from "antd"
 import { useMemo, useState, useEffect } from "react"
 import axios from "axios"
 import { parseCookies } from "nookies"
@@ -121,7 +121,7 @@ export const DigitalInvitationModal = ({ isOpen, onCancel, onSubmit, event }) =>
   }
 
   const [currentPage, setCurrentPage] = useState(0)
-  const pageSize = 4
+  const pageSize = 12
 
   const paginatedInvitations = allInvitations.slice(
     currentPage * pageSize,
@@ -154,50 +154,52 @@ export const DigitalInvitationModal = ({ isOpen, onCancel, onSubmit, event }) =>
         </Col>
   
         <Col xs={24}>
-          <Row justify="center" align="middle" style={{ marginTop: 8 }}>
-            <Button
-              shape="circle"
-              icon={<LeftOutlined />}
-              size="large"
-              style={{ marginRight: 16 }}
-              onClick={handlePrev}
-              disabled={currentPage === 0}
-            />   
-              <Row gutter={[16, 16]} style={{ flex: 1, justifyContent: "center" }}>
-                {paginatedInvitations.map(invite => (
-                  <Col key={invite.id} xs={12} sm={6} md={6}>
-                    <Card
-                      hoverable
-                      onClick={() => handleSelectInvitation(invite.id)}
-                      style={{
-                        border: invite.id === selectedInvitationId ? '1px solid #1890ff' : '1px solid #f0f0f0',
-                        boxShadow: invite.id === selectedInvitationId ? '0 0px 30px rgba(24,144,255,0.6)' : 'none',
-                      }}
-                      cover={
-                         <Image 
-                         preview={false}
-                         alt={invite.fileName}
-                         src={invite.fileUrl}
-                         style={{ height: 200, objectFit: "contain", borderRadius: "4px" }} />                        
-                      }
-                    >
-                      <Card.Meta title={invite.fileName} />
-                    </Card>
-                  </Col>
-                ))}
+          <Collapse defaultActiveKey={["1"]} style={{ marginTop: 8 }}>
+            <Collapse.Panel header="Seleccionar plantilla de invitación" key="1">
+              <Row justify="center" align="middle">
+                <Button
+                  shape="circle"
+                  icon={<LeftOutlined />}
+                  size="large"
+                  style={{ marginRight: 16 }}
+                  onClick={handlePrev}
+                  disabled={currentPage === 0}
+                />
+
+                <Row gutter={[16, 16]} style={{ flex: 1, justifyContent: "center" }}>
+                  {paginatedInvitations.map(invite => (
+                    <Col key={invite.id} xs={12} sm={6} md={4} >
+                      <Image 
+                        onClick={() => handleSelectInvitation(invite.id)}
+                        preview={false}
+                        alt={invite.fileName}
+                        src={invite.fileUrl}
+                        style={{
+                          
+                          objectFit: "contain",
+                          borderRadius: "4px",
+                          border: invite.id === selectedInvitationId ? '1px solid #1890ff' : '1px solid #f0f0f0',
+                          boxShadow: invite.id === selectedInvitationId ? '0 0px 30px rgba(24,144,255,0.6)' : 'none',
+                          cursor: 'pointer'
+                        }}
+                      />
+                    </Col>
+                  ))}
+                </Row>
+
+                <Button
+                  shape="circle"
+                  icon={<RightOutlined />}
+                  size="large"
+                  style={{ marginLeft: 16 }}
+                  onClick={handleNext}
+                  disabled={currentPage >= totalPages - 1}
+                />
               </Row>
-    
-              <Button
-                shape="circle"
-                icon={<RightOutlined />}
-                size="large"
-                style={{ marginLeft: 16 }}
-                onClick={handleNext}
-                disabled={currentPage >= totalPages - 1}
-              />
-            </Row>
-          </Col>
-        </Row>
+            </Collapse.Panel>
+          </Collapse>
+        </Col>
+      </Row>
     </>
   ), [allInvitations, paginatedInvitations, currentPage])
   
@@ -205,6 +207,7 @@ export const DigitalInvitationModal = ({ isOpen, onCancel, onSubmit, event }) =>
   const getDigitalInvitation = () => {
     return {
       ...event?.digitalInvitation,
+      fileUrl: selectedInvitationUrl || event?.digitalInvitation?.fileUrl,
       canvaMap: {
         ...event?.digitalInvitation?.canvaMap,
         coordinates: updatedCoordinates.map(coordinate => {
@@ -273,4 +276,4 @@ export const DigitalInvitationModal = ({ isOpen, onCancel, onSubmit, event }) =>
       </Row>
     </Modal>
   )
-}
+} 
