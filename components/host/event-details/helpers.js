@@ -141,19 +141,20 @@ export const invitationPDF = async (event, invitation, pdf, dimensions) => {
   pdf.setFont("helvetica", "normal")
 
   const title = itemsByKey?.["Nombre del evento"]
-  const titleX = title ? getCenteredXCoordinate(name, pdf.getTextWidth(name), title?.coordinateX) : centerTextValue(name, 15) + valuesX
   const titleCustomConfig = JSON.parse(title?.customConfig || "{}")
   pdf.setFontSize(titleCustomConfig.fontSize || 38)
   pdf.setTextColor(titleCustomConfig.fontColor || "#000")
   pdf.setFont("helvetica", "bold")
+  const titleX = title ? getCenteredXCoordinate(name, pdf.getTextWidth(name), title?.coordinateX) : centerTextValue(name, 15) + valuesX
+
   pdf.text(name, titleX, title ? getCenteredYCoordinate(title?.coordinateY) : 180 + valuesY)
 
   const guest = itemsByKey?.["Nombre de invitado"]
-  const invitationX = guest ? getCenteredXCoordinate(invitationName, pdf.getTextWidth(invitationName), guest?.coordinateX) : centerTextValue(invitationName, 20) + valuesX
   const guestCustomConfig = JSON.parse(guest?.customConfig || "{}")
   pdf.setFontSize(guestCustomConfig.fontSize || 38)
   pdf.setTextColor(guestCustomConfig.fontColor || "#000")
   pdf.setFont("helvetica", "normal")
+  const invitationX = guest ? getCenteredXCoordinate(invitationName, pdf.getTextWidth(invitationName), guest?.coordinateX) : centerTextValue(invitationName, 20) + valuesX
   pdf.text(invitationName, invitationX, guest ? getCenteredYCoordinate(guest?.coordinateY) : 230 + valuesY)
 
   const guestsNumber = itemsByKey?.["# de invitados"]
@@ -161,6 +162,7 @@ export const invitationPDF = async (event, invitation, pdf, dimensions) => {
   const guestsNumberCustomConfig = JSON.parse(guestsNumber?.customConfig || "{}")
   pdf.setFontSize(guestsNumberCustomConfig.fontSize || 38)
   pdf.setTextColor(guestsNumberCustomConfig.fontColor || "#000")
+  pdf.setFont("helvetica", "normal")
   pdf.text(guestNumberLabel, guestsNumber ? getCenteredXCoordinate(guestNumberLabel, pdf.getTextWidth(guestNumberLabel), guestsNumber?.coordinateX) : 300 + valuesX, guestsNumber ? getCenteredYCoordinate(guestsNumber?.coordinateY) : 280 + valuesY)
 
   const tables = `Mesa(s): ${invitationTables.map(el => {
@@ -179,6 +181,7 @@ export const invitationPDF = async (event, invitation, pdf, dimensions) => {
   const tableCustomConfig = JSON.parse(table?.customConfig || "{}")
   pdf.setFontSize(tableCustomConfig.fontSize || 38)
   pdf.setTextColor(tableCustomConfig.fontColor || "#000")
+  pdf.setFont("helvetica", "normal")
   pdf.text(tables, table ? getCenteredXCoordinate(tables, pdf.getTextWidth(tables), table?.coordinateX) : centerTextValue(tables, 15) + dayX, table ? getCenteredYCoordinate(table?.coordinateY) : 320 + dayY)
 
   const dateCoordinate = itemsByKey?.Fecha
