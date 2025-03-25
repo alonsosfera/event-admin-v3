@@ -224,8 +224,8 @@ export const DigitalInvitationModal = ({ isOpen, onCancel, onSubmit, event }) =>
                 showUploadList={false}
                 accept="image/*"
               >
-                <Button type="dashed" style={{ marginBottom: 16 }}>
-                  + Crear nueva invitación
+                <Button type="primary" style={{ marginBottom: 16 }}>
+                  Subir nueva invitación
                 </Button>
               </Upload>
 
