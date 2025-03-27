@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react"
 import { Input, Tooltip, Button } from "antd"
-import { LinkOutlined, CheckSquareOutlined } from "@ant-design/icons"
+import { LinkOutlined, CheckOutlined } from "@ant-design/icons"
 
 const InvitationField = ({ label, value, onChange, onLinkChange, linkValue }) => {
   const [isTooltipVisible, setIsTooltipVisible] = useState(false)
@@ -34,7 +34,7 @@ const InvitationField = ({ label, value, onChange, onLinkChange, linkValue }) =>
               onChange={e => setLink(e.target.value)}
               style={{ marginRight: "0.5rem" }} />
             <Button
-              icon={<CheckSquareOutlined />}
+              icon={<CheckOutlined />}
               onClick={handleLinkChange} />
           </div>
         }
