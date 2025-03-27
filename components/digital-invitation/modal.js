@@ -327,8 +327,8 @@ export const DigitalInvitationModal = ({ isOpen, onCancel, onSubmit, event }) =>
             type="info"
             message="Arrastra los elementos para reorganizarlos"
             style={{
-              fontSize: "12px",          // Reducir el tamaño de la fuente
-              padding: "8px 16px",       // Reducir el padding
+              fontSize: "12px",
+              padding: "8px 16px",
                }}/>
         </Col>
       </Row>
