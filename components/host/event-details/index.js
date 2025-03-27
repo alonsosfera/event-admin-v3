@@ -23,8 +23,8 @@ const EventDetails = ({ data, refetchEvent, fullSize, fetchedEvent }) => {
   const { designH = 540, designW = 960 } = COORDINATES_BY_EVENT_TYPE[fetchedEvent.type] || {}
 
   const handleDigitalModalToggle = () => {
-    const coordinates = data?.digitalInvitation?.canvaMap?.coordinates || []
-    if (coordinates.length === 0) {
+    const digitalInvitation = data?.digitalInvitation || []
+    if (digitalInvitation.length === 0) {
       setShowAlert(true)
     } else {
       setOpenModalInvitation(true)

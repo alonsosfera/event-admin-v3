@@ -1,4 +1,4 @@
-import { Col, Modal, Row, notification, Tooltip, Button, Collapse } from "antd"
+import { Col, Modal, Row, notification, Tooltip, Button, Collapse, Upload, Image } from "antd"
 import { useMemo, useState, useEffect } from "react"
 import axios from "axios"
 import { parseCookies } from "nookies"
@@ -6,7 +6,7 @@ import short from "short-uuid"
 import { CopyOutlined, LeftOutlined, RightOutlined } from "@ant-design/icons"
 import InvitationField from "./input-modal"
 import { InvitationConfigMapHost } from "./invitation-config-map-host"
-import { Image } from "antd"
+import { fileToArrayBuffer, arrayBufferToBase64 } from "../designs/helpers"
 
 export const DigitalInvitationModal = ({ isOpen, onCancel, onSubmit, event }) => {
   const translator = short()
@@ -17,6 +17,8 @@ export const DigitalInvitationModal = ({ isOpen, onCancel, onSubmit, event }) =>
   const [customConfig, setCustomConfig] = useState({})
   const [updatedCoordinates, setUpdatedCoordinates] = useState(coordinates)
   const [allInvitations, setAllInvitations] = useState([])
+  const [previewFile, setPreviewFile] = useState(null)
+  const [activeSource, setActiveSource] = useState(null)
 
   useEffect(() => {
     if (coordinates.length > 0) {
@@ -33,9 +35,34 @@ export const DigitalInvitationModal = ({ isOpen, onCancel, onSubmit, event }) =>
 
   const handleSelectInvitation = (id) => {
     const selected = allInvitations.find(inv => inv.id === id)
-    setSelectedInvitationId(id)
-    setSelectedInvitationUrl(selected?.fileUrl || null)
+  
+    if (selected) {
+      setSelectedInvitationId(id)
+      setSelectedInvitationUrl(selected.fileUrl || null)
+      setActiveSource('select')
+  
+      const coords = selected.canvaMap?.coordinates || []
+  
+      const newState = coords.reduce((acc, coordinate) => {
+        acc[coordinate.key] = coordinate.label || ""
+        return acc
+      }, {})
+      setState(newState)
+  
+      const newCustomConfig = coords.reduce((acc, coordinate) => {
+        const parsed = JSON.parse(coordinate.customConfig || "{}")
+        if (parsed.link) {
+          acc[coordinate.key] = parsed.link
+        }
+        return acc
+      }, {})
+      setCustomConfig(newCustomConfig)
+  
+      setUpdatedCoordinates(coords)
+    }
   }
+  
+  
 
   useEffect(() => {
     const fetchAllInvitations = async () => {
@@ -53,7 +80,6 @@ export const DigitalInvitationModal = ({ isOpen, onCancel, onSubmit, event }) =>
   
     fetchAllInvitations()
   }, [])
-  
 
   const handlePositionChange = (key, newX, newY) => {
     setUpdatedCoordinates(prevCoordinates =>
@@ -103,23 +129,79 @@ export const DigitalInvitationModal = ({ isOpen, onCancel, onSubmit, event }) =>
     })
   }
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     setIsSaving(true)
-    const { room, room_name, ...eventToSave } = event
-    axios.put(`/api/events/update/${event.id}`, { ...eventToSave,
-      digitalInvitation: getDigitalInvitation() }, {
-      headers: { "Authorization": `Bearer ${token}` }
-    })
-      .then(() => {
-        handleCopyDigitalInviteToClipboard()
-        onSubmit()
-      })
-      .catch(error => {
-        console.error("Error al enviar datos:", error)
-      })
-      .finally(() => setIsSaving(false))
-  }
+  
+    try {
+      let fileUrl = selectedInvitationUrl
 
+      if (!fileUrl) {
+        fileUrl = event?.digitalInvitation?.fileUrl
+      }
+  
+      if (activeSource === 'upload' && previewFile?.file) {
+      const arrayBuffer = await fileToArrayBuffer(previewFile.file)
+      const fileBuffer = arrayBufferToBase64(arrayBuffer)
+      const fileType = previewFile.file.type.split("/")[1]
+
+      const { data } = await axios.post("/api/storage/upload", {
+        fileName: previewFile.file.name,
+        fileType,
+        folder: "invitations",
+        fileBuffer
+      }, {
+        headers: { Authorization: `Bearer ${token}` }
+      })
+
+      fileUrl = data.fileUrl
+  
+        const response = await axios.get("/api/design/invitations", {
+          headers: { Authorization: `Bearer ${token}` }
+        })
+        setAllInvitations(response.data?.invitations || [])
+      }
+  
+      const { room, room_name, ...eventToSave } = event
+  
+      await axios.put(`/api/events/update/${event.id}`, {
+        ...eventToSave,
+        digitalInvitation: {
+          ...event?.digitalInvitation,
+          fileUrl,
+          canvaMap: {
+            ...event?.digitalInvitation?.canvaMap,
+            coordinates: updatedCoordinates.map(coordinate => {
+              const coordCustomConfig = JSON.parse(coordinate.customConfig || "{}")
+              return {
+                ...coordinate,
+                label: state[coordinate.key],
+                customConfig: JSON.stringify({
+                  ...coordCustomConfig,
+                  link: customConfig[coordinate.key] || coordCustomConfig.link || undefined
+                })
+              }
+            })
+          }
+        }
+      }, {
+        headers: { Authorization: `Bearer ${token}` }
+      })
+  
+      handleCopyDigitalInviteToClipboard()
+      onSubmit()
+  
+    } catch (error) {
+      console.error("Error al guardar:", error)
+      notification.error({
+        message: "Error al guardar",
+        description: "Hubo un problema al guardar la invitación.",
+        placement: "topRight"
+      })
+    } finally {
+      setIsSaving(false)
+    }
+  }
+  
   const [currentPage, setCurrentPage] = useState(0)
   const pageSize = 12
 
@@ -137,6 +219,8 @@ export const DigitalInvitationModal = ({ isOpen, onCancel, onSubmit, event }) =>
   const handleNext = () => {
     if (currentPage < totalPages - 1) setCurrentPage(prev => prev + 1)
   }
+
+
   
   const modalTitle = useMemo(() => (
     <>
@@ -154,8 +238,24 @@ export const DigitalInvitationModal = ({ isOpen, onCancel, onSubmit, event }) =>
         </Col>
   
         <Col xs={24}>
-          <Collapse defaultActiveKey={["1"]} style={{ marginTop: 8 }}>
+          <Collapse style={{ marginTop: 8 }}>
             <Collapse.Panel header="Seleccionar plantilla de invitación" key="1">
+              <Upload
+                beforeUpload={file => {
+                  const previewUrl = URL.createObjectURL(file)
+                  setUpdatedCoordinates([])
+                  setPreviewFile({ file, previewUrl })
+                  setActiveSource('upload')
+                  return false
+                }}
+                showUploadList={false}
+                accept="image/*"
+              >
+                <Button type="primary" style={{ marginBottom: 16 }}>
+                  Subir nueva invitación
+                </Button>
+              </Upload>
+
               <Row justify="center" align="middle">
                 <Button
                   shape="circle"
@@ -167,15 +267,36 @@ export const DigitalInvitationModal = ({ isOpen, onCancel, onSubmit, event }) =>
                 />
 
                 <Row gutter={[16, 16]} style={{ flex: 1, justifyContent: "center" }}>
+                {previewFile?.previewUrl && (
+                  <Col xs={12} sm={6} md={4}>
+                    <Image
+                      preview={false}
+                      src={previewFile.previewUrl}
+                      alt="Vista previa subida"
+                      onClick={() => {
+                        setActiveSource('upload')
+                        setSelectedInvitationId(null)
+                        setSelectedInvitationUrl(null)
+                      }}
+                      style={{
+                        objectFit: "contain",
+                        borderRadius: "4px",
+                        border: activeSource === 'upload' ? '1px solid #1890ff' : '1px solid #f0f0f0',
+                        boxShadow: activeSource === 'upload' ? '0 0px 30px rgba(24,144,255,0.6)' : 'none',
+                        cursor: 'pointer'
+                      }}
+                    />
+                  </Col>
+                )}
+
                   {paginatedInvitations.map(invite => (
-                    <Col key={invite.id} xs={12} sm={6} md={4} >
-                      <Image 
+                    <Col key={invite.id} xs={12} sm={6} md={4}>
+                      <Image
                         onClick={() => handleSelectInvitation(invite.id)}
                         preview={false}
                         alt={invite.fileName}
                         src={invite.fileUrl}
                         style={{
-                          
                           objectFit: "contain",
                           borderRadius: "4px",
                           border: invite.id === selectedInvitationId ? '1px solid #1890ff' : '1px solid #f0f0f0',
@@ -203,34 +324,18 @@ export const DigitalInvitationModal = ({ isOpen, onCancel, onSubmit, event }) =>
     </>
   ), [allInvitations, paginatedInvitations, currentPage])
   
-
-  const getDigitalInvitation = () => {
-    return {
-      ...event?.digitalInvitation,
-      fileUrl: selectedInvitationUrl || event?.digitalInvitation?.fileUrl,
-      canvaMap: {
-        ...event?.digitalInvitation?.canvaMap,
-        coordinates: updatedCoordinates.map(coordinate => {
-          const coordCustomConfig = JSON.parse(coordinate.customConfig || "{}")
-          return {
-            ...coordinate,
-            label: state[coordinate.key],
-            customConfig: JSON.stringify({
-              ...coordCustomConfig,
-              link: customConfig[coordinate.key] || coordCustomConfig.link || undefined
-            })
-          }
-        })
-      }
-    }
-  }
-
   const sortCoordinates = (a, b) => {
     const yDiff = a.coordinateY - b.coordinateY
     const xDiff = a.coordinateX - b.coordinateX
     if (Math.abs(yDiff) < 30) return xDiff
     return yDiff
   }
+
+  useEffect(() => {
+    if(activeSource === "upload") {
+      setUpdatedCoordinates([])
+    }
+  }, [activeSource])
 
   return (
     <Modal
@@ -260,7 +365,13 @@ export const DigitalInvitationModal = ({ isOpen, onCancel, onSubmit, event }) =>
         </Col>
         <Col span={16}>
           <InvitationConfigMapHost
-            selectedInvitationUrl={selectedInvitationUrl}
+            selectedInvitationUrl={
+              activeSource === 'upload'
+                ? previewFile?.previewUrl
+                : activeSource === 'select'
+                ? selectedInvitationUrl
+                : event?.digitalInvitation?.fileUrl
+            }
             event={{
               ...event,
               digitalInvitation: {
