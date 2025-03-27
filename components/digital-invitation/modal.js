@@ -49,7 +49,6 @@ export const DigitalInvitationModal = ({ isOpen, onCancel, onSubmit, event }) =>
       }, {})
       setState(newState)
   
-      // Config personalizada (links, etc)
       const newCustomConfig = coords.reduce((acc, coordinate) => {
         const parsed = JSON.parse(coordinate.customConfig || "{}")
         if (parsed.link) {
@@ -244,6 +243,7 @@ export const DigitalInvitationModal = ({ isOpen, onCancel, onSubmit, event }) =>
               <Upload
                 beforeUpload={file => {
                   const previewUrl = URL.createObjectURL(file)
+                  setUpdatedCoordinates([])
                   setPreviewFile({ file, previewUrl })
                   setActiveSource('upload')
                   return false
@@ -330,6 +330,12 @@ export const DigitalInvitationModal = ({ isOpen, onCancel, onSubmit, event }) =>
     if (Math.abs(yDiff) < 30) return xDiff
     return yDiff
   }
+
+  useEffect(() => {
+    if(activeSource === "upload") {
+      setUpdatedCoordinates([])
+    }
+  }, [activeSource])
 
   return (
     <Modal
