@@ -1,4 +1,4 @@
-import { Col, Modal, Row, notification, Tooltip, Button, Collapse, Upload, Image } from "antd"
+import { Col, Modal, Row, notification, Tooltip, Button, Collapse, Upload, Image, Alert } from "antd"
 import { useMemo, useState, useEffect } from "react"
 import axios from "axios"
 import { parseCookies } from "nookies"
@@ -224,7 +224,7 @@ export const DigitalInvitationModal = ({ isOpen, onCancel, onSubmit, event }) =>
   
   const modalTitle = useMemo(() => (
     <>
-      <Row>
+      <Row gutter={24}>
         <Col xs={24}>
           Invitación Digital&nbsp;
           <Tooltip title="Copiar link a portapapeles">
@@ -319,6 +319,17 @@ export const DigitalInvitationModal = ({ isOpen, onCancel, onSubmit, event }) =>
               </Row>
             </Collapse.Panel>
           </Collapse>
+        </Col>
+        <Col xs={8}></Col>
+        <Col align="center" xs={16}>
+          <Alert
+            showIcon
+            type="info"
+            message="Arrastra los elementos para reorganizarlos"
+            style={{
+              fontSize: "12px",          // Reducir el tamaño de la fuente
+              padding: "8px 16px",       // Reducir el padding
+               }}/>
         </Col>
       </Row>
     </>
