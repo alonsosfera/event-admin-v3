@@ -9,9 +9,8 @@ const Stage = dynamic(() => import("react-konva").then(mod => mod.Stage), { ssr:
 const Layer = dynamic(() => import("react-konva").then(mod => mod.Layer), { ssr: false })
 const InvitationConfigMapItemHost = dynamic(() => import("./invitation-config-map-item-host"), { ssr: false })
 
-export const InvitationConfigMapHost = ({ event, onPositionChange }) => {
+export const InvitationConfigMapHost = ({ event, onPositionChange, selectedInvitationUrl }) => {
   const { eventDate ,digitalInvitation } = event || {}
-
   const getDefaultItems = canvaMap => {
     return canvaMap?.coordinates.map(coordinate => ({
       ...coordinate, customConfig: JSON.parse(coordinate.customConfig)
@@ -83,7 +82,8 @@ export const InvitationConfigMapHost = ({ event, onPositionChange }) => {
   }, [ onPositionChange, onUpdateItemPosition, scaleFactor])
 
   const dragBoundFunc = (pos, item) => {
-    const textWidth = item.key.length * item.customConfig.fontSize * scaleFactor * 0.4
+    const text = item.label || item.key
+    const textWidth = text.length * item.customConfig.fontSize * scaleFactor * 0.4
     const textHeight = item.customConfig.fontSize * scaleFactor
     const newX = Math.max(0, Math.min(pos.x, displaySize.width - textWidth))
     const newY = Math.max(0, Math.min(pos.y, displaySize.height - textHeight))
@@ -108,7 +108,7 @@ export const InvitationConfigMapHost = ({ event, onPositionChange }) => {
       <Image
         preview={false}
         onLoad={handleImageLoad}
-        src={digitalInvitation.fileUrl}
+        src={selectedInvitationUrl ? selectedInvitationUrl : digitalInvitation.fileUrl}
         alt={digitalInvitation.fileName}
         style={{ maxWidth: "100%", height: "auto", display: "block" }} />
       <Stage
