@@ -81,9 +81,6 @@ export const DigitalInvitationModal = ({ isOpen, onCancel, onSubmit, event }) =>
   
     fetchAllInvitations()
   }, [])
-  
-  console.log(allInvitations);
-  
 
   const handlePositionChange = (key, newX, newY) => {
     setUpdatedCoordinates(prevCoordinates =>
