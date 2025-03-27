@@ -35,10 +35,34 @@ export const DigitalInvitationModal = ({ isOpen, onCancel, onSubmit, event }) =>
 
   const handleSelectInvitation = (id) => {
     const selected = allInvitations.find(inv => inv.id === id)
-    setSelectedInvitationId(id)
-    setSelectedInvitationUrl(selected?.fileUrl || null)
-    setActiveSource('select')
+  
+    if (selected) {
+      setSelectedInvitationId(id)
+      setSelectedInvitationUrl(selected.fileUrl || null)
+      setActiveSource('select')
+  
+      const coords = selected.canvaMap?.coordinates || []
+  
+      const newState = coords.reduce((acc, coordinate) => {
+        acc[coordinate.key] = coordinate.label || ""
+        return acc
+      }, {})
+      setState(newState)
+  
+      // Config personalizada (links, etc)
+      const newCustomConfig = coords.reduce((acc, coordinate) => {
+        const parsed = JSON.parse(coordinate.customConfig || "{}")
+        if (parsed.link) {
+          acc[coordinate.key] = parsed.link
+        }
+        return acc
+      }, {})
+      setCustomConfig(newCustomConfig)
+  
+      setUpdatedCoordinates(coords)
+    }
   }
+  
   
 
   useEffect(() => {
@@ -57,6 +81,8 @@ export const DigitalInvitationModal = ({ isOpen, onCancel, onSubmit, event }) =>
   
     fetchAllInvitations()
   }, [])
+  
+  console.log(allInvitations);
   
 
   const handlePositionChange = (key, newX, newY) => {
@@ -112,6 +138,10 @@ export const DigitalInvitationModal = ({ isOpen, onCancel, onSubmit, event }) =>
   
     try {
       let fileUrl = selectedInvitationUrl
+
+      if (!fileUrl) {
+        fileUrl = event?.digitalInvitation?.fileUrl
+      }
   
       if (activeSource === 'upload' && previewFile?.file) {
       const arrayBuffer = await fileToArrayBuffer(previewFile.file)
