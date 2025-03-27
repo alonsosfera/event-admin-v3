@@ -1,4 +1,4 @@
-import { Alert, Col, Row } from "antd"
+import { Alert, Col, Row, Image} from "antd"
 import { useEffect, useState } from "react"
 import dayjs from "dayjs"
 import JsPDF from "jspdf"
@@ -9,14 +9,27 @@ import { getInvitations, deleteInvitation, updateEvent, getRoomMapByEvent } from
 import { COORDINATES_BY_EVENT_TYPE, invitationPDF, sendInvitation } from "./helpers"
 import { useService } from "../../../hooks/use-service"
 import { useImageSize } from "react-image-size"
+import Link from "next/link"
 
 const EventDetails = ({ data, refetchEvent, fullSize, fetchedEvent }) => {
   const [state, setState] = useState({ isModalOpen: false })
   const [invitations, setInvitations] = useState([])
   const [dimensions] = useImageSize(data.digitalPass?.fileUrl)
+  const [openModalInvitation, setOpenModalInvitation] = useState(false)
+  const [showAlert, setShowAlert] = useState(false)
+  
   const isPassLoading = data.digitalPass && !dimensions
 
   const { designH = 540, designW = 960 } = COORDINATES_BY_EVENT_TYPE[fetchedEvent.type] || {}
+
+  const handleDigitalModalToggle = () => {
+    const coordinates = data?.digitalInvitation?.canvaMap?.coordinates || []
+    if (coordinates.length === 0) {
+      setShowAlert(true)
+    } else {
+      setOpenModalInvitation(true)
+    }
+  }
 
   useEffect(() => {
     if (data.id) {
@@ -108,14 +121,50 @@ const EventDetails = ({ data, refetchEvent, fullSize, fetchedEvent }) => {
       {fetchedEvent.name ? (
         <>
           <Row>
-            <Col span={24}><h1>Detalles de evento</h1></Col>
-            <Col span={12} lg={8}><b>Nombre: </b>{fetchedEvent.name}</Col>
-            <Col span={12} lg={8}><b>Salón: </b>{fetchedEvent.room_name}</Col>
-            <Col span={12} lg={8}><b>Fecha: </b>{dayjs(fetchedEvent.eventDate).format("DD/MM/YYYY hh:mm a")}</Col>
-            <Col span={12} lg={8}><b>Capacidad: </b>{fetchedEvent.assistance}</Col>
-            <Col span={12} lg={8}><b>Invitados: </b>{invitedGuests}</Col>
-            <Col span={12} lg={8}><b>Confirmados: </b>{addConfirmed}</Col>
-          </Row>
+            <Col xs={24} lg={14}><h1>Detalles de evento</h1>
+              <Row style={{ padding: "0", marginBottom: "10px", marginTop: "10px" }} >
+                <Col xs={24} sm={8} md={8}><b>Nombre: </b>{fetchedEvent.name}</Col>
+                <Col xs={24} sm={8} md={8}><b>Fecha: </b>{dayjs(fetchedEvent.eventDate).format("DD/MM/YYYY hh:mm a")}</Col>
+                <Col xs={24} sm={8} md={8}><b>Capacidad: </b>{fetchedEvent.assistance}</Col>
+              </Row>
+              <Row style={{ padding: "0" }} >               
+                <Col xs={24} sm={8} md={8}><b>Invitados: </b>{invitedGuests} </Col>
+                <Col xs={24} sm={8} md={8}><b>Confirmados: </b>{addConfirmed}</Col>
+              </Row>
+            </Col>
+              <Col xs={24} lg={10} style={{ textAlign: "center" }}>
+                <Row gutter={12} style={{ display: "flex", justifyContent: "center"}}>
+                  <Col sm={12}>
+                    <Image
+                      alt="pass"
+                      preview={false}
+                      placeholder={true}
+                      src={data.digitalPass.fileUrl}/>
+                    <Link
+                      href="#"
+                      passHref
+                      onClick={handleDigitalModalToggle}
+                      style={{ display: "block" }}
+                      >Editar pase</Link>
+                  </Col>
+                  <Col 
+                    onClick={handleDigitalModalToggle} sm={12}
+                    style={{ cursor: "pointer" }}>         
+                    <Image
+                      alt="pass"
+                      preview={false}
+                      placeholder={true}
+                      src={data.digitalInvitation.fileUrl}/>
+                    <Link
+                      href="#"
+                      passHref
+                      onClick={handleDigitalModalToggle}
+                      style={{ display: "block" }}
+                      >Editar invitación</Link>
+                  </Col>
+                </Row>
+              </Col>            
+            </Row>
           <Alert
             className="mobile-alert"
             message="Favor de utilizar un dispositivo de escritorio para crear invitaciones"
@@ -133,7 +182,11 @@ const EventDetails = ({ data, refetchEvent, fullSize, fetchedEvent }) => {
             onResendInvitation={onResendInvitation}
             onNew={onNew}
             isPassLoading={isPassLoading}
-            invitedGuests={invitedGuests} />
+            invitedGuests={invitedGuests}
+            handleDigitalModalToggle={handleDigitalModalToggle}
+            openModalInvitation={openModalInvitation}
+            setOpenModalInvitation={setOpenModalInvitation}
+            showAlert={showAlert} />
           {state.isModalOpen && (
             <NewInvitation
               event={fetchedEvent}
