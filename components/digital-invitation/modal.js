@@ -239,7 +239,7 @@ export const DigitalInvitationModal = ({ isOpen, onCancel, onSubmit, event }) =>
   
         <Col xs={24}>
           <Collapse style={{ marginTop: 8 }}>
-            <Collapse.Panel header="Seleccionar plantilla de invitación" key="1">
+            <Collapse.Panel header="Seleccionar diseño" key="1">
               <Upload
                 beforeUpload={file => {
                   const previewUrl = URL.createObjectURL(file)
@@ -252,7 +252,7 @@ export const DigitalInvitationModal = ({ isOpen, onCancel, onSubmit, event }) =>
                 accept="image/*"
               >
                 <Button type="primary" style={{ marginBottom: 16 }}>
-                  Subir nueva invitación
+                  Cargar nuevo diseño
                 </Button>
               </Upload>
 
