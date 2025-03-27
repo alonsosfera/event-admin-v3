@@ -7,6 +7,7 @@ import { CopyOutlined, LeftOutlined, RightOutlined } from "@ant-design/icons"
 import InvitationField from "./input-modal"
 import { InvitationConfigMapHost } from "./invitation-config-map-host"
 import { fileToArrayBuffer, arrayBufferToBase64 } from "../designs/helpers"
+import { InvitationConfigItem } from "../designs/invitations/invitation-config-item"
 
 export const DigitalInvitationModal = ({ isOpen, onCancel, onSubmit, event }) => {
   const translator = short()
@@ -19,6 +20,15 @@ export const DigitalInvitationModal = ({ isOpen, onCancel, onSubmit, event }) =>
   const [allInvitations, setAllInvitations] = useState([])
   const [previewFile, setPreviewFile] = useState(null)
   const [activeSource, setActiveSource] = useState(null)
+  const [scaleFactor, setScaleFactor] = useState(1)
+  const [newItems, setNewItems] = useState([])  
+
+  const handleImageLoad = (e) => {
+    const naturalWidth = e.target.naturalWidth;
+    const displayWidth = e.target.width;
+    const scale = displayWidth / naturalWidth;
+    setScaleFactor(scale);
+  };
 
   useEffect(() => {
     if (coordinates.length > 0) {
@@ -62,8 +72,6 @@ export const DigitalInvitationModal = ({ isOpen, onCancel, onSubmit, event }) =>
     }
   }
   
-  
-
   useEffect(() => {
     const fetchAllInvitations = async () => {
       try {
@@ -82,6 +90,19 @@ export const DigitalInvitationModal = ({ isOpen, onCancel, onSubmit, event }) =>
   }, [])
 
   const handlePositionChange = (key, newX, newY) => {
+    
+    newItems.length > 0 ?
+
+    setNewItems(prevCoordinates =>
+      prevCoordinates.map(coord =>
+        coord.key === key
+          ? { ...coord, coordinateX: newX, coordinateY: newY }
+          : coord
+      )
+    )
+
+    : 
+
     setUpdatedCoordinates(prevCoordinates =>
       prevCoordinates.map(coord =>
         coord.key === key
@@ -163,6 +184,7 @@ export const DigitalInvitationModal = ({ isOpen, onCancel, onSubmit, event }) =>
   
       const { room, room_name, ...eventToSave } = event
   
+     const finalCoordinates = newItems.length > 0 ? newItems : updatedCoordinates;
       await axios.put(`/api/events/update/${event.id}`, {
         ...eventToSave,
         digitalInvitation: {
@@ -170,11 +192,11 @@ export const DigitalInvitationModal = ({ isOpen, onCancel, onSubmit, event }) =>
           fileUrl,
           canvaMap: {
             ...event?.digitalInvitation?.canvaMap,
-            coordinates: updatedCoordinates.map(coordinate => {
+            coordinates: finalCoordinates.map(coordinate => {
               const coordCustomConfig = JSON.parse(coordinate.customConfig || "{}")
               return {
                 ...coordinate,
-                label: state[coordinate.key],
+                label: newItems.length > 0 ? coordinate.label : state[coordinate.key],
                 customConfig: JSON.stringify({
                   ...coordCustomConfig,
                   link: customConfig[coordinate.key] || coordCustomConfig.link || undefined
@@ -185,7 +207,7 @@ export const DigitalInvitationModal = ({ isOpen, onCancel, onSubmit, event }) =>
         }
       }, {
         headers: { Authorization: `Bearer ${token}` }
-      })
+      });
   
       handleCopyDigitalInviteToClipboard()
       onSubmit()
@@ -219,8 +241,6 @@ export const DigitalInvitationModal = ({ isOpen, onCancel, onSubmit, event }) =>
   const handleNext = () => {
     if (currentPage < totalPages - 1) setCurrentPage(prev => prev + 1)
   }
-
-
   
   const modalTitle = useMemo(() => (
     <>
@@ -272,6 +292,7 @@ export const DigitalInvitationModal = ({ isOpen, onCancel, onSubmit, event }) =>
                     <Image
                       preview={false}
                       src={previewFile.previewUrl}
+                      onLoad={handleImageLoad}
                       alt="Vista previa subida"
                       onClick={() => {
                         setActiveSource('upload')
@@ -293,6 +314,7 @@ export const DigitalInvitationModal = ({ isOpen, onCancel, onSubmit, event }) =>
                     <Col key={invite.id} xs={12} sm={6} md={4}>
                       <Image
                         onClick={() => handleSelectInvitation(invite.id)}
+                        onLoad={handleImageLoad}
                         preview={false}
                         alt={invite.fileName}
                         src={invite.fileUrl}
@@ -348,6 +370,41 @@ export const DigitalInvitationModal = ({ isOpen, onCancel, onSubmit, event }) =>
     }
   }, [activeSource])
 
+  const handleAddItem = (newItem) => {
+  console.log("newItem recibido:", newItem);
+
+  const itemExists = newItems.some(item => item.key === newItem.key);
+
+  if (itemExists) {
+    notification.warning({
+      message: "Este elemento ya existe",
+      description: `El texto "${newItem.key}" ya ha sido agregado. No se puede repetir.`,
+      placement: "topRight",
+    });
+    return;
+  }
+
+  const customConfigString = JSON.stringify(newItem.customConfig || {
+    fontSize: 12,
+    fontColor: "000000", 
+    fontFamily: "Merienda, cursive"
+  });
+
+  setNewItems(prevItems => {
+    const updatedItems = [
+      ...prevItems,
+      {
+        key: newItem.key,
+        coordinateX: 0,
+        coordinateY: 0,
+        label: newItem.key,
+        customConfig: customConfigString,
+      }
+    ];
+    return updatedItems;
+  });
+};
+  
   return (
     <Modal
       centered
@@ -359,7 +416,8 @@ export const DigitalInvitationModal = ({ isOpen, onCancel, onSubmit, event }) =>
       confirmLoading={isSaving}
       onOk={handleSubmit}>
       <Row gutter={24}>
-        <Col span={8}>
+        {updatedCoordinates.length > 0 ? (
+          <Col span={8}>
           {updatedCoordinates.sort(sortCoordinates).map(coordinate => (
             <InvitationField
               key={coordinate.key}
@@ -373,7 +431,16 @@ export const DigitalInvitationModal = ({ isOpen, onCancel, onSubmit, event }) =>
               onChange={event => onValueChange(event, coordinate.key)}
               onLinkChange={link => onLinkChange(coordinate.key, link)} />
             ))}
-        </Col>
+          </Col>
+        ) : (
+          <Col span={8}>
+            <InvitationConfigItem
+              onSubmit={handleAddItem}
+              scaleFactor={scaleFactor}
+              selectedFile={event?.digitalInvitation}
+            />
+          </Col> 
+          )}        
         <Col span={16}>
           <InvitationConfigMapHost
             selectedInvitationUrl={
@@ -389,7 +456,7 @@ export const DigitalInvitationModal = ({ isOpen, onCancel, onSubmit, event }) =>
                 ...event.digitalInvitation,
                 canvaMap: {
                   ...event.digitalInvitation?.canvaMap,
-                  coordinates: updatedCoordinates
+                  coordinates: newItems.length > 0 ? newItems : updatedCoordinates
                 }
               }
             }}
