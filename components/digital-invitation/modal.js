@@ -235,10 +235,14 @@ export const DigitalInvitationModal = ({ isOpen, onCancel, onSubmit, event }) =>
   const handleNext = () => {
     if (currentPage < totalPages - 1) setCurrentPage(prev => prev + 1)
   }
+
+  const resetCoordinates = () => {
+    setUpdatedCoordinates([])
+  }
   
   const modalTitle = useMemo(() => (
     <>
-      <Row gutter={24}>
+      <Row gutter={[24, 8]}>
         <Col xs={24}>
           Invitación Digital&nbsp;
           <Tooltip title="Copiar link a portapapeles">
@@ -334,7 +338,14 @@ export const DigitalInvitationModal = ({ isOpen, onCancel, onSubmit, event }) =>
             </Collapse.Panel>
           </Collapse>
         </Col>
-        <Col xs={8}></Col>
+        <Col align="center" xs={8}>
+        {updatedCoordinates.length > 0 &&
+          <Button
+            type="primary" danger
+            onClick={resetCoordinates}>
+            Borrar elementos
+          </Button>}
+        </Col>
         <Col align="center" xs={16}>
           <Alert
             showIcon
@@ -396,10 +407,6 @@ export const DigitalInvitationModal = ({ isOpen, onCancel, onSubmit, event }) =>
     return updatedItems;
   });
 };
-
-  const resetCoordinates = () => {
-    setUpdatedCoordinates([])
-  }
   
   const handleScaleFactorChange = (newScaleFactor) => {
     setScaleFactor(newScaleFactor)
@@ -431,13 +438,6 @@ export const DigitalInvitationModal = ({ isOpen, onCancel, onSubmit, event }) =>
               onChange={event => onValueChange(event, coordinate.key)}
               onLinkChange={link => onLinkChange(coordinate.key, link)} />
             ))}
-            <Col align="center">
-              <Button
-                type="primary"
-                onClick={resetCoordinates}>
-                Borrar elementos
-              </Button>
-            </Col>
           </Col>
         ) : (
           <Col span={8}>
