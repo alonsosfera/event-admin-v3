@@ -50,6 +50,7 @@ export const DigitalInvitationModal = ({ isOpen, onCancel, onSubmit, event }) =>
       setSelectedInvitationId(id)
       setSelectedInvitationUrl(selected.fileUrl || null)
       setActiveSource('select')
+      setNewItems([])
   
       const coords = selected.canvaMap?.coordinates || []
   
@@ -404,6 +405,10 @@ export const DigitalInvitationModal = ({ isOpen, onCancel, onSubmit, event }) =>
     return updatedItems;
   });
 };
+
+  const resetCoordinates = () => {
+    setUpdatedCoordinates([])
+  }
   
   return (
     <Modal
@@ -431,6 +436,13 @@ export const DigitalInvitationModal = ({ isOpen, onCancel, onSubmit, event }) =>
               onChange={event => onValueChange(event, coordinate.key)}
               onLinkChange={link => onLinkChange(coordinate.key, link)} />
             ))}
+            <Col align="center">
+              <Button
+                type="primary"
+                onClick={resetCoordinates}>
+                Resetear campos
+              </Button>
+            </Col>
           </Col>
         ) : (
           <Col span={8}>
