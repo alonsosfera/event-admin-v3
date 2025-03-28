@@ -20,15 +20,8 @@ export const DigitalInvitationModal = ({ isOpen, onCancel, onSubmit, event }) =>
   const [allInvitations, setAllInvitations] = useState([])
   const [previewFile, setPreviewFile] = useState(null)
   const [activeSource, setActiveSource] = useState(null)
-  const [scaleFactor, setScaleFactor] = useState(1)
   const [newItems, setNewItems] = useState([])  
-
-  const handleImageLoad = (e) => {
-    const naturalWidth = e.target.naturalWidth;
-    const displayWidth = e.target.width;
-    const scale = displayWidth / naturalWidth;
-    setScaleFactor(scale);
-  };
+  const [scaleFactor, setScaleFactor] = useState(1)
 
   useEffect(() => {
     if (coordinates.length > 0) {
@@ -293,7 +286,6 @@ export const DigitalInvitationModal = ({ isOpen, onCancel, onSubmit, event }) =>
                     <Image
                       preview={false}
                       src={previewFile.previewUrl}
-                      onLoad={handleImageLoad}
                       alt="Vista previa subida"
                       onClick={() => {
                         setActiveSource('upload')
@@ -315,7 +307,6 @@ export const DigitalInvitationModal = ({ isOpen, onCancel, onSubmit, event }) =>
                     <Col key={invite.id} xs={12} sm={6} md={4}>
                       <Image
                         onClick={() => handleSelectInvitation(invite.id)}
-                        onLoad={handleImageLoad}
                         preview={false}
                         alt={invite.fileName}
                         src={invite.fileUrl}
@@ -396,8 +387,8 @@ export const DigitalInvitationModal = ({ isOpen, onCancel, onSubmit, event }) =>
       ...prevItems,
       {
         key: newItem.key,
-        coordinateX: 0,
-        coordinateY: 0,
+        coordinateX: 200,
+        coordinateY: 200,
         label: newItem.key,
         customConfig: customConfigString,
       }
@@ -408,6 +399,10 @@ export const DigitalInvitationModal = ({ isOpen, onCancel, onSubmit, event }) =>
 
   const resetCoordinates = () => {
     setUpdatedCoordinates([])
+  }
+  
+  const handleScaleFactorChange = (newScaleFactor) => {
+    setScaleFactor(newScaleFactor)
   }
   
   return (
@@ -440,7 +435,7 @@ export const DigitalInvitationModal = ({ isOpen, onCancel, onSubmit, event }) =>
               <Button
                 type="primary"
                 onClick={resetCoordinates}>
-                Resetear campos
+                Borrar elementos
               </Button>
             </Col>
           </Col>
@@ -455,6 +450,7 @@ export const DigitalInvitationModal = ({ isOpen, onCancel, onSubmit, event }) =>
           )}        
         <Col span={16}>
           <InvitationConfigMapHost
+            onScaleFactorChange={handleScaleFactorChange}
             selectedInvitationUrl={
               activeSource === 'upload'
                 ? previewFile?.previewUrl
