@@ -247,7 +247,7 @@ export const DigitalInvitationModal = ({ isOpen, onCancel, onSubmit, event }) =>
 
       <Col xs={8} style={{ textAlign: "center" }}>
         {updatedCoordinates.length > 0 && (
-          <Button danger onClick={() => setUpdatedCoordinates([])}>Borrar elementos</Button>
+          <Button type="primary" danger onClick={() => setUpdatedCoordinates([])}>Borrar elementos</Button>
         )}
       </Col>
 
