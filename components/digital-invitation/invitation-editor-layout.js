@@ -3,24 +3,9 @@ import { EditableFieldsList } from "./editable-fields-list"
 import { InvitationConfigItem } from "../designs/invitations/invitation-config-item"
 import { InvitationConfigMapHost } from "./invitation-config-map-host"
 
-export const InvitationEditorLayout = ({
-  updatedCoordinates,
-  newItems,
-  state,
-  customConfig,
-  onValueChange,
-  onLinkChange,
-  handleAddItem,
-  scaleFactor,
-  selectedFile,
-  selectedInvitationUrl,
-  previewFile,
-  activeSource,
-  event,
-  onScaleFactorChange,
-  onPositionChange,
-  onDeleteItem
-}) => {
+export const InvitationEditorLayout = ({ updatedCoordinates, newItems, state, customConfig, onValueChange, onLinkChange, handleAddItem,
+   scaleFactor, selectedFile, selectedInvitationUrl, previewFile, activeSource, event, onScaleFactorChange, onPositionChange, onDeleteItem }) =>  {
+  
   const finalCoordinates = newItems.length > 0 ? newItems : updatedCoordinates
 
   return (

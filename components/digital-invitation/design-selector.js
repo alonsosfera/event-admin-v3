@@ -3,19 +3,8 @@ import { LeftOutlined, RightOutlined } from "@ant-design/icons"
 
 const pageSize = 12
 
-export const DesignSelector = ({
-  previewFile,
-  setPreviewFile,
-  activeSource,
-  setActiveSource,
-  selectedInvitationId,
-  setSelectedInvitationId,
-  setSelectedInvitationUrl,
-  allInvitations,
-  handleSelectInvitation,
-  currentPage,
-  setCurrentPage
-}) => {
+export const DesignSelector = ({ previewFile, setPreviewFile, activeSource, setActiveSource, selectedInvitationId, setSelectedInvitationId, 
+  setSelectedInvitationUrl, allInvitations, handleSelectInvitation, currentPage, setCurrentPage }) => {
   const totalPages = Math.ceil(allInvitations.length / pageSize)
 
   const paginatedInvitations = allInvitations.slice(
