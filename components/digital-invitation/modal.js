@@ -146,7 +146,7 @@ export const DigitalInvitationModal = ({ isOpen, onCancel, onSubmit, event }) =>
   const handleCopyLink = () => {
     navigator.clipboard.writeText(`${process.env.NEXT_PUBLIC_APP_URI}/digital/e-${translator.fromUUID(event.id)}`)
     notification.info({
-      message: "Link copiado",
+      message: "Link de invitación digital copíado al portapapeles",
       placement: "topRight"
     })
   }
