@@ -8,7 +8,7 @@ import { useSession } from "next-auth/react"
 
 const InvitationsTable = ({
   data, onNew, onDownload, onSingleDownload, loadingRoomMap, roomMapRefetch, roomMapData, refetchEvent,
-  onResendInvitation, remove, event, invitedGuests, handleDigitalModalToggle, openModalInvitation, setOpenModalInvitation, showAlert
+  onResendInvitation, remove, event, invitedGuests, openModalInvitation, setOpenModalInvitation, showAlert, onCancelInvitationModal
 }) => {
   const [isInviteButtonDisabled, setIsInviteButtonDisabled] = useState(false)
   const [openEditMapModal, setOpenEditMapModal] = useState(false)
@@ -137,7 +137,7 @@ const InvitationsTable = ({
       <DigitalInvitationModal
         event={event}
         isOpen={openModalInvitation}
-        onCancel={() => setOpenModalInvitation(false)}
+        onCancel={onCancelInvitationModal}
         onSubmit={async () => {
           await refetchEvent()
           setOpenModalInvitation(false)

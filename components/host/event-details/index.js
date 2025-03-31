@@ -17,6 +17,7 @@ const EventDetails = ({ data, refetchEvent, fullSize, fetchedEvent }) => {
   const [dimensions] = useImageSize(data.digitalPass?.fileUrl)
   const [openModalInvitation, setOpenModalInvitation] = useState(false)
   const [showAlert, setShowAlert] = useState(false)
+  const [originalEvent, setOriginalEvent] = useState(null)
   
   const isPassLoading = data.digitalPass && !dimensions
 
@@ -27,8 +28,17 @@ const EventDetails = ({ data, refetchEvent, fullSize, fetchedEvent }) => {
     if (digitalInvitation.length === 0) {
       setShowAlert(true)
     } else {
+      setOriginalEvent(fetchedEvent)
       setOpenModalInvitation(true)
     }
+  }
+
+  const onCancelInvitationModal = () => {
+    if (originalEvent) {
+      refetchEvent(originalEvent)
+      setOriginalEvent(null)
+    }
+    setOpenModalInvitation(false)
   }
 
   useEffect(() => {
@@ -171,6 +181,8 @@ const EventDetails = ({ data, refetchEvent, fullSize, fetchedEvent }) => {
             type="info" />
           <InvitationsTable
             event={fetchedEvent}
+            originalEvent={originalEvent}
+            onCancelInvitationModal={onCancelInvitationModal}
             remove={onRemove}
             data={invitations}
             roomMapData={roomMapData}
