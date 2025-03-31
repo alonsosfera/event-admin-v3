@@ -161,7 +161,7 @@ const EventDetails = ({ data, refetchEvent, fullSize, fetchedEvent }) => {
                     onClick={handleDigitalModalToggle} sm={12}
                     style={{ cursor: "pointer" }}>         
                     <Image
-                      alt="pass"
+                      alt="invitation"
                       preview={false}
                       placeholder={true}
                       src={data.digitalInvitation.fileUrl}/>

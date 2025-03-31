@@ -269,6 +269,7 @@ export const DigitalInvitationModal = ({ isOpen, onCancel, onSubmit, event }) =>
       title={modalTitle}
       open={isOpen}
       onCancel={onCancel}
+      cancelText="Cancelar"
       okText="Guardar"
       confirmLoading={isSaving}
       onOk={handleSubmit}
