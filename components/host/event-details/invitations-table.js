@@ -138,7 +138,10 @@ const InvitationsTable = ({
         event={event}
         isOpen={openModalInvitation}
         onCancel={() => setOpenModalInvitation(false)}
-        onSubmit={() => setOpenModalInvitation(false)} />
+        onSubmit={async () => {
+          await refetchEvent()
+          setOpenModalInvitation(false)
+        }} />
       <EditRoomMap
         event={event}
         eventId={event.id}

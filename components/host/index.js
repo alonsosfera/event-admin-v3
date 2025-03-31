@@ -80,8 +80,13 @@ export const HostDashboard = ({ eventId }) => {
         isLoading={state.isLoading}
         data={eventData || event}
         fetchedEvent={event}
-        refetchEvent={event => setEvent(event)}
-        fullSize={hideEventsList} />
+        refetchEvent={async () => {
+          const res = await refetchEvent({ eventId: event.id })
+          setEvent(res)
+          return res
+        }}
+        fullSize={hideEventsList}
+      />
     </Row>
   )
 }
