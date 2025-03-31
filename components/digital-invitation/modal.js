@@ -241,6 +241,7 @@ export const DigitalInvitationModal = ({ isOpen, onCancel, onSubmit, event }) =>
           handleSelectInvitation={handleSelectInvitation}
           currentPage={currentPage}
           setCurrentPage={setCurrentPage}
+          setUpdatedCoordinates={setUpdatedCoordinates}
         />
       </Col>
 

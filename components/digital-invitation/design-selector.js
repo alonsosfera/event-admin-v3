@@ -4,7 +4,7 @@ import { LeftOutlined, RightOutlined } from "@ant-design/icons"
 const pageSize = 12
 
 export const DesignSelector = ({ previewFile, setPreviewFile, activeSource, setActiveSource, selectedInvitationId, setSelectedInvitationId, 
-  setSelectedInvitationUrl, allInvitations, handleSelectInvitation, currentPage, setCurrentPage }) => {
+  setSelectedInvitationUrl, allInvitations, handleSelectInvitation, currentPage, setCurrentPage, setUpdatedCoordinates }) => {
   const totalPages = Math.ceil(allInvitations.length / pageSize)
 
   const paginatedInvitations = allInvitations.slice(
@@ -15,6 +15,7 @@ export const DesignSelector = ({ previewFile, setPreviewFile, activeSource, setA
   const handleUploadPreview = (file) => {
     const previewUrl = URL.createObjectURL(file)
     setPreviewFile({ file, previewUrl })
+    setUpdatedCoordinates([])
     setActiveSource("upload")
     return false
   }
@@ -60,6 +61,7 @@ export const DesignSelector = ({ previewFile, setPreviewFile, activeSource, setA
                     setActiveSource("upload")
                     setSelectedInvitationId(null)
                     setSelectedInvitationUrl(null)
+                    setUpdatedCoordinates([])
                   }}
                   style={{
                     objectFit: "contain",
