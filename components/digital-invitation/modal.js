@@ -256,7 +256,7 @@ export const DigitalInvitationModal = ({ isOpen, onCancel, onSubmit, event }) =>
           showIcon
           type="info"
           message="Arrastra los elementos para reorganizarlos"
-          style={{ fontSize: "12px", padding: "8px 16px" }}
+          style={{ fontSize: "12px", padding: "8px 16px", marginBottom: "4px" }}
         />
       </Col>
     </Row>
