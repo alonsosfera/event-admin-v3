@@ -260,14 +260,7 @@ export const DigitalInvitationModal = ({ isOpen, onCancel, onSubmit, event }) =>
         />
       </Col>
     </Row>
-  ), [
-    previewFile,
-    activeSource,
-    selectedInvitationId,
-    allInvitations,
-    currentPage,
-    updatedCoordinates
-  ])
+  ), [ previewFile, activeSource, selectedInvitationId, allInvitations, currentPage, updatedCoordinates ])
 
   return (
     <Modal
