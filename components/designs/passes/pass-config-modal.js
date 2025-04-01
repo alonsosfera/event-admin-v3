@@ -10,42 +10,13 @@ const PassConfigMap = dynamic(() => import("./pass-config-map"), {
 })
 
 export const PassConfigModal = ({ onClose, onSuccess, selectedFile }) => {
-  if (!selectedFile) return null
 
   const [scaleFactor, setScaleFactor] = useState(1)
   const [fileName, setFileName] = useState(selectedFile.fileName)
   const [loading, setLoading] = useState(false)
-
-  const generalCustomConfig = useMemo(() => {
-    if (selectedFile?.canvaMap?.coordinates?.length < 1) return {}
-    const itemWithCustomConfig = selectedFile?.canvaMap?.coordinates?.find(coordinate => {
-      const currCustomConfig = JSON.parse(coordinate?.customConfig || "{}")
-      return currCustomConfig.fontSize && currCustomConfig.fontColor
-    })
-    return JSON.parse(itemWithCustomConfig?.customConfig || "{}")
-  }, [selectedFile])
-
   const [fontColor, setFontColor] = useState(generalCustomConfig.fontColor || "#000")
   const [fontSize, setFontSize] = useState(generalCustomConfig.fontSize || 30)
-
-  const qrSizeFromConfig = useMemo(() => {
-    if (!selectedFile?.canvaMap?.coordinates?.length) return 250
-    const qrItem = selectedFile.canvaMap.coordinates.find(item => item.key === "QR_CODE")
-    return qrItem ? JSON.parse(qrItem.customConfig || "{}").qrSize || 250 : 250
-  }, [selectedFile])
-
   const [qrSize, setQrSize] = useState(qrSizeFromConfig)
-
-  const defaultItems = [
-    { key: "Nombre del evento", coordinateX: 80, coordinateY: 15, customConfig: { fontColor, fontSize } },
-    { key: "Nombre de invitado", coordinateX: 80, coordinateY: 60, customConfig: { fontColor, fontSize } },
-    { key: "# de invitados", coordinateX: 80, coordinateY: 105, customConfig: { fontColor, fontSize } },
-    { key: "Mesa", coordinateX: 80, coordinateY: 150, customConfig: { fontColor, fontSize } },
-    { key: "Fecha", coordinateX: 80, coordinateY: 195, customConfig: { fontColor, fontSize } },
-    { key: "Hora", coordinateX: 80, coordinateY: 240, customConfig: { fontColor, fontSize } },
-    { key: "QR_CODE", coordinateX: 250, coordinateY: 150, customConfig: { qrSize } }
-  ]
-
   const [items, setItems] = useState(() => {
     if (selectedFile?.canvaMap?.coordinates?.length) {
       return selectedFile.canvaMap.coordinates.map(coordinate => {
@@ -64,6 +35,34 @@ export const PassConfigModal = ({ onClose, onSuccess, selectedFile }) => {
     return defaultItems
   })
 
+  const generalCustomConfig = useMemo(() => {
+    if (selectedFile?.canvaMap?.coordinates?.length < 1) return {}
+    const itemWithCustomConfig = selectedFile?.canvaMap?.coordinates?.find(coordinate => {
+      const currCustomConfig = JSON.parse(coordinate?.customConfig || "{}")
+      return currCustomConfig.fontSize && currCustomConfig.fontColor
+    })
+    return JSON.parse(itemWithCustomConfig?.customConfig || "{}")
+  }, [selectedFile])
+
+  
+
+  const qrSizeFromConfig = useMemo(() => {
+    if (!selectedFile?.canvaMap?.coordinates?.length) return 250
+    const qrItem = selectedFile.canvaMap.coordinates.find(item => item.key === "QR_CODE")
+    return qrItem ? JSON.parse(qrItem.customConfig || "{}").qrSize || 250 : 250
+  }, [selectedFile])
+
+
+  const defaultItems = [
+    { key: "Nombre del evento", coordinateX: 80, coordinateY: 15, customConfig: { fontColor, fontSize } },
+    { key: "Nombre de invitado", coordinateX: 80, coordinateY: 60, customConfig: { fontColor, fontSize } },
+    { key: "# de invitados", coordinateX: 80, coordinateY: 105, customConfig: { fontColor, fontSize } },
+    { key: "Mesa", coordinateX: 80, coordinateY: 150, customConfig: { fontColor, fontSize } },
+    { key: "Fecha", coordinateX: 80, coordinateY: 195, customConfig: { fontColor, fontSize } },
+    { key: "Hora", coordinateX: 80, coordinateY: 240, customConfig: { fontColor, fontSize } },
+    { key: "QR_CODE", coordinateX: 250, coordinateY: 150, customConfig: { qrSize } }
+  ]
+
   useEffect(() => {
     setItems(prevItems =>
       prevItems.map(item => ({
@@ -77,6 +76,8 @@ export const PassConfigModal = ({ onClose, onSuccess, selectedFile }) => {
       }))
     )
   }, [fontColor, fontSize, qrSize])
+
+  if (!selectedFile) return null
 
   const onSave = async () => {
     setLoading(true)
