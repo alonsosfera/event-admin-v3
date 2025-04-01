@@ -36,7 +36,7 @@ export const InvitationConfigItem = ({ scaleFactor, selectedFile, onSubmit }) =>
       initialValues={{ fileName: selectedFile.fileName }}>
       <Form.Item
         name="key"
-        label="Nombre del campo"
+        label="Valor del elemento"
         rules={[{ required: true }]}>
         <Input placeholder="Ej. Titulo, Padres, Iglesia, etc" />
       </Form.Item>

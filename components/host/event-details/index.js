@@ -17,6 +17,7 @@ const EventDetails = ({ data, refetchEvent, fullSize, fetchedEvent }) => {
   const [dimensions] = useImageSize(data.digitalPass?.fileUrl)
   const [openModalInvitation, setOpenModalInvitation] = useState(false)
   const [showAlert, setShowAlert] = useState(false)
+  const [originalEvent, setOriginalEvent] = useState(null)
   
   const isPassLoading = data.digitalPass && !dimensions
 
@@ -27,8 +28,17 @@ const EventDetails = ({ data, refetchEvent, fullSize, fetchedEvent }) => {
     if (digitalInvitation.length === 0) {
       setShowAlert(true)
     } else {
+      setOriginalEvent(fetchedEvent)
       setOpenModalInvitation(true)
     }
+  }
+
+  const onCancelInvitationModal = () => {
+    if (originalEvent) {
+      refetchEvent(originalEvent)
+      setOriginalEvent(null)
+    }
+    setOpenModalInvitation(false)
   }
 
   useEffect(() => {
@@ -132,7 +142,7 @@ const EventDetails = ({ data, refetchEvent, fullSize, fetchedEvent }) => {
                 <Col xs={24} sm={8} md={8}><b>Confirmados: </b>{addConfirmed}</Col>
               </Row>
             </Col>
-              <Col xs={24} lg={10} style={{ textAlign: "center" }}>
+              <Col xs={0} sm={24} lg={10} style={{ textAlign: "center" }}>
                 <Row gutter={12} style={{ display: "flex", justifyContent: "center"}}>
                   <Col sm={12}>
                     <Image
@@ -151,7 +161,7 @@ const EventDetails = ({ data, refetchEvent, fullSize, fetchedEvent }) => {
                     onClick={handleDigitalModalToggle} sm={12}
                     style={{ cursor: "pointer" }}>         
                     <Image
-                      alt="pass"
+                      alt="invitation"
                       preview={false}
                       placeholder={true}
                       src={data.digitalInvitation.fileUrl}/>
@@ -167,10 +177,12 @@ const EventDetails = ({ data, refetchEvent, fullSize, fetchedEvent }) => {
             </Row>
           <Alert
             className="mobile-alert"
-            message="Favor de utilizar un dispositivo de escritorio para crear invitaciones"
+            message="Favor de utilizar un dispositivo de escritorio para editar los pases e invitaciones digitales"
             type="info" />
           <InvitationsTable
             event={fetchedEvent}
+            originalEvent={originalEvent}
+            onCancelInvitationModal={onCancelInvitationModal}
             remove={onRemove}
             data={invitations}
             roomMapData={roomMapData}
