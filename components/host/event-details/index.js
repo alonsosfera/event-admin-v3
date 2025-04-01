@@ -10,12 +10,14 @@ import { COORDINATES_BY_EVENT_TYPE, invitationPDF, sendInvitation } from "./help
 import { useService } from "../../../hooks/use-service"
 import { useImageSize } from "react-image-size"
 import Link from "next/link"
+import { DigitalPassModal } from "../../digital-pass/modal"
 
 const EventDetails = ({ data, refetchEvent, fullSize, fetchedEvent }) => {
   const [state, setState] = useState({ isModalOpen: false })
   const [invitations, setInvitations] = useState([])
   const [dimensions] = useImageSize(data.digitalPass?.fileUrl)
   const [openModalInvitation, setOpenModalInvitation] = useState(false)
+  const [openModalPass, setOpenModalPass] = useState(false)
   const [showAlert, setShowAlert] = useState(false)
   const [originalEvent, setOriginalEvent] = useState(null)
   
@@ -33,12 +35,30 @@ const EventDetails = ({ data, refetchEvent, fullSize, fetchedEvent }) => {
     }
   }
 
+  const handlePassModalToggle = () => {
+    const digitalPass = data?.digitalPass
+    if (!digitalPass?.fileUrl) {
+      setShowAlert(true)
+    } else {
+      setOriginalEvent(fetchedEvent)
+      setOpenModalPass(true)
+    }
+  }
+
   const onCancelInvitationModal = () => {
     if (originalEvent) {
       refetchEvent(originalEvent)
       setOriginalEvent(null)
     }
     setOpenModalInvitation(false)
+  }
+
+  const onCancelPassModal = () => {
+    if (originalEvent) {
+      refetchEvent(originalEvent)
+      setOriginalEvent(null)
+    }
+    setOpenModalPass(false)
   }
 
   useEffect(() => {
@@ -149,11 +169,13 @@ const EventDetails = ({ data, refetchEvent, fullSize, fetchedEvent }) => {
                       alt="pass"
                       preview={false}
                       placeholder={true}
-                      src={data.digitalPass.fileUrl}/>
+                      src={data.digitalPass.fileUrl}
+                      onClick={handlePassModalToggle}
+                      style={{ cursor: "pointer" }}/>
                     <Link
                       href="#"
                       passHref
-                      onClick={handleDigitalModalToggle}
+                      onClick={handlePassModalToggle}
                       style={{ display: "block" }}
                       >Editar pase</Link>
                   </Col>
@@ -211,6 +233,15 @@ const EventDetails = ({ data, refetchEvent, fullSize, fetchedEvent }) => {
               refetchInvitations={refetchInvitations}
               invitedGuests={invitedGuests} />
           )}
+          <DigitalPassModal
+            isOpen={openModalPass}
+            onCancel={onCancelPassModal}
+            onSubmit={() => {
+              setOpenModalPass(false)
+              refetchEvent()
+            }}
+            event={fetchedEvent}
+          />
         </>
       ) : (
         <Alert message="Selecciona un evento" />
