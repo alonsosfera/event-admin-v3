@@ -26,19 +26,30 @@ export const DigitalInvitationModal = ({ isOpen, onCancel, onSubmit, event }) =>
   const [activeSource, setActiveSource] = useState(null)
   const [scaleFactor, setScaleFactor] = useState(1)
   const [currentPage, setCurrentPage] = useState(0)
+  const [hasInitialized, setHasInitialized] = useState(false)
 
   const coordinates = event?.digitalInvitation?.canvaMap?.coordinates || []
 
   useEffect(() => {
-    setUpdatedCoordinates(coordinates)
-    if (coordinates.length > 0) {
-      const initialState = coordinates.reduce((acc, c) => {
-        acc[c.key] = c.label || ""
-        return acc
-      }, {})
-      setState(initialState)
+    if (!hasInitialized && isOpen) {
+      if (coordinates.length > 0) {
+        setUpdatedCoordinates(coordinates)
+      } else {
+        setUpdatedCoordinates(defaultItems)
+      }
+      setHasInitialized(true)
     }
-  }, [coordinates])
+  }, [coordinates, isOpen, hasInitialized])
+
+  useEffect(() => {
+    if (!isOpen) {
+      setHasInitialized(false)
+      setSelectedInvitationId(null)
+      setSelectedInvitationUrl(null)
+      setPreviewFile(null)
+      setActiveSource(null)
+    }
+  }, [isOpen])
 
   useEffect(() => {
     const fetchAllInvitations = async () => {
