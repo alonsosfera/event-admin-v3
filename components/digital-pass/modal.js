@@ -171,6 +171,28 @@ export const DigitalPassModal = ({ isOpen, onCancel, onSubmit, event }) => {
     }
   }
 
+  useEffect(() => {
+    if (activeSource === "upload") {
+      setUpdatedCoordinates(defaultItems(event, fontColor, fontSize).map(item => {
+        if (item.key === "QR_CODE") {
+          return {
+            ...item,
+            customConfig: JSON.stringify({
+              qrSize
+            })
+          }
+        }
+        return {
+          ...item,
+          customConfig: JSON.stringify({
+            fontColor,
+            fontSize
+          })
+        }
+      }))
+    }
+  }, [activeSource])
+
   const handlePositionChange = (key, newX, newY) => {
     setUpdatedCoordinates(prev =>
       prev.map(c => (c.key === key ? { ...c, coordinateX: newX, coordinateY: newY } : c))
