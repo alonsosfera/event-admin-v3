@@ -22,6 +22,7 @@ export const DigitalInvitationModal = ({ isOpen, onCancel, onSubmit, event }) =>
   const [activeSource, setActiveSource] = useState(null)
   const [newItems, setNewItems] = useState([])  
   const [scaleFactor, setScaleFactor] = useState(1)
+  const [deletedKeys, setDeletedKeys] = useState([])
 
   useEffect(() => {
     if (coordinates.length > 0) {
@@ -467,6 +468,12 @@ export const DigitalInvitationModal = ({ isOpen, onCancel, onSubmit, event }) =>
                   coordinates: newItems.length > 0 ? newItems : updatedCoordinates
                 }
               }
+            }}
+            onDeleteItem={item => {
+              setDeletedKeys(prev => [...prev, item.key])
+              newItems.length > 0
+                ? setNewItems(prev => prev.filter(i => i.key !== item.key))
+                : setUpdatedCoordinates(prev => prev.filter(i => i.key !== item.key))
             }}
             onPositionChange={handlePositionChange} />
         </Col>
