@@ -9,7 +9,7 @@ const Stage = dynamic(() => import("react-konva").then(mod => mod.Stage), { ssr:
 const Layer = dynamic(() => import("react-konva").then(mod => mod.Layer), { ssr: false })
 const InvitationConfigMapItemHost = dynamic(() => import("./invitation-config-map-item-host"), { ssr: false })
 
-export const InvitationConfigMapHost = ({ event, onPositionChange, selectedInvitationUrl }) => {
+export const InvitationConfigMapHost = ({ event, onPositionChange, selectedInvitationUrl, onScaleFactorChange, onDeleteItem }) => {
   const { eventDate ,digitalInvitation } = event || {}
   const getDefaultItems = canvaMap => {
     return canvaMap?.coordinates.map(coordinate => ({
@@ -37,8 +37,14 @@ export const InvitationConfigMapHost = ({ event, onPositionChange, selectedInvit
     const naturalWidth = e.target.naturalWidth
     const displayWidth = e.target.width
     const displayHeight = e.target.height
+    const scale = displayWidth / naturalWidth
+
     setDisplaySize({ width: displayWidth, height: displayHeight })
-    setScaleFactor(displayWidth / naturalWidth)
+    setScaleFactor(scale)
+
+    if (onScaleFactorChange) {
+      onScaleFactorChange(scale)
+    }
   }
 
   const onDragMove = useCallback(e => {
@@ -57,10 +63,6 @@ export const InvitationConfigMapHost = ({ event, onPositionChange, selectedInvit
 
   const onUpdateItemPosition = (item, coordinates) => {
     setItems(prevState => prevState.map(i => i.key === item.key ? { ...i, ...coordinates } : i))
-  }
-
-  const onDeleteItem = item => {
-    setItems(prevState => prevState.filter(i => i.key !== item.key))
   }
 
   const onDragEnd = useCallback((event, item) => {
