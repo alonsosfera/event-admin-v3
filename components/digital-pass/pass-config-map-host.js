@@ -1,5 +1,5 @@
 import React, { useState, useRef, useCallback, useEffect } from "react"
-import { Spin, Image } from "antd"
+import { Spin, Image, Alert } from "antd"
 import dynamic from "next/dynamic"
 import QRCode from "qrcode"
 import { getLineGuideStops, getObjectSnappingEdges,
@@ -150,44 +150,52 @@ export const PassConfigMapHost = ({ event, onPositionChange, selectedDesignUrl, 
   }, { texts: [], qr: null })
 
   return (
-    <div style={{ position: "relative" }}>
-      <Image
-        preview={false}
-        onLoad={handleImageLoad}
-        src={selectedDesignUrl ? selectedDesignUrl : digitalPass.fileUrl}
-        alt={digitalPass.fileName}
-        style={{ maxWidth: "100%", height: "auto", display: "block" }} />
-      <Stage
-        ref={stageRef}
-        width={displaySize.width}
-        height={displaySize.height}
-        style={{ position: "absolute", top: 0, left: 0, zIndex: 2 }}>
-        <Layer ref={layerRef}>
-          {texts.map(item => (
-            <PassConfigMapItemHost
-              item={item}
-              key={item.key}
-              onDragEnd={e => onDragEnd(e, item)}
-              onDragMove={onDragMove}
-              scaleFactor={scaleFactor}
-              dragBoundFunc={pos => dragBoundFunc(pos, item)} />
-          ))}
-          {qr && qrImage && (
-            <KonImage
-              draggable
-              image={qrImage}
-              width={(qr.customConfig.qrSize || 250) * scaleFactor}
-              height={(qr.customConfig.qrSize || 250) * scaleFactor}
-              x={qr.coordinateX * scaleFactor}
-              y={qr.coordinateY * scaleFactor}
-              dragBoundFunc={pos => dragBoundFunc(pos, qr)}
-              onDragMove={onDragMove}
-              onDragEnd={event => onDragEnd(event, qr)}
-              name="object"
-            />
-          )}
-        </Layer>
-      </Stage>
-    </div>
+    <>
+      <Alert
+            showIcon
+            type="info"
+            message="Arrastra los elementos para reorganizarlos"
+            style={{ fontSize: "12px", padding: "8px 16px", marginTop: "-10px" }}
+          />
+      <div style={{ position: "relative" }}>
+        <Image
+          preview={false}
+          onLoad={handleImageLoad}
+          src={selectedDesignUrl ? selectedDesignUrl : digitalPass.fileUrl}
+          alt={digitalPass.fileName}
+          style={{ maxWidth: "100%", height: "auto", display: "block" }} />
+        <Stage
+          ref={stageRef}
+          width={displaySize.width}
+          height={displaySize.height}
+          style={{ position: "absolute", top: 0, left: 0, zIndex: 2 }}>
+          <Layer ref={layerRef}>
+            {texts.map(item => (
+              <PassConfigMapItemHost
+                item={item}
+                key={item.key}
+                onDragEnd={e => onDragEnd(e, item)}
+                onDragMove={onDragMove}
+                scaleFactor={scaleFactor}
+                dragBoundFunc={pos => dragBoundFunc(pos, item)} />
+            ))}
+            {qr && qrImage && (
+              <KonImage
+                draggable
+                image={qrImage}
+                width={(qr.customConfig.qrSize || 250) * scaleFactor}
+                height={(qr.customConfig.qrSize || 250) * scaleFactor}
+                x={qr.coordinateX * scaleFactor}
+                y={qr.coordinateY * scaleFactor}
+                dragBoundFunc={pos => dragBoundFunc(pos, qr)}
+                onDragMove={onDragMove}
+                onDragEnd={event => onDragEnd(event, qr)}
+                name="object"
+              />
+            )}
+          </Layer>
+        </Stage>
+      </div>
+    </>
   )
 } 
