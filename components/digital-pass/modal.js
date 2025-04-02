@@ -5,7 +5,7 @@ import axios from "axios"
 import { SketchPicker } from "react-color"
 import dayjs from "dayjs"
 
-import { DesignSelector } from "./design-selector"
+import { DesignSelector } from "../designs/design-selector"
 import { PassEditorLayout } from "./pass-editor-layout"
 import { fileToArrayBuffer, arrayBufferToBase64 } from "../designs/helpers"
 

@@ -5,7 +5,7 @@ import short from "short-uuid"
 import { CopyOutlined } from "@ant-design/icons"
 import axios from "axios"
 
-import { DesignSelector } from "./design-selector"
+import { DesignSelector } from "../designs/design-selector"
 import { InvitationEditorLayout } from "./invitation-editor-layout"
 import { fileToArrayBuffer, arrayBufferToBase64 } from "../designs/helpers"
 
@@ -244,12 +244,12 @@ export const DigitalInvitationModal = ({ isOpen, onCancel, onSubmit, event }) =>
           setPreviewFile={setPreviewFile}
           activeSource={activeSource}
           setActiveSource={setActiveSource}
-          selectedInvitationId={selectedInvitationId}
-          setSelectedInvitationId={setSelectedInvitationId}
-          setSelectedInvitationUrl={setSelectedInvitationUrl}
-          allInvitations={allInvitations}
+          selectedDesignId={selectedInvitationId}
+          setSelectedDesignId={setSelectedInvitationId}
+          setSelectedDesignUrl={setSelectedInvitationUrl}
+          allDesigns={allInvitations}
           setAllInvitations={setAllInvitations}
-          handleSelectInvitation={handleSelectInvitation}
+          handleSelectDesign={handleSelectInvitation}
           currentPage={currentPage}
           setCurrentPage={setCurrentPage}
           setUpdatedCoordinates={setUpdatedCoordinates}
