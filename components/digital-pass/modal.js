@@ -301,7 +301,7 @@ export const DigitalPassModal = ({ isOpen, onCancel, onSubmit, event }) => {
           wrapperCol={{ span:20 }}>
           <Form.Item 
             label="Color de letra"
-            style={{ marginBottom: 24 }}
+            style={{ marginBottom: 20 }}
           >
             <Tooltip
               color="white"
@@ -315,7 +315,7 @@ export const DigitalPassModal = ({ isOpen, onCancel, onSubmit, event }) => {
           </Form.Item>
           <Form.Item 
             label="Tamaño de letra"
-            style={{ marginBottom: 24 }}
+            style={{ marginBottom: 20 }}
           >
             <Row gutter={8}>
               <Col flex="auto">
@@ -339,7 +339,7 @@ export const DigitalPassModal = ({ isOpen, onCancel, onSubmit, event }) => {
           </Form.Item>
           <Form.Item 
             label="Tamaño del QR"
-            style={{ marginBottom: 24 }}
+            style={{ marginBottom: 20 }}
           >
             <Row gutter={8}>
               <Col flex="auto">
