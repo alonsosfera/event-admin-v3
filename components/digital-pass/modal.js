@@ -101,9 +101,46 @@ export const DigitalPassModal = ({ isOpen, onCancel, onSubmit, event }) => {
   }, [])
 
   useEffect(() => {
+    if (activeSource === "upload" && previewFile) {
+      const defaultCoords = defaultItems(event, fontColor, fontSize)
+      setUpdatedCoordinates(prev => {
+        if (prev.length > 0) {
+          return prev.map(item => {
+            const defaultItem = defaultCoords.find(d => d.key === item.key)
+            if (!defaultItem) return item
+
+            if (item.key === "QR_CODE") {
+              return {
+                ...item,
+                customConfig: JSON.stringify({
+                  qrSize
+                })
+              }
+            }
+            return {
+              ...item,
+              customConfig: JSON.stringify({
+                fontColor,
+                fontSize
+              })
+            }
+          })
+        }
+        return defaultCoords.map(item => ({
+          ...item,
+          customConfig: JSON.stringify(item.customConfig)
+        }))
+      })
+    }
+  }, [activeSource, previewFile])
+
+  useEffect(() => {
     setUpdatedCoordinates(prev =>
       prev.map(item => {
-        const currentConfig = JSON.parse(item.customConfig || "{}")
+        if (item.key === "QR_CODE") return item
+        const currentConfig = typeof item.customConfig === 'string' 
+          ? JSON.parse(item.customConfig) 
+          : item.customConfig
         return {
           ...item,
           customConfig: JSON.stringify({
@@ -118,7 +155,10 @@ export const DigitalPassModal = ({ isOpen, onCancel, onSubmit, event }) => {
   useEffect(() => {
     setUpdatedCoordinates(prev =>
       prev.map(item => {
-        const currentConfig = JSON.parse(item.customConfig || "{}")
+        if (item.key === "QR_CODE") return item
+        const currentConfig = typeof item.customConfig === 'string' 
+          ? JSON.parse(item.customConfig) 
+          : item.customConfig
         return {
           ...item,
           customConfig: JSON.stringify({
@@ -134,7 +174,9 @@ export const DigitalPassModal = ({ isOpen, onCancel, onSubmit, event }) => {
     setUpdatedCoordinates(prev =>
       prev.map(item => {
         if (item.key !== "QR_CODE") return item
-        const currentConfig = JSON.parse(item.customConfig || "{}")
+        const currentConfig = typeof item.customConfig === 'string' 
+          ? JSON.parse(item.customConfig) 
+          : item.customConfig
         return {
           ...item,
           customConfig: JSON.stringify({
@@ -170,28 +212,6 @@ export const DigitalPassModal = ({ isOpen, onCancel, onSubmit, event }) => {
       setUpdatedCoordinates(defaultItems(event, fontColor, fontSize))
     }
   }
-
-  useEffect(() => {
-    if (activeSource === "upload" && previewFile) {
-      setUpdatedCoordinates(defaultItems(event, fontColor, fontSize).map(item => {
-        if (item.key === "QR_CODE") {
-          return {
-            ...item,
-            customConfig: JSON.stringify({
-              qrSize
-            })
-          }
-        }
-        return {
-          ...item,
-          customConfig: JSON.stringify({
-            fontColor,
-            fontSize
-          })
-        }
-      }))
-    }
-  }, [activeSource, previewFile, event, fontColor, fontSize, qrSize])
 
   const handlePositionChange = (key, newX, newY) => {
     setUpdatedCoordinates(prev =>
