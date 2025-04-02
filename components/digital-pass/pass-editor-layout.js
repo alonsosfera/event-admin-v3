@@ -1,7 +1,7 @@
 import { Col, Row } from "antd"
 import { PassConfigMapHost } from "./pass-config-map-host"
 
-export const PassEditorLayout = ({ updatedCoordinates, scaleFactor, selectedFile, selectedDesignUrl, previewFile, activeSource, event, onScaleFactorChange, onPositionChange }) => {
+export const PassEditorLayout = ({ updatedCoordinates, selectedDesignUrl, previewFile, activeSource, event, onScaleFactorChange, onPositionChange }) => {
   return (
     <Row gutter={24}>
       <Col span={24}>
