@@ -46,8 +46,19 @@ export const DigitalInvitationModal = ({ isOpen, onCancel, onSubmit, event }) =>
   }, [isOpen])
 
   useEffect(() => {
+    if (activeSource === "upload" && previewFile) {
+      setNewItems([])
+      setUpdatedCoordinates([])
+      setState({})
+      setCustomConfig({})
+      setDeletedKeys([])
+      setHasInitialized(false)
+    }
+  }, [activeSource, previewFile])
+
+  useEffect(() => {
     if (!hasInitialized && isOpen) {
-      if (coordinates.length > 0) {
+      if (coordinates.length > 0 && activeSource !== "upload") {
         setUpdatedCoordinates(coordinates)
         const newState = coordinates.reduce((acc, c) => {
           acc[c.key] = c.label || ""
@@ -61,12 +72,10 @@ export const DigitalInvitationModal = ({ isOpen, onCancel, onSubmit, event }) =>
           return acc
         }, {})
         setCustomConfig(newConfig)
-      } else {
-        setUpdatedCoordinates(defaultItems)
       }
       setHasInitialized(true)
     }
-  }, [coordinates, isOpen, hasInitialized])
+  }, [coordinates, isOpen, hasInitialized, activeSource])
 
   useEffect(() => {
     const fetchAllInvitations = async () => {
