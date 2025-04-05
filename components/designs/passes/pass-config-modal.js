@@ -161,41 +161,73 @@ export const PassConfigModal = ({ onClose, onSuccess, selectedFile }) => {
     >
       <Row gutter={12}>
         <Col span={24}>
-          <Form.Item label="Color de letra">
-            <Tooltip
-              color="white"
-              trigger="click"
-              title={<SketchPicker color={fontColor} onChangeComplete={color => setFontColor(color.hex)} />}
+          <Form
+            labelAlign="left"
+            labelCol={{ span: 4 }}
+            wrapperCol={{ span:20 }}>
+            <Form.Item 
+              label="Color de letra"
+              style={{ marginBottom: 20 }}
             >
-              <Button type="primary" style={{ marginBottom: "5px" }}>
-                Seleccionar color de fuente
-              </Button>
-            </Tooltip>
-          </Form.Item>
-          <Form.Item label="Tamaño de letra">
-            <Slider 
-              min={12} 
-              max={120} 
-              onChange={onFontSizeChange} 
-              value={parseInt(fontSize)} />
-            <InputNumber 
-              min={12} 
-              max={120} 
-              value={fontSize} 
-              onChange={onFontSizeChange} />
-          </Form.Item>
-          <Form.Item label="Tamaño del QR">
-            <Slider 
-              min={100}
-              max={800} 
-              onChange={setQrSize} 
-              value={qrSize} />
-            <InputNumber 
-              min={100} 
-              max={800} 
-              value={qrSize} 
-              onChange={setQrSize} />
-          </Form.Item>
+              <Tooltip
+                color="white"
+                trigger="click"
+                title={<SketchPicker color={fontColor} onChangeComplete={color => setFontColor(color.hex)} />}
+              >
+                <Button type="primary">
+                  Seleccionar color
+                </Button>
+              </Tooltip>
+            </Form.Item>
+            <Form.Item 
+              label="Tamaño de letra"
+              style={{ marginBottom: 20 }}
+            >
+              <Row gutter={8}>
+                <Col flex="auto">
+                  <Slider 
+                    min={12} 
+                    max={120} 
+                    onChange={onFontSizeChange} 
+                    value={parseInt(fontSize)}
+                  />
+                </Col>
+                <Col flex="80px">
+                  <InputNumber 
+                    min={12} 
+                    max={120} 
+                    value={fontSize} 
+                    onChange={onFontSizeChange}
+                    style={{ width: '100%' }}
+                  />
+                </Col>
+              </Row>
+            </Form.Item>
+            <Form.Item 
+              label="Tamaño del QR"
+              style={{ marginBottom: 20 }}
+            >
+              <Row gutter={8}>
+                <Col flex="auto">
+                  <Slider 
+                    min={100}
+                    max={800} 
+                    onChange={setQrSize} 
+                    value={qrSize}
+                  />
+                </Col>
+                <Col flex="80px">
+                  <InputNumber 
+                    min={100} 
+                    max={800} 
+                    value={qrSize} 
+                    onChange={setQrSize}
+                    style={{ width: '100%' }}
+                  />
+                </Col>
+              </Row>
+            </Form.Item>
+          </Form>
           <PassConfigMap 
             items={items} 
             scaleFactor={scaleFactor} 

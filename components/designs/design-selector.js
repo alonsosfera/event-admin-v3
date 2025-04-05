@@ -3,11 +3,11 @@ import { LeftOutlined, RightOutlined } from "@ant-design/icons"
 
 const pageSize = 12
 
-export const DesignSelector = ({ previewFile, setPreviewFile, activeSource, setActiveSource, selectedInvitationId, setSelectedInvitationId, 
-  setSelectedInvitationUrl, allInvitations, handleSelectInvitation, currentPage, setCurrentPage, setUpdatedCoordinates }) => {
-  const totalPages = Math.ceil(allInvitations.length / pageSize)
+export const DesignSelector = ({ previewFile, setPreviewFile, activeSource, setActiveSource, selectedDesignId, setSelectedDesignId, 
+  setSelectedDesignUrl, allDesigns, handleSelectDesign, currentPage, setCurrentPage, setUpdatedCoordinates }) => {
+  const totalPages = Math.ceil((allDesigns || []).length / pageSize)
 
-  const paginatedInvitations = allInvitations.slice(
+  const paginatedDesigns = (allDesigns || []).slice(
     currentPage * pageSize,
     currentPage * pageSize + pageSize
   )
@@ -59,8 +59,8 @@ export const DesignSelector = ({ previewFile, setPreviewFile, activeSource, setA
                   alt="Vista previa subida"
                   onClick={() => {
                     setActiveSource("upload")
-                    setSelectedInvitationId(null)
-                    setSelectedInvitationUrl(null)
+                    setSelectedDesignId(null)
+                    setSelectedDesignUrl(null)
                     setUpdatedCoordinates([])
                   }}
                   style={{
@@ -74,18 +74,18 @@ export const DesignSelector = ({ previewFile, setPreviewFile, activeSource, setA
               </Col>
             )}
 
-            {paginatedInvitations.map(invite => (
-              <Col key={invite.id} xs={12} sm={6} md={4}>
+            {paginatedDesigns.map(design => (
+              <Col key={design.id} xs={12} sm={6} md={4}>
                 <Image
-                  onClick={() => handleSelectInvitation(invite.id)}
+                  onClick={() => handleSelectDesign(design.id)}
                   preview={false}
-                  alt={invite.fileName}
-                  src={invite.fileUrl}
+                  alt={design.fileName}
+                  src={design.fileUrl}
                   style={{
                     objectFit: "contain",
                     borderRadius: "4px",
-                    border: invite.id === selectedInvitationId ? "1px solid #1890ff" : "1px solid #f0f0f0",
-                    boxShadow: invite.id === selectedInvitationId ? "0 0px 30px rgba(24,144,255,0.6)" : "none",
+                    border: design.id === selectedDesignId ? "1px solid #1890ff" : "1px solid #f0f0f0",
+                    boxShadow: design.id === selectedDesignId ? "0 0px 30px rgba(24,144,255,0.6)" : "none",
                     cursor: "pointer"
                   }}
                 />
@@ -105,4 +105,4 @@ export const DesignSelector = ({ previewFile, setPreviewFile, activeSource, setA
       </Collapse.Panel>
     </Collapse>
   )
-}
+} 

@@ -5,7 +5,7 @@ import short from "short-uuid"
 import { CopyOutlined } from "@ant-design/icons"
 import axios from "axios"
 
-import { DesignSelector } from "./design-selector"
+import { DesignSelector } from "../designs/design-selector"
 import { InvitationEditorLayout } from "./invitation-editor-layout"
 import { fileToArrayBuffer, arrayBufferToBase64 } from "../designs/helpers"
 
@@ -26,19 +26,30 @@ export const DigitalInvitationModal = ({ isOpen, onCancel, onSubmit, event }) =>
   const [activeSource, setActiveSource] = useState(null)
   const [scaleFactor, setScaleFactor] = useState(1)
   const [currentPage, setCurrentPage] = useState(0)
+  const [hasInitialized, setHasInitialized] = useState(false)
 
   const coordinates = event?.digitalInvitation?.canvaMap?.coordinates || []
 
   useEffect(() => {
-    setUpdatedCoordinates(coordinates)
-    if (coordinates.length > 0) {
-      const initialState = coordinates.reduce((acc, c) => {
-        acc[c.key] = c.label || ""
-        return acc
-      }, {})
-      setState(initialState)
+    if (!hasInitialized && isOpen) {
+      if (coordinates.length > 0) {
+        setUpdatedCoordinates(coordinates)
+      } else {
+        setUpdatedCoordinates(defaultItems)
+      }
+      setHasInitialized(true)
     }
-  }, [coordinates])
+  }, [coordinates, isOpen, hasInitialized])
+
+  useEffect(() => {
+    if (!isOpen) {
+      setHasInitialized(false)
+      setSelectedInvitationId(null)
+      setSelectedInvitationUrl(null)
+      setPreviewFile(null)
+      setActiveSource(null)
+    }
+  }, [isOpen])
 
   useEffect(() => {
     const fetchAllInvitations = async () => {
@@ -233,12 +244,12 @@ export const DigitalInvitationModal = ({ isOpen, onCancel, onSubmit, event }) =>
           setPreviewFile={setPreviewFile}
           activeSource={activeSource}
           setActiveSource={setActiveSource}
-          selectedInvitationId={selectedInvitationId}
-          setSelectedInvitationId={setSelectedInvitationId}
-          setSelectedInvitationUrl={setSelectedInvitationUrl}
-          allInvitations={allInvitations}
+          selectedDesignId={selectedInvitationId}
+          setSelectedDesignId={setSelectedInvitationId}
+          setSelectedDesignUrl={setSelectedInvitationUrl}
+          allDesigns={allInvitations}
           setAllInvitations={setAllInvitations}
-          handleSelectInvitation={handleSelectInvitation}
+          handleSelectDesign={handleSelectInvitation}
           currentPage={currentPage}
           setCurrentPage={setCurrentPage}
           setUpdatedCoordinates={setUpdatedCoordinates}
