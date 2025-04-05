@@ -38,7 +38,7 @@ export const DraggableTable = ({
     if (position.x <= 10) element.x(10)
     if (position.y <= 10) element.y(10)
     if (position.x >= 892 - tableDimensions.width) element.x(892 - tableDimensions.width)
-    if (position.y >= 720 - tableDimensions.height - 20) element.y(720 - tableDimensions.height - 20)
+    if (position.y >= 760 - tableDimensions.height - 22) element.y(760 - tableDimensions.height - 22)
   }
 
   useEffect(() => {
