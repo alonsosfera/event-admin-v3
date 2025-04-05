@@ -31,25 +31,51 @@ export const DigitalInvitationModal = ({ isOpen, onCancel, onSubmit, event }) =>
   const coordinates = event?.digitalInvitation?.canvaMap?.coordinates || []
 
   useEffect(() => {
-    if (!hasInitialized && isOpen) {
-      if (coordinates.length > 0) {
-        setUpdatedCoordinates(coordinates)
-      } else {
-        setUpdatedCoordinates(defaultItems)
-      }
-      setHasInitialized(true)
-    }
-  }, [coordinates, isOpen, hasInitialized])
-
-  useEffect(() => {
     if (!isOpen) {
       setHasInitialized(false)
       setSelectedInvitationId(null)
       setSelectedInvitationUrl(null)
       setPreviewFile(null)
       setActiveSource(null)
+      setNewItems([])
+      setUpdatedCoordinates([])
+      setState({})
+      setCustomConfig({})
+      setDeletedKeys([])
     }
   }, [isOpen])
+
+  useEffect(() => {
+    if (activeSource === "upload" && previewFile) {
+      setNewItems([])
+      setUpdatedCoordinates([])
+      setState({})
+      setCustomConfig({})
+      setDeletedKeys([])
+      setHasInitialized(false)
+    }
+  }, [activeSource, previewFile])
+
+  useEffect(() => {
+    if (!hasInitialized && isOpen) {
+      if (coordinates.length > 0 && activeSource !== "upload") {
+        setUpdatedCoordinates(coordinates)
+        const newState = coordinates.reduce((acc, c) => {
+          acc[c.key] = c.label || ""
+          return acc
+        }, {})
+        setState(newState)
+
+        const newConfig = coordinates.reduce((acc, c) => {
+          const parsed = JSON.parse(c.customConfig || "{}")
+          if (parsed.link) acc[c.key] = parsed.link
+          return acc
+        }, {})
+        setCustomConfig(newConfig)
+      }
+      setHasInitialized(true)
+    }
+  }, [coordinates, isOpen, hasInitialized, activeSource])
 
   useEffect(() => {
     const fetchAllInvitations = async () => {
