@@ -1,10 +1,6 @@
   .invitation-container {
   background-color: #f9f9f9;
   
-  // .ant-card .ant-card-body {
-  //   padding: 2px 2px 2px 2px;
-  // }
-
   .card-invitation {
     position: relative;
     background-image: url('/assets/background1.jpg');
@@ -31,113 +27,127 @@
   //   height: 100%;
   // }
   
-  // .title {
-  //   font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
-  //   font-size: 50px;
-  //   font-weight: bold;
-  //   color: black;
-  //   position: absolute;
-  //   width: 100%;
-  //   top: 5%;
-  //   left: 50%;
-  //   transform: translateX(-50%)
+  .title {
+    font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+    font-size: 50px;
+    font-weight: bold;
+    color: black;
+    position: absolute;
+    width: 100%;
+    top: 5%;
+    left: 50%;
+    transform: translateX(-50%)
     
-  // }
+  }
   
-  // .date {
-  //   font-size: 25px;
-  //   font-family: 'Courier New', Courier, monospace;
-  //   font-weight: bold;
-  //   color: green;
-  //   position: absolute;
-  //   width: 100%;
-  //   top: 15%;
-  //   left: 50%;
-  //   transform: translateX(-50%)
-  // }
+  .date {
+    font-size: 25px;
+    font-family: 'Courier New', Courier, monospace;
+    font-weight: bold;
+    color: green;
+    position: absolute;
+    width: 100%;
+    top: 15%;
+    left: 50%;
+    transform: translateX(-50%)
+  }
 
-  // .text {
-  //   font-size: 20px;
-  //   color: #fff;
-  //   position: absolute;
-  //   width: 100%;
-  //   top: 76%;
-  //   left: 50%;
-  //   transform: translateX(-50%)
-  // }
+  .text {
+    font-size: 20px;
+    color: #fff;
+    position: absolute;
+    width: 100%;
+    top: 76%;
+    left: 50%;
+    transform: translateX(-50%)
+  }
 
-  // .wp-block-uagb-countdown {
-  //   display: flex;
-  //   justify-content: center;
-  //   text-align: center;
-  //   line-height: normal;
-  //   margin: 0;
-  //   padding: 20px 0;
-  // }
+  .wp-block-uagb-countdown {
+    display: flex;
+    justify-content: center;
+    text-align: center;
+    line-height: normal;
+    margin: 0;
+    padding: 20px 0;
+  }
   
-  // .countdown-container {
-  //   display: flex;
-  //   justify-content: center;
-  //   gap: 20px;
-  //   flex-wrap: wrap;
-  // }
+  .countdown-container {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    flex-wrap: wrap;
+  }
   
-  // .countdown-item {
-  //   background-color: rgba(0, 0, 0, 0.5);
-  //   color: white; 
-  //   border-radius: 12px;
-  //   padding: 20px 10px;
-  //   text-align: center;
-  //   box-shadow: 0 10px 20px rgba(0, 0, 0, 0.5);
-  //   width: 100px;
-  // }
+  .countdown-item {
+    background-color: rgba(0, 0, 0, 0.5);
+    color: white; 
+    border-radius: 12px;
+    padding: 20px 10px;
+    text-align: center;
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.5);
+    width: 100px;
+  }
   
-  // .countdown-number {
-  //   font-size: 38px;
-  //   font-weight: bold;
-  //   display: block;
-  // }
+  .countdown-number {
+    font-size: 38px;
+    font-weight: bold;
+    display: block;
+  }
   
-  // .countdown-label {
-  //   font-size: 16px;
-  //   font-weight: 400;
-  // }
-  
-  // @media (max-width: 544px) {
-  //   .countdown-container {
-  //     gap: 15px;
-  //   }
-  
-  //   .countdown-item {
-  //     padding: 15px 20px;
-  //     width: 70px;
-  //   }
+  .countdown-label {
+    font-size: 16px;
+    font-weight: 400;
+  }
 
-  //   .countdown-number {
-  //     font-size: 25px;
-  //     font-weight: bold;
-  //     display: block;
-  //   }
+  .ant-image {
+    object-fit: contain;
+    width: 100%;
+    height: auto;
+  }
+  
+  @media (max-width: 544px) {
+
+    .ant-image {
+      width: 100%;
+      height: auto;
+    }
+
+    .ant-card .ant-card-body {
+      padding: 2px 2px 2px 2px;
+    }
     
-  //   .countdown-label {
-  //     font-size: 10px;
-  //     font-weight: 400;
-  //   }
+    .countdown-container {
+      gap: 15px;
+    }
+  
+    .countdown-item {
+      padding: 15px 20px;
+      width: 70px;
+    }
+
+    .countdown-number {
+      font-size: 25px;
+      font-weight: bold;
+      display: block;
+    }
+    
+    .countdown-label {
+      font-size: 10px;
+      font-weight: 400;
+    }
+  }  
 
   //   .ant-image{
   //     width: 100%;
   //   }
   // }
     
-  // @media (min-width: 544px) {
+  @media (min-width: 544px) {
 
   //   .ant-card .ant-card-body {
   //     padding: 20px 00px 20px 0px;
   //   }
-  //   .ant-image {
-  //     width: 90%;
-  //     height: auto;
-  //   }
+
   //   .countdown-container {
   //     gap: 30px;
   //   }
@@ -147,7 +157,7 @@
   //     width: 70%;
   //     height: auto;
   //   }
-  // }
+  }
 
   // @media (min-width: 1200px) {
   //   .ant-card .ant-card-body {

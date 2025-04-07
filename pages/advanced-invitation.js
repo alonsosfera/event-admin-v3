@@ -7,7 +7,7 @@ const { Title, Text } = Typography;
 const InvitationPage = () => {
 
   const handleRSVP = () => {
-    // Handle RSVP action here, for example, show a confirmation message
+    
     alert('Thank you for confirming your attendance!');
   };
 
@@ -19,33 +19,73 @@ const InvitationPage = () => {
             className='card-invitation'
           >
             {/* Header */}
-            <div style={{ textAlign: 'center' }}>
+            <div style={{ textAlign: 'center', position: 'relative' }}>
               <Image
+                preview={false}
                 src="/assets/boda2.webp"
-                alt="Wedding Banner"
-                style={{
-                  width: '100%',
-                  height: '100%',
-                  borderRadius: '8px',
-                  marginBottom: '20px',
-                }}
+                alt="Wedding Banner"     
               />
-              <Title level={1} style={{ fontSize: '50px', fontWeight: 'bold', color: '#4c4c4c' }}>
-                Carla & Luis
-              </Title>
-              <Text style={{ fontSize: '20px', color: '#8f8f8f', marginTop: '10px' }}>
-                You are invited to share this very special day with us!
-              </Text>
-              <Text
-                style={{
-                  fontSize: '20px',
-                  fontWeight: 'bold',
-                  color: '#8e44ad',
-                  marginTop: '10px',
-                }}
-              >
-                May 15, 2025 | 5:00 PM
-              </Text>
+              {/* Primer texto - Título */}
+              <div style={{
+                position: 'absolute',
+                top: '30%',  // Puedes ajustar este valor
+                left: '50%',
+                transform: 'translate(-50%, -50%)',
+
+              }}>
+                <Title level={1} style={{ 
+                  fontSize: '50px', 
+                  fontWeight: 'bold', 
+                  color: '#4c4c4c',
+                  margin: 0,
+                  '@media (max-width: 768px)': {
+                    fontSize: '30px',
+                  }
+                }}>
+                  Carla & Luis
+                </Title>
+              </div>
+
+              <div style={{
+                position: 'absolute',
+                top: '50%',
+                left: '50%',
+                transform: 'translate(-50%, -50%)',
+              }}>
+                <Text style={{ 
+                  fontSize: '20px', 
+                  color: '#8f8f8f', 
+                  display: 'block',
+                  '@media (max-width: 768px)': {
+                    fontSize: '16px',
+                  }
+                }}>
+                  You are invited to share this very special day with us!
+                </Text>
+              </div>
+
+              <div className="text">
+                  <div class="wp-block-uagb-countdown">
+                    <div class="countdown-container">
+                      <div class="countdown-item">
+                        <span class="countdown-number" id="days">10</span>
+                        <span class="countdown-label">Days</span>
+                      </div>
+                      <div class="countdown-item">
+                        <span class="countdown-number" id="hours">20</span>
+                        <span class="countdown-label">Hours</span>
+                      </div>
+                      <div class="countdown-item">
+                        <span class="countdown-number" id="minutes">30</span>
+                        <span class="countdown-label">Minutes</span>
+                      </div>
+                      <div class="countdown-item">
+                        <span class="countdown-number" id="seconds">40</span>
+                        <span class="countdown-label">Seconds</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
             </div>
 
             {/* Event Details */}
