@@ -1,5 +1,5 @@
 import React from 'react';
-import { Button, Card, Col, Row, Typography, Image, Flex } from 'antd';
+import { Button, Card, Col, Row, Typography, Image, Carousel } from 'antd';
 
 const { Title, Text } = Typography;
 
@@ -99,7 +99,7 @@ const InvitationPage = () => {
                     />
                   </div>
               </Col>
-              <Col xs={{ span: 24, order: 1} } sm={{ span: 16, order: 2 }}>
+              <Col xs={{ span: 24, order: 1} } sm={{ span: 16, order: 2 }} style={{ textAlign: "center" }} >
                 <Title level={2} style={{ color: '#4c4c4c', marginBottom: '10px', fontWeight: 'bold' }}>
                 Invitación válida para:
                 </Title>
@@ -110,8 +110,8 @@ const InvitationPage = () => {
                 <Text style={{ fontSize: '18px', color: '#7f8c8d' }}>
                   Arturo Contreras Chaparro
                 </Text>
-                  <Row gutter={[ 100 ]}> 
-                    <Col sm={12}>
+                  <Row gutter={[ 0 ]}> 
+                    <Col xs={24} sm={12}>
                       <Text style={{ fontSize: '18px', color: '#7f8c8d', fontWeight: "bold" }}>
                         PERSONAS
                       </Text>
@@ -120,7 +120,7 @@ const InvitationPage = () => {
                         4
                       </Text>
                     </Col>
-                    <Col sm={12}>
+                    <Col xs={24} sm={12}>
                       <Text style={{ fontSize: '18px', color: '#7f8c8d', fontWeight: "bold" }}>
                         MESA
                       </Text>
@@ -209,6 +209,57 @@ const InvitationPage = () => {
               </Row>
             </div>
           </Card>
+
+          {/* sección carrusel  */} 
+          <Card className='card-invitation'>
+            <div style={{ textAlign: 'center', marginBottom: '20px' }}>
+              <Title level={2} style={{ color: '#4c4c4c', fontWeight: 'bold' }}>
+                Recuerdos Especiales
+              </Title>
+              <Text style={{ fontSize: '18px', color: '#7f8c8d' }}>
+                Un vistazo a los momentos que nos han traído hasta aquí
+              </Text>
+            </div>
+            <Carousel arrows autoplay>
+              <div>
+                <Image
+                  src="/assets/carousel1.jpg"
+                  preview={false}
+                  alt="Recuerdo 1"
+                  width="100%"
+                  style={{ objectFit: 'cover', borderRadius: '10px' }}
+                />
+              </div>
+              <div>
+                <Image
+                  src="/assets/carousel2.jpeg"
+                  preview={false}
+                  alt="Recuerdo 2"
+                  width="100%"
+                  style={{ objectFit: 'cover', borderRadius: '10px' }}
+                />
+              </div>
+              <div>
+                <Image
+                  src="/assets/carousel3.webp"
+                  preview={false}
+                  alt="Recuerdo 3"
+                  width="100%"
+                  style={{ objectFit: 'cover', borderRadius: '10px' }}
+                />
+              </div>
+              <div>
+                <Image
+                  src="/assets/carousel4.webp"
+                  preview={false}
+                  alt="Recuerdo 4"
+                  width="100%"
+                  style={{ objectFit: 'cover', borderRadius: '10px' }}
+                />
+              </div>
+            </Carousel>
+          </Card>
+                
           <Card className='card-invitation'>    
           {/* RSVP Section */}
             <div style={{ marginTop: '30px' }}>
