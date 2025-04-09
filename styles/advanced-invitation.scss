@@ -14,17 +14,19 @@
   }
 
   .invitation-container-image{
+
+    .ant-image {
+      object-fit: contain;
+      width: 480px;
+      height: auto;
+    }
+
     .ant-card .ant-card-body{
       padding-top: 0;
       padding-bottom: 0;
     }
   }
 
-  .ant-image {
-    object-fit: contain;
-    width: 480px;
-    height: auto;
-  }
   
   // .ant-image {
   //   width: 100%;

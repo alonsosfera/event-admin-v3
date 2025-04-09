@@ -8,7 +8,7 @@ const PremiumInvitationPlace = () => {
 
     <Card className='card-invitation'>
       <div style={{ textAlign: 'center' }}>
-        <Row>
+        <Row gutter={[ 24, 24 ]}>
           <Col xs={24}>
             <Title level={1} style={{ color: '#4c4c4c', marginBottom: '10px', fontWeight: 'bold' }}>
               ¿Dónde & Cuándo?
@@ -20,11 +20,9 @@ const PremiumInvitationPlace = () => {
             </Title>
             <Image
               preview={false}
-              width={400}
-              height={300}
               src="/assets/basílica.jpg"
               alt="ceremonia"
-              style={{ objectFit: "contain" }}
+              style={{ borderRadius: "8px" }}
             />
             <Title level={3} style={{ color: '#4c4c4c', marginBottom: '10px', fontWeight: 'bold' }}>
               Basílica de Guadalupe Monterrey
@@ -49,11 +47,9 @@ const PremiumInvitationPlace = () => {
             </Title>
             <Image
               preview={false}
-              width={400}
-              height={300}
               src="/assets/La_joya.jpg"
               alt="ceremonia"
-              style={{ objectFit: "contain" }}
+              style={{ borderRadius: "8px" }}
             />
             <Title level={3} style={{ color: '#4c4c4c', marginBottom: '10px', fontWeight: 'bold' }}>
               Salón La Joya
