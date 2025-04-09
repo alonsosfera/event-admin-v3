@@ -8,7 +8,7 @@ const PremiumInvitationVideo = () => {
       <div style={{ position: 'relative', paddingBottom: '56.25%', height: 0, overflow: 'hidden' }}>
         <iframe
           src="https://www.youtube.com/embed/7TWzV05kQ4w"
-          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+          allow=" clipboard-write; encrypted-media; gyroscope; picture-in-picture"
           allowFullScreen
           title="Video de YouTube"
           style={{
