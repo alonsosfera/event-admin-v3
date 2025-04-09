@@ -1,11 +1,12 @@
 import React from 'react'
-import { Col, Row, Typography } from 'antd'
+import { Col, Row, Typography, Card } from 'antd'
 import PremiumInvitationCover from '@/components/designs/invitations/premium/premium-invitation-cover.js';
 import PremiumInvitationPass from '@/components/designs/invitations/premium/premium-invitation-pass';
 import PremiumInvitationPlace from '@/components/designs/invitations/premium/premium-invitation-place';
 import PremiumInvitationCarousel from '@/components/designs/invitations/premium/premium-invitation-carousel';
 import PremiumInvitationAttendance from '@/components/designs/invitations/premium/premium-invitation-attendance';
 import PremiumInvitationFamily from '@/components/designs/invitations/premium/premium-invitation-family';
+import PremiumInvitationVideo from '@/components/designs/invitations/premium/premium-invitation-video';
 
 const { Text } = Typography
 
@@ -21,6 +22,7 @@ const PremiumInvitationPage = () => {
           <PremiumInvitationCarousel /> 
           <PremiumInvitationAttendance />
           <PremiumInvitationFamily />
+          <PremiumInvitationVideo />
           
           
           <div style={{ textAlign: 'center', marginTop: '50px', paddingTop: '20px', borderTop: '1px solid #e1e1e1' }}>
