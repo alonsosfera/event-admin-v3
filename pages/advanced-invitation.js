@@ -1,5 +1,4 @@
-import React from 'react'
-import { Col, Row, Typography, Card } from 'antd'
+import { Col, Row, Typography, Card, Button } from 'antd'
 import PremiumInvitationCover from '@/components/designs/invitations/premium/premium-invitation-cover.js';
 import PremiumInvitationPass from '@/components/designs/invitations/premium/premium-invitation-pass';
 import PremiumInvitationPlace from '@/components/designs/invitations/premium/premium-invitation-place';
@@ -7,8 +6,9 @@ import PremiumInvitationCarousel from '@/components/designs/invitations/premium/
 import PremiumInvitationAttendance from '@/components/designs/invitations/premium/premium-invitation-attendance';
 import PremiumInvitationFamily from '@/components/designs/invitations/premium/premium-invitation-family';
 import PremiumInvitationVideo from '@/components/designs/invitations/premium/premium-invitation-video';
+import PremiumInvitationGift from '@/components/designs/invitations/premium/premium-invitation-gifts';
 
-const { Text } = Typography
+const { Text, Title } = Typography
 
 const PremiumInvitationPage = () => {
 
@@ -23,8 +23,8 @@ const PremiumInvitationPage = () => {
           <PremiumInvitationAttendance />
           <PremiumInvitationFamily />
           <PremiumInvitationVideo />
-          
-          
+          <PremiumInvitationGift />
+                    
           <div style={{ textAlign: 'center', marginTop: '50px', paddingTop: '20px', borderTop: '1px solid #e1e1e1' }}>
             <Text style={{ fontSize: '14px', color: '#7f8c8d' }}>
               Gracias por ser parte de nuestro día especial.
