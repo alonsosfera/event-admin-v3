@@ -1,4 +1,4 @@
-import { Button, Card, Typography } from 'antd'
+import { Button, Card, Row, Typography, Col } from 'antd'
 
 const { Title, Text } = Typography
 
@@ -10,14 +10,17 @@ const PremiumInvitationAttendance = () => {
 
   return (
 
-    <Card className='card-invitation'>    
-      <div style={{ marginTop: '30px' }}>
-        <Title level={2} style={{ color: '#4c4c4c', marginBottom: '10px', fontWeight: 'bold' }}>
-          Confirmar Asistencia
-        </Title>
-        <Text style={{ fontSize: '18px', color: '#7f8c8d' }}>
-          Por favor confirma tu asistencia haciendo clic en el botón de abajo.
-        </Text>
+    <Card className='card-invitation' style={{ textAlign: "center" }}>   
+      <Row justify="center">
+        <Col xs={24} sm={16}>
+          <Title level={2} style={{ color: '#4c4c4c', marginBottom: '10px', fontWeight: 'bold' }}>
+            Confirmar Asistencia
+          </Title>
+          <Text style={{ fontSize: '18px', color: '#7f8c8d' }}>
+            Para nosotros es muy importante que nos acompañes, por favor confirma tu asistencia para poder considerarte.
+          </Text>
+        </Col>
+      </Row>
         <div style={{ marginTop: '20px', textAlign: 'center' }}>
           <Button
             type="primary"
@@ -35,7 +38,6 @@ const PremiumInvitationAttendance = () => {
             Confirmar Asistencia
           </Button>
         </div>
-      </div>
     </Card>
   )
 }
