@@ -1,30 +1,62 @@
-import { Card, Typography } from "antd"  
+import { Card, Typography, Row, Col, Avatar } from "antd"  
 
-const { Title } = Typography
+const { Title, Text } = Typography
 
 const PremiumInvitationFamily = () => {
 
-  return ( 
+  const familyMembers = [
+    { name: "María & Carlos", role: "Padres de la Novia", avatar: "/assets/esposos.jpeg" },
+    { name: "Ana & Juan", role: "Padres del Novio", avatar: "/assets/esposos.jpeg" },
+    { name: "José", role: "Padrino", avatar: "/assets/esposos.jpeg" },
+    { name: "Carmen", role: "Madrina", avatar: "/assets/esposos.jpeg" },
+    { name: "Roberto", role: "Hermano del Novio", avatar: "/assets/esposos.jpeg" },
+    { name: "Lucía", role: "Hermana de la Novia", avatar: "/assets/esposos.jpeg" }
+  ];
 
+  return ( 
     <Card className='card-invitation'> 
-      <div style={{ marginTop: '40px', backgroundColor: '#f2f2f2', padding: '20px', borderRadius: '8px' }}>
-        <Title level={3} style={{ color: '#4c4c4c', fontWeight: 'bold', marginBottom: '15px' }}>
+      <div style={{ textAlign: 'center' }}>
+        <Title level={1} style={{ color: '#4c4c4c', marginBottom: '30px', fontWeight: 'bold' }}>
           Nuestra Familia y Amigos
         </Title>
-        <ul style={{ listStyleType: 'none', padding: '0' }}>
-          <li style={{ fontSize: '18px', color: '#7f8c8d', marginBottom: '8px' }}>
-            Padres de la Novia: María & Carlos
-          </li>
-          <li style={{ fontSize: '18px', color: '#7f8c8d', marginBottom: '8px' }}>
-            Padres del Novio: Ana & Juan
-          </li>
-          <li style={{ fontSize: '18px', color: '#7f8c8d', marginBottom: '8px' }}>
-            Padrino: José
-          </li>
-          <li style={{ fontSize: '18px', color: '#7f8c8d', marginBottom: '8px' }}>
-            Madrina: Carmen
-          </li>
-        </ul>
+        
+        <Row gutter={[24, 40]} justify="center">
+          {familyMembers.map((member, index) => (
+            <Col xs={24} sm={12} md={8} key={index}>
+              <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+                <Avatar 
+                  size={200} 
+                  src={member.avatar}
+                  style={{ 
+                    backgroundColor: 'white', 
+                    color: 'black',
+                    fontSize: '40px',
+                    display: 'flex',
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                    marginBottom: '15px',
+                    boxShadow: '0 4px 8px rgba(0, 0, 0, 0.2)'
+                  }}
+                >
+                </Avatar>
+                <Text style={{ 
+                  fontSize: '20px', 
+                  color: '#4c4c4c', 
+                  fontWeight: 'bold',
+                  marginBottom: '5px'
+                }}>
+                  {member.name}
+                </Text>
+                <Text style={{ 
+                  fontSize: '16px', 
+                  color: '#7f8c8d' 
+                }}>
+                  {member.role}
+                </Text>
+              </div>
+            </Col>
+          ))}
+        </Row>
       </div>
     </Card>
   )
