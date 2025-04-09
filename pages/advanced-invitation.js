@@ -20,10 +20,10 @@ const PremiumInvitationPage = () => {
           <PremiumInvitationPass />  
           <PremiumInvitationPlace />
           <PremiumInvitationCarousel /> 
-          <PremiumInvitationAttendance />
-          <PremiumInvitationFamily />
           <PremiumInvitationVideo />
+          <PremiumInvitationFamily />
           <PremiumInvitationGift />
+          <PremiumInvitationAttendance />
                     
           <div style={{ textAlign: 'center', marginTop: '50px', paddingTop: '20px', borderTop: '1px solid #e1e1e1' }}>
             <Text style={{ fontSize: '14px', color: '#7f8c8d' }}>
