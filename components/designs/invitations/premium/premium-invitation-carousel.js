@@ -4,8 +4,14 @@ const { Title, Text } = Typography
 
 const PremiumInvitationCarousel = () => {
 
-  return (
+  const carrouselImages = [
+    { src: "/assets/carousel1.jpg", alt: "Recuerdo 1" },
+    { src: "/assets/carousel2.jpeg", alt: "Recuerdo 2" },
+    { src: "/assets/carousel3.webp", alt: "Recuerdo 3" },
+    { src: "/assets/carousel4.webp", alt: "Recuerdo 4" }
+  ]
 
+  return (
     <Card className='card-invitation'>
       <div style={{ textAlign: 'center', marginBottom: '20px' }}>
         <Title level={2} style={{ color: '#4c4c4c', fontWeight: 'bold' }}>
@@ -16,45 +22,19 @@ const PremiumInvitationCarousel = () => {
         </Text>
       </div>
       <Carousel arrows autoplay>
-        <div>
-          <Image
-            src="/assets/carousel1.jpg"
-            preview={false}
-            alt="Recuerdo 1"
-            width="100%"
-            style={{ objectFit: 'cover', borderRadius: '10px' }}
-          />
-        </div>
-        <div>
-          <Image
-            src="/assets/carousel2.jpeg"
-            preview={false}
-            alt="Recuerdo 2"
-            width="100%"
-            style={{ objectFit: 'cover', borderRadius: '10px' }}
-          />
-        </div>
-        <div>
-          <Image
-            src="/assets/carousel3.webp"
-            preview={false}
-            alt="Recuerdo 3"
-            width="100%"
-            style={{ objectFit: 'cover', borderRadius: '10px' }}
-          />
-        </div>
-        <div>
-          <Image
-            src="/assets/carousel4.webp"
-            preview={false}
-            alt="Recuerdo 4"
-            width="100%"
-            style={{ objectFit: 'cover', borderRadius: '10px' }}
-          />
-        </div>
+        {carrouselImages.map((image, index) => (
+          <div key={index}>
+            <Image
+              src={image.src}
+              alt={image.alt}
+              preview={false}
+              width="100%"
+              style={{ objectFit: 'cover', borderRadius: '10px' }}
+            />
+          </div>
+        ))}
       </Carousel>
     </Card>
-
   )
 }
 
