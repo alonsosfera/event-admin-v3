@@ -7,6 +7,7 @@ import PremiumInvitationAttendance from '@/components/designs/invitations/premiu
 import PremiumInvitationFamily from '@/components/designs/invitations/premium/premium-invitation-family';
 import PremiumInvitationVideo from '@/components/designs/invitations/premium/premium-invitation-video';
 import PremiumInvitationGift from '@/components/designs/invitations/premium/premium-invitation-gifts';
+import PremiumInvitationContact from '@/components/designs/invitations/premium/premium-invitation-contact';
 
 const { Text, Title } = Typography
 
@@ -23,6 +24,7 @@ const PremiumInvitationPage = () => {
           <PremiumInvitationVideo />
           <PremiumInvitationFamily />
           <PremiumInvitationGift />
+          <PremiumInvitationContact />
           <PremiumInvitationAttendance />
                     
           <div style={{ textAlign: 'center', marginTop: '50px', paddingTop: '20px', borderTop: '1px solid #e1e1e1' }}>
