@@ -11,6 +11,7 @@ import PremiumInvitationFamily from '@/components/designs/invitations/premium/pr
 import PremiumInvitationVideo from '@/components/designs/invitations/premium/premium-invitation-video'
 import PremiumInvitationGift from '@/components/designs/invitations/premium/premium-invitation-gifts'
 import PremiumInvitationContact from '@/components/designs/invitations/premium/premium-invitation-contact'
+import PremiumInvitationMusicPlayer from '@/components/designs/invitations/premium/premium-invitation-music'
 // import InvitationPremiumSideBar from '@/components/designs/invitations/premium/premium-invitation-sidebar'
 
 
@@ -34,6 +35,8 @@ const PremiumInvitationPage = () => {
 
   return (
     <>
+
+    <PremiumInvitationMusicPlayer />
     
     <div className='invitation-container'>
       <ParallaxProvider>
