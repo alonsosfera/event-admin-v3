@@ -1,4 +1,4 @@
-import { Modal, Button, Row, Col, notification, Form, Tooltip, Slider, InputNumber } from "antd"
+import { Modal, Button, Row, Col, notification, Form, Tooltip, Slider, InputNumber, Radio, Flex, Typography } from "antd"
 import { useEffect, useMemo, useState } from "react"
 import { parseCookies } from "nookies"
 import axios from "axios"
@@ -9,13 +9,13 @@ import { DesignSelector } from "../designs/design-selector"
 import { PassEditorLayout } from "./pass-editor-layout"
 import { fileToArrayBuffer, arrayBufferToBase64 } from "../designs/helpers"
 
-const defaultItems = (event, fontColor, fontSize) => [
-  { key: "Nombre del evento", label: event.name, coordinateX: 80, coordinateY: 15, customConfig: { fontColor, fontSize } },
-  { key: "Nombre de invitado", coordinateX: 80, coordinateY: 60, customConfig: { fontColor, fontSize } },
-  { key: "# de invitados", coordinateX: 80, coordinateY: 105, customConfig: { fontColor, fontSize } },
-  { key: "Mesa", coordinateX: 80, coordinateY: 150, customConfig: { fontColor, fontSize } },
-  { key: "Fecha", label: dayjs(event.eventDate).format("DD/MM/YYYY"), coordinateX: 80, coordinateY: 195, customConfig: { fontColor, fontSize } },
-  { key: "Hora", label: dayjs(event.eventDate).format("hh:mm a"), coordinateX: 80, coordinateY: 240, customConfig: { fontColor, fontSize } },
+const defaultItems = (event, fontColor, fontSize, textAlign = "center") => [
+  { key: "Nombre del evento", label: event.name, coordinateX: 80, coordinateY: 15, customConfig: { fontColor, fontSize, textAlign } },
+  { key: "Nombre de invitado", coordinateX: 80, coordinateY: 60, customConfig: { fontColor, fontSize, textAlign } },
+  { key: "# de invitados", coordinateX: 80, coordinateY: 105, customConfig: { fontColor, fontSize, textAlign } },
+  { key: "Mesa", coordinateX: 80, coordinateY: 150, customConfig: { fontColor, fontSize, textAlign } },
+  { key: "Fecha", label: dayjs(event.eventDate).format("DD [de] MMMM"), coordinateX: 80, coordinateY: 195, customConfig: { fontColor, fontSize, textAlign } },
+  { key: "Hora", label: dayjs(event.eventDate).format("hh:mm A"), coordinateX: 80, coordinateY: 240, customConfig: { fontColor, fontSize, textAlign } },
   { key: "QR_CODE", coordinateX: 250, coordinateY: 150, customConfig: { qrSize: 250 } }
 ]
 
@@ -44,6 +44,7 @@ export const DigitalPassModal = ({ isOpen, onCancel, onSubmit, event }) => {
 
   const [fontColor, setFontColor] = useState(generalCustomConfig.fontColor || "#000")
   const [fontSize, setFontSize] = useState(generalCustomConfig.fontSize || 30)
+  const [textAlign, setTextAlign] = useState(generalCustomConfig.textAlign || "center")
 
   const qrSizeFromConfig = useMemo(() => {
     if (!event?.digitalPass?.canvaMap?.coordinates?.length) return 250
@@ -62,18 +63,18 @@ export const DigitalPassModal = ({ isOpen, onCancel, onSubmit, event }) => {
           if (coord.key === "Nombre del evento") {
             return { ...coord, label: event.name }
           } else if (coord.key === "Fecha") {
-            return { ...coord, label: dayjs(event.eventDate).format("DD/MM/YYYY") }
+            return { ...coord, label: dayjs(event.eventDate).format("DD [de] MMMM") }
           } else if (coord.key === "Hora") {
             return { ...coord, label: dayjs(event.eventDate).format("hh:mm a") }
           }
           return coord
         }))
       } else {
-        setUpdatedCoordinates(defaultItems(event, fontColor, fontSize))
+        setUpdatedCoordinates(defaultItems(event, fontColor, fontSize, textAlign))
       }
       setHasInitialized(true)
     }
-  }, [coordinates, event, isOpen, hasInitialized, fontColor, fontSize])
+  }, [coordinates, event, isOpen, hasInitialized, fontColor, fontSize, textAlign])
 
   useEffect(() => {
     if (!isOpen) {
@@ -102,7 +103,7 @@ export const DigitalPassModal = ({ isOpen, onCancel, onSubmit, event }) => {
 
   useEffect(() => {
     if (activeSource === "upload" && previewFile) {
-      const defaultCoords = defaultItems(event, fontColor, fontSize)
+      const defaultCoords = defaultItems(event, fontColor, fontSize, textAlign)
       setUpdatedCoordinates(prev => {
         if (prev.length > 0) {
           return prev.map(item => {
@@ -121,7 +122,8 @@ export const DigitalPassModal = ({ isOpen, onCancel, onSubmit, event }) => {
               ...item,
               customConfig: JSON.stringify({
                 fontColor,
-                fontSize
+                fontSize,
+                textAlign
               })
             }
           })
@@ -173,6 +175,24 @@ export const DigitalPassModal = ({ isOpen, onCancel, onSubmit, event }) => {
   useEffect(() => {
     setUpdatedCoordinates(prev =>
       prev.map(item => {
+        if (item.key === "QR_CODE") return item
+        const currentConfig = typeof item.customConfig === 'string' 
+          ? JSON.parse(item.customConfig) 
+          : item.customConfig
+        return {
+          ...item,
+          customConfig: JSON.stringify({
+            ...currentConfig,
+            textAlign
+          })
+        }
+      })
+    )
+  }, [textAlign])
+
+  useEffect(() => {
+    setUpdatedCoordinates(prev =>
+      prev.map(item => {
         if (item.key !== "QR_CODE") return item
         const currentConfig = typeof item.customConfig === 'string' 
           ? JSON.parse(item.customConfig) 
@@ -202,14 +222,14 @@ export const DigitalPassModal = ({ isOpen, onCancel, onSubmit, event }) => {
         if (coord.key === "Nombre del evento") {
           return { ...coord, label: event.name }
         } else if (coord.key === "Fecha") {
-          return { ...coord, label: dayjs(event.eventDate).format("DD/MM/YYYY") }
+          return { ...coord, label: dayjs(event.eventDate).format("DD [de] MMMM") }
         } else if (coord.key === "Hora") {
-          return { ...coord, label: dayjs(event.eventDate).format("hh:mm a") }
+          return { ...coord, label: dayjs(event.eventDate).format("hh:mm A") }
         }
         return coord
       }))
     } else {
-      setUpdatedCoordinates(defaultItems(event, fontColor, fontSize))
+      setUpdatedCoordinates(defaultItems(event, fontColor, fontSize, textAlign))
     }
   }
 
@@ -272,105 +292,11 @@ export const DigitalPassModal = ({ isOpen, onCancel, onSubmit, event }) => {
     }
   }
 
-  const modalTitle = useMemo(() => (
-    <Row gutter={[24, 8]}>
-      <Col xs={24}>Pase Digital</Col>
-
-      <Col xs={24}>
-        <DesignSelector
-          previewFile={previewFile}
-          setPreviewFile={setPreviewFile}
-          activeSource={activeSource}
-          setActiveSource={setActiveSource}
-          selectedDesignId={selectedPassId}
-          setSelectedDesignId={setSelectedPassId}
-          setSelectedDesignUrl={setSelectedPassUrl}
-          allDesigns={allPasses}
-          handleSelectDesign={handleSelectPass}
-          currentPage={currentPage}
-          setCurrentPage={setCurrentPage}
-          setUpdatedCoordinates={setUpdatedCoordinates}
-          designType="pase"
-        />
-      </Col>
-
-      <Col xs={24}>
-        <Form
-          labelAlign="left"
-          labelCol={{ span: 4 }}
-          wrapperCol={{ span:20 }}>
-          <Form.Item 
-            label="Color de letra"
-            style={{ marginBottom: 20 }}
-          >
-            <Tooltip
-              color="white"
-              trigger="click"
-              title={<SketchPicker color={fontColor} onChangeComplete={color => setFontColor(color.hex)} />}
-            >
-              <Button type="primary">
-                Seleccionar color
-              </Button>
-            </Tooltip>
-          </Form.Item>
-          <Form.Item 
-            label="Tamaño de letra"
-            style={{ marginBottom: 20 }}
-          >
-            <Row gutter={8}>
-              <Col flex="auto">
-                <Slider 
-                  min={12} 
-                  max={120} 
-                  onChange={onFontSizeChange} 
-                  value={parseInt(fontSize)}
-                />
-              </Col>
-              <Col flex="80px">
-                <InputNumber 
-                  min={12} 
-                  max={120} 
-                  value={fontSize} 
-                  onChange={onFontSizeChange}
-                  style={{ width: '100%' }}
-                />
-              </Col>
-            </Row>
-          </Form.Item>
-          <Form.Item 
-            label="Tamaño del QR"
-            style={{ marginBottom: 20 }}
-          >
-            <Row gutter={8}>
-              <Col flex="auto">
-                <Slider 
-                  min={100}
-                  max={800} 
-                  onChange={setQrSize} 
-                  value={qrSize}
-                />
-              </Col>
-              <Col flex="80px">
-                <InputNumber 
-                  min={100} 
-                  max={800} 
-                  value={qrSize} 
-                  onChange={setQrSize}
-                  style={{ width: '100%' }}
-                />
-              </Col>
-            </Row>
-          </Form.Item>
-        </Form>
-      </Col>
-    </Row>
-  ), [previewFile, activeSource, selectedPassId, allPasses, currentPage, fontColor, fontSize, qrSize])
-
   return (
     <Modal
       centered
       width={800}
-      title={modalTitle}
+      title={"Pase Digital"}
       open={isOpen}
       onCancel={onCancel}
       cancelText="Cancelar"
@@ -378,17 +304,128 @@ export const DigitalPassModal = ({ isOpen, onCancel, onSubmit, event }) => {
       confirmLoading={isSaving}
       onOk={handleSubmit}
     >
-      <PassEditorLayout
-        updatedCoordinates={updatedCoordinates}
-        scaleFactor={scaleFactor}
-        selectedFile={event?.digitalPass}
-        selectedDesignUrl={selectedPassUrl}
-        previewFile={previewFile}
-        activeSource={activeSource}
-        event={event}
-        onScaleFactorChange={setScaleFactor}
-        onPositionChange={handlePositionChange}
-      />
+      <Row gutter={[24, 8]}>
+        <Col xs={24}>
+          <DesignSelector
+            previewFile={previewFile}
+            setPreviewFile={setPreviewFile}
+            activeSource={activeSource}
+            setActiveSource={setActiveSource}
+            selectedDesignId={selectedPassId}
+            setSelectedDesignId={setSelectedPassId}
+            setSelectedDesignUrl={setSelectedPassUrl}
+            allDesigns={allPasses}
+            handleSelectDesign={handleSelectPass}
+            currentPage={currentPage}
+            setCurrentPage={setCurrentPage}
+            setUpdatedCoordinates={setUpdatedCoordinates}
+            designType="pase"
+          />
+        </Col>
+
+        <Col xs={24}>
+          <Form labelAlign="left" style={{ border: "1px solid lightgray", padding: 20, borderRadius: 10, marginBottom: 10 }}>
+            <Flex>
+              <div style={{ flex: 1 }}>
+                <Form.Item 
+                  label="Alineación"
+                  labelCol={{ span: 6 }}
+                  wrapperCol={{ span: 18 }}
+                  style={{ marginBottom: 20 }}
+                >
+                  <Radio.Group value={textAlign} onChange={e => setTextAlign(e.target.value)}>
+                    <Radio.Button value="left">Izquierda</Radio.Button>
+                    <Radio.Button value="center">Centro</Radio.Button>
+                  </Radio.Group>
+                </Form.Item>
+              </div>
+              <div style={{ flex: 1 }}>
+                <Form.Item 
+                  label="Color de letra"
+                  labelCol={{ span: 8 }}
+                  wrapperCol={{ span: 18 }}
+                  style={{ marginBottom: 20 }}
+                >
+                  <Tooltip
+                    color="white"
+                    trigger="click"
+                    title={<SketchPicker color={fontColor} onChangeComplete={color => setFontColor(color.hex)} />}
+                  >
+                    <Button type="primary">
+                      Seleccionar color
+                    </Button>
+                  </Tooltip>
+                </Form.Item>
+              </div>
+            </Flex>
+            <Form.Item 
+              label="Tamaño de letra"
+              labelCol={{ span: 4 }}
+              wrapperCol={{ span: 20 }}
+              style={{ marginBottom: 20 }}
+            >
+              <Row gutter={8}>
+                <Col flex="auto">
+                  <Slider 
+                    min={12} 
+                    max={120} 
+                    onChange={onFontSizeChange} 
+                    value={parseInt(fontSize)}
+                  />
+                </Col>
+                <Col flex="80px">
+                  <InputNumber 
+                    min={12} 
+                    max={120} 
+                    value={fontSize} 
+                    onChange={onFontSizeChange}
+                    style={{ width: '100%' }}
+                  />
+                </Col>
+              </Row>
+            </Form.Item>
+            <Form.Item 
+              label="Tamaño del QR"
+              labelCol={{ span: 4 }}
+              wrapperCol={{ span: 20 }}
+              style={{ marginBottom: 0 }}
+            >
+              <Row gutter={8}>
+                <Col flex="auto">
+                  <Slider 
+                    min={100}
+                    max={800} 
+                    onChange={setQrSize} 
+                    value={qrSize}
+                  />
+                </Col>
+                <Col flex="80px">
+                  <InputNumber 
+                    min={100} 
+                    max={800} 
+                    value={qrSize} 
+                    onChange={setQrSize}
+                    style={{ width: '100%' }}
+                  />
+                </Col>
+              </Row>
+            </Form.Item>
+          </Form>
+        </Col>
+        <Col>
+          <PassEditorLayout
+            updatedCoordinates={updatedCoordinates}
+            scaleFactor={scaleFactor}
+            selectedFile={event?.digitalPass}
+            selectedDesignUrl={selectedPassUrl}
+            previewFile={previewFile}
+            activeSource={activeSource}
+            event={event}
+            onScaleFactorChange={setScaleFactor}
+            onPositionChange={handlePositionChange}
+          />
+        </Col>
+      </Row>
     </Modal>
   )
 } 

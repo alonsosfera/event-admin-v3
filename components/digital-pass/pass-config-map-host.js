@@ -93,9 +93,20 @@ export const PassConfigMapHost = ({ event, onPositionChange, selectedDesignUrl, 
     const layer = event.target.getLayer()
     layer.find(".guid-line").forEach(l => l.destroy())
 
-    const coordinateX = item.key === "QR_CODE"
-      ? event.target.x()
-      : event.target.x() + event.target.children[0].width() / 2
+    let coordinateX
+    if (item.key === "QR_CODE") {
+      coordinateX = event.target.x()
+    } else {
+      // Handle different text alignments
+      if (item.customConfig.textAlign === "left") {
+        // For left-aligned text, use the x position directly
+        coordinateX = event.target.x()
+      } else {
+        // For center-aligned text, add half the width to get the center point
+        coordinateX = event.target.x() + event.target.children[0].width() / 2
+      }
+    }
+    
     const coordinateY = item.key === "QR_CODE"
       ? event.target.y()
       : event.target.y() + event.target.children[0].height() / 2
@@ -123,7 +134,17 @@ export const PassConfigMapHost = ({ event, onPositionChange, selectedDesignUrl, 
     const text = item.label || item.key
     const textWidth = text.length * item.customConfig.fontSize * scaleFactor * 0.4
     const textHeight = item.customConfig.fontSize * scaleFactor
-    const newX = Math.max(0, Math.min(pos.x, displaySize.width - textWidth))
+    
+    // Use different logic based on text alignment
+    let newX
+    if (item.customConfig.textAlign === "left") {
+      // For left alignment, we want to preserve the original x position
+      newX = Math.max(0, Math.min(pos.x, displaySize.width - textWidth))
+    } else {
+      // For center alignment, we need to account for the text width
+      newX = Math.max(0, Math.min(pos.x, displaySize.width - textWidth))
+    }
+    
     const newY = Math.max(0, Math.min(pos.y, displaySize.height - textHeight))
     return { x: newX, y: newY }
   }
@@ -152,11 +173,11 @@ export const PassConfigMapHost = ({ event, onPositionChange, selectedDesignUrl, 
   return (
     <>
       <Alert
-            showIcon
-            type="info"
-            message="Arrastra los elementos para reorganizarlos"
-            style={{ fontSize: "12px", padding: "8px 16px", marginTop: "-10px" }}
-          />
+        showIcon
+        type="info"
+        message="Arrastra los elementos para reorganizarlos"
+        style={{ fontSize: "12px", padding: "8px 16px", marginTop: "-10px" }}
+      />
       <div style={{ position: "relative" }}>
         <Image
           preview={false}

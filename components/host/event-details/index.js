@@ -6,7 +6,7 @@ import { withForm } from "../../../helpers"
 import { NewInvitation } from "./new-invitation"
 import InvitationsTable from "./invitations-table"
 import { getInvitations, deleteInvitation, updateEvent, getRoomMapByEvent } from "../../events/helpers"
-import { COORDINATES_BY_EVENT_TYPE, invitationPDF, sendInvitation } from "./helpers"
+import { invitationPDF, sendInvitation } from "./helpers"
 import { useService } from "../../../hooks/use-service"
 import { useImageSize } from "react-image-size"
 import Link from "next/link"
@@ -23,7 +23,7 @@ const EventDetails = ({ data, refetchEvent, fullSize, fetchedEvent }) => {
   
   const isPassLoading = data.digitalPass && !dimensions
 
-  const { designH = 540, designW = 960 } = COORDINATES_BY_EVENT_TYPE[fetchedEvent.type] || {}
+  const designH = 540, designW = 960
 
   const handleDigitalModalToggle = () => {
     const digitalInvitation = data?.digitalInvitation || []

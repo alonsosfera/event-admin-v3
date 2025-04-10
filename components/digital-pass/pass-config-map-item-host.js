@@ -23,12 +23,23 @@ const PassConfigMapItemHost = ({ item, scaleFactor, dragBoundFunc, onDragEnd, on
     if (elementRef.current) {
       const width = elementRef.current.children[0].width()
       const height = elementRef.current.children[0].height()
-      setPosition({
-        x: item.coordinateX * scaleFactor - width / 2,
-        y: item.coordinateY * scaleFactor - height / 2
-      })
+      
+      // Set position based on text alignment
+      if (customConfig.textAlign === "left") {
+        // For left-aligned text, use the x coordinate directly
+        setPosition({
+          x: item.coordinateX * scaleFactor,
+          y: item.coordinateY * scaleFactor - height / 2
+        })
+      } else {
+        // For center-aligned text, subtract half the width to center it
+        setPosition({
+          x: item.coordinateX * scaleFactor - width / 2,
+          y: item.coordinateY * scaleFactor - height / 2
+        })
+      }
     }
-  }, [item, scaleFactor, item.label])
+  }, [item, scaleFactor, item.label, customConfig.textAlign])
 
   return (
     <Group
@@ -47,6 +58,7 @@ const PassConfigMapItemHost = ({ item, scaleFactor, dragBoundFunc, onDragEnd, on
         fill={customConfig.fontColor}
         fontFamily={customConfig.fontFamily}
         fontSize={(customConfig.fontSize) * scaleFactor}
+        align={customConfig.textAlign || "center"}
       />
     </Group>
   )

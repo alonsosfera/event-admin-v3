@@ -1,7 +1,7 @@
 import axios from "axios"
 import dynamic from "next/dynamic"
 import React, { useState, useEffect, useMemo } from "react"
-import { Col, message, Modal, Row, Button, Tooltip, Slider, InputNumber, Form } from "antd"
+import { Col, message, Modal, Row, Button, Tooltip, Slider, InputNumber, Form, Radio, Flex } from "antd"
 import { EditableModalTitle } from "../../shared"
 import { SketchPicker } from "react-color"
 
@@ -27,6 +27,7 @@ export const PassConfigModal = ({ onClose, onSuccess, selectedFile }) => {
 
   const [fontColor, setFontColor] = useState(generalCustomConfig.fontColor || "#000")
   const [fontSize, setFontSize] = useState(generalCustomConfig.fontSize || 30)
+  const [textAlign, setTextAlign] = useState(generalCustomConfig.textAlign || "center")
 
   const qrSizeFromConfig = useMemo(() => {
     if (!selectedFile?.canvaMap?.coordinates?.length) return 250
@@ -37,12 +38,12 @@ export const PassConfigModal = ({ onClose, onSuccess, selectedFile }) => {
   const [qrSize, setQrSize] = useState(qrSizeFromConfig)
 
   const defaultItems = [
-    { key: "Nombre del evento", coordinateX: 80, coordinateY: 15, customConfig: { fontColor, fontSize } },
-    { key: "Nombre de invitado", coordinateX: 80, coordinateY: 60, customConfig: { fontColor, fontSize } },
-    { key: "# de invitados", coordinateX: 80, coordinateY: 105, customConfig: { fontColor, fontSize } },
-    { key: "Mesa", coordinateX: 80, coordinateY: 150, customConfig: { fontColor, fontSize } },
-    { key: "Fecha", coordinateX: 80, coordinateY: 195, customConfig: { fontColor, fontSize } },
-    { key: "Hora", coordinateX: 80, coordinateY: 240, customConfig: { fontColor, fontSize } },
+    { key: "Nombre del evento", coordinateX: 80, coordinateY: 15, customConfig: { fontColor, fontSize, textAlign } },
+    { key: "Nombre de invitado", coordinateX: 80, coordinateY: 60, customConfig: { fontColor, fontSize, textAlign } },
+    { key: "# de invitados", coordinateX: 80, coordinateY: 105, customConfig: { fontColor, fontSize, textAlign } },
+    { key: "Mesa", coordinateX: 80, coordinateY: 150, customConfig: { fontColor, fontSize, textAlign } },
+    { key: "Fecha", coordinateX: 80, coordinateY: 195, customConfig: { fontColor, fontSize, textAlign } },
+    { key: "Hora", coordinateX: 80, coordinateY: 240, customConfig: { fontColor, fontSize, textAlign } },
     { key: "QR_CODE", coordinateX: 250, coordinateY: 150, customConfig: { qrSize } }
   ]
 
@@ -56,6 +57,7 @@ export const PassConfigModal = ({ onClose, onSuccess, selectedFile }) => {
             ...currCustomConfig,
             fontColor,
             fontSize,
+            textAlign,
             qrSize: coordinate.key === "QR_CODE" ? currCustomConfig.qrSize || 250 : undefined
           }
         }
@@ -72,11 +74,12 @@ export const PassConfigModal = ({ onClose, onSuccess, selectedFile }) => {
           ...item.customConfig,
           fontColor,
           fontSize,
+          textAlign,
           qrSize: item.key === "QR_CODE" ? qrSize : item.customConfig.qrSize
         }
       }))
     )
-  }, [fontColor, fontSize, qrSize])
+  }, [fontColor, fontSize, textAlign, qrSize])
 
   const onSave = async () => {
     setLoading(true)
@@ -86,7 +89,8 @@ export const PassConfigModal = ({ onClose, onSuccess, selectedFile }) => {
         customConfig: JSON.stringify({
           ...coordinate.customConfig,
           qrSize: coordinate.key === "QR_CODE" ? qrSize : coordinate.customConfig.qrSize,
-          fontColor
+          fontColor,
+          textAlign
         })
       }))
 
@@ -165,20 +169,39 @@ export const PassConfigModal = ({ onClose, onSuccess, selectedFile }) => {
             labelAlign="left"
             labelCol={{ span: 4 }}
             wrapperCol={{ span:20 }}>
-            <Form.Item 
-              label="Color de letra"
-              style={{ marginBottom: 20 }}
-            >
-              <Tooltip
-                color="white"
-                trigger="click"
-                title={<SketchPicker color={fontColor} onChangeComplete={color => setFontColor(color.hex)} />}
-              >
-                <Button type="primary">
-                  Seleccionar color
-                </Button>
-              </Tooltip>
-            </Form.Item>
+            <Flex gap="middle" align="stretch">
+              <div style={{ flex: 1 }}>
+                <Form.Item 
+                  label="Alineación"
+                  labelCol={{ span: 8 }}
+                  wrapperCol={{ span: 16 }}
+                  style={{ marginBottom: 20 }}
+                >
+                  <Radio.Group value={textAlign} onChange={e => setTextAlign(e.target.value)}>
+                    <Radio.Button value="left">Izquierda</Radio.Button>
+                    <Radio.Button value="center">Centro</Radio.Button>
+                  </Radio.Group>
+                </Form.Item>
+              </div>
+              <div style={{ flex: 1 }}>
+                <Form.Item 
+                  label="Color de letra"
+                  labelCol={{ span: 8 }}
+                  wrapperCol={{ span: 16 }}
+                  style={{ marginBottom: 20 }}
+                >
+                  <Tooltip
+                    color="white"
+                    trigger="click"
+                    title={<SketchPicker color={fontColor} onChangeComplete={color => setFontColor(color.hex)} />}
+                  >
+                    <Button type="primary">
+                      Seleccionar color
+                    </Button>
+                  </Tooltip>
+                </Form.Item>
+              </div>
+            </Flex>
             <Form.Item 
               label="Tamaño de letra"
               style={{ marginBottom: 20 }}

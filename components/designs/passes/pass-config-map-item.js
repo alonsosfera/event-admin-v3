@@ -7,15 +7,29 @@ const PassConfigMapItem = ({ item, scaleFactor, dragBoundFunc, onDragEnd, onDrag
 
   useLayoutEffect(() => {
     if (elementRef.current) {
-      setPosition({
-        x: item.coordinateX * scaleFactor - (elementRef.current?.width() / 2),
-        y: item.coordinateY * scaleFactor - (elementRef.current?.height() / 2)
-      })
+      // Apply different positioning based on text alignment
+      const width = elementRef.current.width()
+      const height = elementRef.current.height()
+      
+      if (item.customConfig?.textAlign === "left") {
+        // For left alignment, don't center horizontally
+        setPosition({
+          x: item.coordinateX * scaleFactor,
+          y: item.coordinateY * scaleFactor - (height / 2)
+        })
+      } else {
+        // For center alignment (default), center horizontally
+        setPosition({
+          x: item.coordinateX * scaleFactor - (width / 2),
+          y: item.coordinateY * scaleFactor - (height / 2)
+        })
+      }
     }
   }, [item, scaleFactor])
 
   const fontSize = item.customConfig?.fontSize || 38
   const fontColor = item.customConfig?.fontColor || "#000"
+  const textAlign = item.customConfig?.textAlign || "center"
 
   return (
     <Text
@@ -28,6 +42,7 @@ const PassConfigMapItem = ({ item, scaleFactor, dragBoundFunc, onDragEnd, onDrag
       fontFamily="Helvetica"
       fontSize={fontSize * scaleFactor}
       fill={fontColor}
+      align={textAlign}
       dragBoundFunc={pos => dragBoundFunc(pos, item)}
       onDragMove={onDragMove}
       onDragEnd={event => onDragEnd(event, item)}
