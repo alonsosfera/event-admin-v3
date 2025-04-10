@@ -1,51 +1,64 @@
 import { Col, Row, Typography } from 'antd'
-import { ParallaxProvider, Parallax } from 'react-scroll-parallax';
+import { ParallaxProvider, Parallax } from 'react-scroll-parallax'
+import { useState } from 'react'
 
-import PremiumInvitationCover from '@/components/designs/invitations/premium/premium-invitation-cover.js';
-import PremiumInvitationPass from '@/components/designs/invitations/premium/premium-invitation-pass';
-import PremiumInvitationPlace from '@/components/designs/invitations/premium/premium-invitation-place';
-import PremiumInvitationCarousel from '@/components/designs/invitations/premium/premium-invitation-carousel';
-import PremiumInvitationAttendance from '@/components/designs/invitations/premium/premium-invitation-attendance';
-import PremiumInvitationFamily from '@/components/designs/invitations/premium/premium-invitation-family';
-import PremiumInvitationVideo from '@/components/designs/invitations/premium/premium-invitation-video';
-import PremiumInvitationGift from '@/components/designs/invitations/premium/premium-invitation-gifts';
-import PremiumInvitationContact from '@/components/designs/invitations/premium/premium-invitation-contact';
+import PremiumInvitationCover from '@/components/designs/invitations/premium/premium-invitation-cover.js'
+import PremiumInvitationPass from '@/components/designs/invitations/premium/premium-invitation-pass'
+import PremiumInvitationPlace from '@/components/designs/invitations/premium/premium-invitation-place'
+import PremiumInvitationCarousel from '@/components/designs/invitations/premium/premium-invitation-carousel'
+import PremiumInvitationAttendance from '@/components/designs/invitations/premium/premium-invitation-attendance'
+import PremiumInvitationFamily from '@/components/designs/invitations/premium/premium-invitation-family'
+import PremiumInvitationVideo from '@/components/designs/invitations/premium/premium-invitation-video'
+import PremiumInvitationGift from '@/components/designs/invitations/premium/premium-invitation-gifts'
+import PremiumInvitationContact from '@/components/designs/invitations/premium/premium-invitation-contact'
+// import InvitationPremiumSideBar from '@/components/designs/invitations/premium/premium-invitation-sidebar'
 
-const { Text } = Typography;
 
-const sections = [
-  { Component: PremiumInvitationCover, translateX: [0, 0] },
-  { Component: PremiumInvitationPass },
-  { Component: PremiumInvitationPlace },
-  { Component: PremiumInvitationCarousel },
-  { Component: PremiumInvitationVideo },
-  { Component: PremiumInvitationFamily },
-  { Component: PremiumInvitationGift },
-  { Component: PremiumInvitationContact },
-  { Component: PremiumInvitationAttendance },
+const { Text } = Typography
+
+const initialSections = [
+  { id: 'cover', label: 'Portada', Component: PremiumInvitationCover, fixed: true },
+  { id: 'pass', label: 'Pase', Component: PremiumInvitationPass },
+  { id: 'place', label: 'Lugar', Component: PremiumInvitationPlace },
+  { id: 'carousel', label: 'Galería', Component: PremiumInvitationCarousel },
+  { id: 'video', label: 'Video', Component: PremiumInvitationVideo },
+  { id: 'family', label: 'Familia', Component: PremiumInvitationFamily },
+  { id: 'gift', label: 'Regalos', Component: PremiumInvitationGift },
+  { id: 'contact', label: 'Contacto', Component: PremiumInvitationContact },
+  { id: 'attendance', label: 'Asistencia', Component: PremiumInvitationAttendance },
 ];
 
 const PremiumInvitationPage = () => {
+
+  const [sectionOrder, setSectionOrder] = useState(initialSections.map(s => s.id));
+
   return (
+    <>
+    
     <div className='invitation-container'>
       <ParallaxProvider>
         <Row justify="center">
           <Col xs={24} sm={22} md={20} lg={16}>
-            {sections.map(({ Component, translateX }, index) => {
-              const customTranslateX = translateX || [(index % 2 === 0 ? -3 : 3), 0];
+          {sectionOrder.map((id, index) => {
+            const section = initialSections.find(s => s.id === id);
+            if (!section) return null;
 
-              return (
-                <Parallax
-                  key={index}
-                  speed={0}
-                  translateX={customTranslateX}
-                  opacity={[0, 5]}
-                  easing="ease"
-                >
-                  <Component />
-                </Parallax>
-              );
-            })}
+            const { Component } = section;
+            const customTranslateX = id === 'cover' ? [0, 0] : [(index % 2 === 0 ? -3 : 3), 0];
+
+            return (
+              <Parallax
+                key={id}
+                speed={0}
+                translateX={customTranslateX}
+                opacity={[0, 5]}
+                easing="ease"
+              >
+                <Component />
+              </Parallax>
+            );
+          })}
+
             <div style={{ textAlign: 'center', marginTop: '50px', paddingTop: '20px', borderTop: '1px solid #e1e1e1' }}>
               <Text style={{ fontSize: '14px', color: '#7f8c8d' }}>
                 Gracias por ser parte de nuestro día especial.
@@ -55,7 +68,14 @@ const PremiumInvitationPage = () => {
         </Row>
       </ParallaxProvider>
     </div>
+
+    {/* <InvitationPremiumSideBar 
+      sectionOrder={sectionOrder}
+      setSectionOrder={setSectionOrder}
+      sections={initialSections}
+    /> */}
+    </>
   );
 };
 
-export default PremiumInvitationPage;
+export default PremiumInvitationPage
