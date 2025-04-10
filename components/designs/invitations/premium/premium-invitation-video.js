@@ -7,8 +7,8 @@ const PremiumInvitationVideo = () => {
     <Card className='card-invitation'> 
       <div style={{ position: 'relative', paddingBottom: '56.25%', height: 0, overflow: 'hidden' }}>
         <iframe
-          src="https://www.youtube.com/embed/7TWzV05kQ4w"
-          allow=" clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+          src="https://www.youtube.com/embed/7TWzV05kQ4w?rel=0&modestbranding=1"
+          allow="clipboard-write; encrypted-media; gyroscope;"
           allowFullScreen
           title="Video de YouTube"
           style={{
