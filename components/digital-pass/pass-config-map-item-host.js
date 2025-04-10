@@ -1,20 +1,23 @@
 import React, { useLayoutEffect, useRef, useState, useEffect } from "react"
-import { Group, Text, Rect } from "react-konva"
+import { Group, Text } from "react-konva"
 import WebFont from "webfontloader"
 
-const InvitationConfigMapItemHost = ({ item, scaleFactor, dragBoundFunc, onDragEnd, onDragMove, onDeleteItem }) => {
+const PassConfigMapItemHost = ({ item, scaleFactor, dragBoundFunc, onDragEnd, onDragMove }) => {
   const elementRef = useRef(null)
   const [position, setPosition] = useState({ x: 0, y: 0 })
 
+  const customConfig = item.customConfig
+
   const loadFont = font => {
+    if (!font) return
     WebFont.load({ google: { families: [font] } })
   }
 
   useEffect(() => {
-    if (WebFont && item.customConfig.fontFamily) {
-      loadFont(item.customConfig.fontFamily)
+    if (WebFont && customConfig.fontFamily) {
+      loadFont(customConfig.fontFamily)
     }
-  }, [item.customConfig.fontFamily])
+  }, [customConfig.fontFamily])
 
   useLayoutEffect(() => {
     if (elementRef.current) {
@@ -41,31 +44,12 @@ const InvitationConfigMapItemHost = ({ item, scaleFactor, dragBoundFunc, onDragE
       <Text
         key={item.key}
         text={item.label || item.key}
-        fill={item.customConfig.fontColor}
-        fontFamily={item.customConfig.fontFamily || "Merienda, cursive"}
-        fontSize={item.customConfig.fontSize * scaleFactor}
-      />
-      
-      <Rect
-        y={-10}
-        x={-10}
-        width={20}
-        height={20}
-        cornerRadius={10}
-        style={{ cursor: "pointer" }}
-        fill="rgba(255, 255, 255, 0.8)"
-        onClick={() => onDeleteItem && onDeleteItem(item)}
-      />
-      <Text
-        y={-5}
-        x={-5}
-        text="X"
-        fontSize={12}
-        fill="#ff0000"
-        onClick={() => onDeleteItem && onDeleteItem(item)}
+        fill={customConfig.fontColor}
+        fontFamily={customConfig.fontFamily}
+        fontSize={(customConfig.fontSize) * scaleFactor}
       />
     </Group>
   )
 }
 
-export default React.memo(InvitationConfigMapItemHost)
+export default React.memo(PassConfigMapItemHost) 

@@ -9,4 +9,4 @@ async function handler(req, res) {
   res.status(200).json({ fonts: items })
 }
 
-export default withAuthApi(handler, [ROLES.ADMIN])
+export default withAuthApi(handler, [ROLES.ADMIN, ROLES.HOST])
