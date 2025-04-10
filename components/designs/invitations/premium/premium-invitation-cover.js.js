@@ -42,7 +42,7 @@ const PremiumInvitationCover = () => {
               fontSize: '20px', 
               color: '#8f8f8f', 
               display: 'block',
-              '@media (max-width: 768px)': {
+              '@media (maxWidth: 768px)': {
                 fontSize: '16px',
               }
             }}>
