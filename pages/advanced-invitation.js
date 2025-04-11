@@ -1,8 +1,8 @@
-import { Col, Row, Typography } from 'antd'
+import { Layout, Typography, Row, Col } from 'antd'
 import { ParallaxProvider, Parallax } from 'react-scroll-parallax'
 import { useState } from 'react'
 
-import PremiumInvitationCover from '@/components/designs/invitations/premium/premium-invitation-cover.js'
+import PremiumInvitationCover from '@/components/designs/invitations/premium/premium-invitation-cover'
 import PremiumInvitationPass from '@/components/designs/invitations/premium/premium-invitation-pass'
 import PremiumInvitationPlace from '@/components/designs/invitations/premium/premium-invitation-place'
 import PremiumInvitationCarousel from '@/components/designs/invitations/premium/premium-invitation-carousel'
@@ -15,6 +15,7 @@ import PremiumInvitationMusicPlayer from '@/components/designs/invitations/premi
 import InvitationPremiumSideBar from '@/components/designs/invitations/premium/premium-invitation-sidebar'
 
 const { Text } = Typography
+const { Content } = Layout
 
 const initialSections = [
   { id: 'cover', label: 'Portada', Component: PremiumInvitationCover },
@@ -26,28 +27,40 @@ const initialSections = [
   { id: 'gift', label: 'Regalos', Component: PremiumInvitationGift },
   { id: 'contact', label: 'Contacto', Component: PremiumInvitationContact },
   { id: 'attendance', label: 'Asistencia', Component: PremiumInvitationAttendance },
-];
+]
 
-const defaultActiveSections = ['cover', 'pass', 'place', 'carousel', 'attendance'];
-const defaultInactiveSections = ['video', 'family', 'gift', 'contact'];
+const defaultActiveSections = ['cover', 'pass', 'place', 'carousel', 'attendance']
+const defaultInactiveSections = ['video', 'family', 'gift', 'contact']
 
 const PremiumInvitationPage = () => {
   const [activeSectionOrder, setActiveSectionOrder] = useState(defaultActiveSections)
   const [inactiveSectionOrder, setInactiveSectionOrder] = useState(defaultInactiveSections)
 
   return (
-    <>
-      <PremiumInvitationMusicPlayer />
+    <Layout style={{ minHeight: '100vh' }}>
+      {/* SIDEBAR */}
+      <InvitationPremiumSideBar
+        sections={initialSections}
+        activeSectionOrder={activeSectionOrder}
+        setActiveSectionOrder={setActiveSectionOrder}
+        inactiveSectionOrder={inactiveSectionOrder}
+        setInactiveSectionOrder={setInactiveSectionOrder}
+      />
 
-      <div className="invitation-container">
+      <Content
+        style={{
+          marginLeft: 260,
+        }}>
+        <PremiumInvitationMusicPlayer />
+        <div className="invitation-container">
         <ParallaxProvider>
           <Row justify="center">
             <Col xs={24} sm={22} md={20} lg={16}>
               {activeSectionOrder.map((id, index) => {
                 const section = initialSections.find((s) => s.id === id)
-                if (!section) return null;
+                if (!section) return null
 
-                const { Component } = section;
+                const { Component } = section
                 const customTranslateX = id === 'cover' ? [0, 0] : [(index % 2 === 0 ? -3 : 3), 0]
 
                 return (
@@ -62,7 +75,7 @@ const PremiumInvitationPage = () => {
                       <Component />
                     </div>
                   </Parallax>
-                );
+                )
               })}
 
               <div
@@ -80,17 +93,10 @@ const PremiumInvitationPage = () => {
             </Col>
           </Row>
         </ParallaxProvider>
-      </div>
-
-      <InvitationPremiumSideBar
-        sections={initialSections}
-        activeSectionOrder={activeSectionOrder}
-        setActiveSectionOrder={setActiveSectionOrder}
-        inactiveSectionOrder={inactiveSectionOrder}
-        setInactiveSectionOrder={setInactiveSectionOrder}
-      />
-    </>
-  );
-};
+        </div>
+      </Content>
+    </Layout>
+  )
+}
 
 export default PremiumInvitationPage

@@ -131,15 +131,14 @@ const InvitationPremiumSideBar = ({
   return (
     <Sider
       width={260}
+      theme='light'
       style={{
-        background: '#fafafa',
         padding: '24px 16px',
         height: '100vh',
         overflowY: 'auto',
-        position: 'fixed',
+        position: "fixed",
         left: 0,
         top: 0,
-        zIndex: 1000,
         borderRight: '1px solid #e5e5e5'
       }}
     >
