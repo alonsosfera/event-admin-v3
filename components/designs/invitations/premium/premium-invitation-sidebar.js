@@ -14,9 +14,7 @@ const InvitationPremiumSideBar = ({
 }) => {
   const [isClient, setIsClient] = useState(false)
 
-  useEffect(() => {
-    setIsClient(true)
-  }, [])
+  useEffect(() => setIsClient(true), [])
 
   const scrollToSection = (id) => {
     const el = document.getElementById(`section-${id}`)
@@ -38,8 +36,8 @@ const InvitationPremiumSideBar = ({
     const [moved] = sourceList.splice(source.index, 1)
     let targetIndex = destination.index
 
-    if (destination.droppableId === 'active') {
-      if (targetIndex === 0) targetIndex = 1
+    if (destination.droppableId === 'active' && targetIndex === 0) {
+      targetIndex = 1
     }
 
     destinationList.splice(targetIndex, 0, moved)
@@ -65,27 +63,46 @@ const InvitationPremiumSideBar = ({
   }
 
   const renderDroppableList = (droppableId, title, list) => (
-    <>
-      <Title level={5} style={{ marginBottom: 16 }}>{title}</Title>
+    <div style={{ marginBottom: 24 }}>
+      <Title level={5} style={{ marginBottom: 8, fontSize: 14 }}>{title}</Title>
       <Droppable droppableId={droppableId}>
         {(provided) => (
           <div
             ref={provided.innerRef}
             {...provided.droppableProps}
-            style={{ display: 'flex', flexDirection: 'column', gap: '16px', marginBottom: 20, minHeight: "40px" }}
+            style={{
+              display: 'flex',
+              flexDirection: 'column',
+              gap: 8,
+              minHeight: 40
+            }}
           >
             {list.map((id, index) => {
               const section = sections.find(s => s.id === id)
               if (!section) return null
 
+              const cardStyle = {
+                width: '100%',
+                maxWidth: '210px',
+                fontSize: 13,
+                padding: '4px 8px',
+                margin: '0 auto'
+              }
+
+              const cardProps = {
+                onClick: () => scrollToSection(id),
+                size: "small",
+                hoverable: true,
+                bodyStyle: { padding: '8px 12px' }
+              }
+
               if (id === 'cover') {
                 return (
                   <Card
                     key={id}
-                    onClick={() => scrollToSection(id)}
-                    size="small"
-                    hoverable
+                    {...cardProps}
                     style={{
+                      ...cardStyle,
                       background: '#f0f0f0',
                       border: '1px dashed #ccc',
                       cursor: 'default'
@@ -97,20 +114,20 @@ const InvitationPremiumSideBar = ({
               }
 
               return (
-                <Draggable key={id} draggableId={id} index={index}>
+                <Draggable draggableId={id} index={index} key={id}>
                   {(provided, snapshot) => (
                     <Card
-                      onClick={() => scrollToSection(id)}
+                      key={id}
+                      {...cardProps}
                       ref={provided.innerRef}
                       {...provided.draggableProps}
                       {...provided.dragHandleProps}
-                      size="small"
-                      hoverable
                       style={{
+                        ...cardStyle,
                         userSelect: 'none',
                         boxShadow: snapshot.isDragging
-                          ? '0 4px 12px rgba(0,0,0,0.1)'
-                          : '0 2px 6px rgba(0,0,0,0.05)',
+                          ? '0 2px 8px rgba(0,0,0,0.1)'
+                          : '0 1px 4px rgba(0,0,0,0.05)',
                         background: '#fff',
                         ...provided.draggableProps.style
                       }}
@@ -125,7 +142,7 @@ const InvitationPremiumSideBar = ({
           </div>
         )}
       </Droppable>
-    </>
+    </div>
   )
 
   return (
@@ -133,7 +150,7 @@ const InvitationPremiumSideBar = ({
       width={260}
       theme='light'
       style={{
-        padding: '24px 16px',
+        padding: '16px 12px',
         height: '100vh',
         overflowY: 'auto',
         position: "fixed",
@@ -142,21 +159,26 @@ const InvitationPremiumSideBar = ({
         borderRight: '1px solid #e5e5e5'
       }}
     >
-      <Title level={4} style={{ marginBottom: 20, textAlign: 'center', color: '#333' }}>
-         Personalizar Secciones
+      <Title level={4} style={{ marginBottom: 16, textAlign: 'center', fontSize: 16 }}>
+        Personalizar Secciones
       </Title>
 
       <Text
         type="secondary"
-        style={{ display: 'block', fontSize: 12, textAlign: 'center', marginBottom: 24 }}
+        style={{
+          display: 'block',
+          fontSize: 11,
+          textAlign: 'center',
+          marginBottom: 16
+        }}
       >
-        Arrastra para mover las secciones
+        Arrastra para mover secciones
       </Text>
 
       {isClient && (
         <DragDropContext onDragEnd={handleDragEnd}>
-          {renderDroppableList('active', '📌 Secciones activas', activeSectionOrder)}
-          {renderDroppableList('inactive', '📂 Secciones disponibles', inactiveSectionOrder)}
+          {renderDroppableList('active', '📌 Activas', activeSectionOrder)}
+          {renderDroppableList('inactive', '📂 Disponibles', inactiveSectionOrder)}
         </DragDropContext>
       )}
     </Sider>
