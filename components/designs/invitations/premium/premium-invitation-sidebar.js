@@ -141,53 +141,53 @@ const InvitationPremiumSideBar = ({
                 style={{ display: 'flex', flexDirection: 'column', gap: '16px', marginBottom: 40 }}
               >
                 {activeSectionOrder.map((id, index) => {
-  const section = sections.find((s) => s.id === id)
-  if (!section) return null
+                const section = sections.find((s) => s.id === id)
+                if (!section) return null
 
-  if (id === 'cover') {
-    return (
-      <Card
-        key={id}
-        onClick={() => handleCardClick(id)}
-        size="small"
-        hoverable
-        style={{
-          background: '#f0f0f0',
-          border: '1px dashed #ccc',
-          cursor: 'default'
-        }}
-      >
-        <Text strong>{section.label}</Text>
-      </Card>
-    )
-  }
+                if (id === 'cover') {
+                  return (
+                    <Card
+                      key={id}
+                      onClick={() => handleCardClick(id)}
+                      size="small"
+                      hoverable
+                      style={{
+                        background: '#f0f0f0',
+                        border: '1px dashed #ccc',
+                        cursor: 'default'
+                      }}
+                    >
+                      <Text strong>{section.label}</Text>
+                    </Card>
+                  )
+                }
 
-  return (
-    <Draggable key={id} draggableId={id} index={index}>
-      {(provided, snapshot) => (
-        <Card
-        onClick={() => handleCardClick(id)}
-        ref={provided.innerRef}
-        {...provided.draggableProps}
-        {...provided.dragHandleProps} // <--- agregá esto acá
-        size="small"
-        hoverable
-        style={{
-          userSelect: 'none',
-          boxShadow: snapshot.isDragging
-            ? '0 4px 12px rgba(0,0,0,0.1)'
-            : '0 2px 6px rgba(0,0,0,0.05)',
-          background: '#fff',
-          ...provided.draggableProps.style
-        }}
-      >
-        <Text strong>{section.label}</Text>
-      </Card>
-      
-      )}
-    </Draggable>
-  )
-})}
+              return (
+                <Draggable key={id} draggableId={id} index={index}>
+                  {(provided, snapshot) => (
+                    <Card
+                    onClick={() => handleCardClick(id)}
+                    ref={provided.innerRef}
+                    {...provided.draggableProps}
+                    {...provided.dragHandleProps}
+                    size="small"
+                    hoverable
+                    style={{
+                      userSelect: 'none',
+                      boxShadow: snapshot.isDragging
+                        ? '0 4px 12px rgba(0,0,0,0.1)'
+                        : '0 2px 6px rgba(0,0,0,0.05)',
+                      background: '#fff',
+                      ...provided.draggableProps.style
+                    }}
+                  >
+                    <Text strong>{section.label}</Text>
+                  </Card>
+                  
+                  )}
+                </Draggable>
+              )
+            })}
 
                 {provided.placeholder}
               </div>
