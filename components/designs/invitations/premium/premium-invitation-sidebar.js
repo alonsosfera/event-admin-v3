@@ -72,7 +72,7 @@ const InvitationPremiumSideBar = ({
           <div
             ref={provided.innerRef}
             {...provided.droppableProps}
-            style={{ display: 'flex', flexDirection: 'column', gap: '16px', marginBottom: 40 }}
+            style={{ display: 'flex', flexDirection: 'column', gap: '16px', marginBottom: 20, minHeight: "40px" }}
           >
             {list.map((id, index) => {
               const section = sections.find(s => s.id === id)
@@ -142,15 +142,15 @@ const InvitationPremiumSideBar = ({
         borderRight: '1px solid #e5e5e5'
       }}
     >
-      <Title level={4} style={{ marginBottom: 32, textAlign: 'center', color: '#333' }}>
-        ✨ Personalizar Secciones
+      <Title level={4} style={{ marginBottom: 20, textAlign: 'center', color: '#333' }}>
+         Personalizar Secciones
       </Title>
 
       <Text
         type="secondary"
         style={{ display: 'block', fontSize: 12, textAlign: 'center', marginBottom: 24 }}
       >
-        Arrastra para mover entre listas
+        Arrastra para mover las secciones
       </Text>
 
       {isClient && (
