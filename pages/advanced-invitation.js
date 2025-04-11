@@ -14,11 +14,10 @@ import PremiumInvitationContact from '@/components/designs/invitations/premium/p
 import PremiumInvitationMusicPlayer from '@/components/designs/invitations/premium/premium-invitation-music'
 import InvitationPremiumSideBar from '@/components/designs/invitations/premium/premium-invitation-sidebar'
 
-
 const { Text } = Typography
 
 const initialSections = [
-  { id: 'cover', label: 'Portada', Component: PremiumInvitationCover, fixed: true },
+  { id: 'cover', label: 'Portada', Component: PremiumInvitationCover },
   { id: 'pass', label: 'Pase', Component: PremiumInvitationPass },
   { id: 'place', label: 'Lugar', Component: PremiumInvitationPlace },
   { id: 'carousel', label: 'Galería', Component: PremiumInvitationCarousel },
@@ -29,56 +28,67 @@ const initialSections = [
   { id: 'attendance', label: 'Asistencia', Component: PremiumInvitationAttendance },
 ];
 
-const PremiumInvitationPage = () => {
+const defaultActiveSections = ['cover', 'pass', 'place', 'carousel', 'attendance'];
+const defaultInactiveSections = ['video', 'family', 'gift', 'contact'];
 
-  const [sectionOrder, setSectionOrder] = useState(initialSections.map(s => s.id));
+const PremiumInvitationPage = () => {
+  const [activeSectionOrder, setActiveSectionOrder] = useState(defaultActiveSections)
+  const [inactiveSectionOrder, setInactiveSectionOrder] = useState(defaultInactiveSections)
 
   return (
     <>
+      <PremiumInvitationMusicPlayer />
 
-    <PremiumInvitationMusicPlayer />
-    
-    <div className='invitation-container'>
-      <ParallaxProvider>
-        <Row justify="center">
-          <Col xs={24} sm={22} md={20} lg={16}>
-          {sectionOrder.map((id, index) => {
-            const section = initialSections.find(s => s.id === id);
-            if (!section) return null;
+      <div className="invitation-container">
+        <ParallaxProvider>
+          <Row justify="center">
+            <Col xs={24} sm={22} md={20} lg={16}>
+              {activeSectionOrder.map((id, index) => {
+                const section = initialSections.find((s) => s.id === id)
+                if (!section) return null;
 
-            const { Component } = section;
-            const customTranslateX = id === 'cover' ? [0, 0] : [(index % 2 === 0 ? -3 : 3), 0];
+                const { Component } = section;
+                const customTranslateX = id === 'cover' ? [0, 0] : [(index % 2 === 0 ? -3 : 3), 0]
 
-            return (
-              <Parallax
-                key={id}
-                speed={0}
-                translateX={customTranslateX}
-                opacity={[0, 5]}
-                easing="ease"
+                return (
+                  <Parallax
+                    key={id}
+                    speed={0}
+                    translateX={customTranslateX}
+                    opacity={[0, 5]}
+                    easing="ease"
+                  >
+                    <div id={`section-${id}`}>
+                      <Component />
+                    </div>
+                  </Parallax>
+                );
+              })}
+
+              <div
+                style={{
+                  textAlign: 'center',
+                  marginTop: '50px',
+                  paddingTop: '20px',
+                  borderTop: '1px solid #e1e1e1',
+                }}
               >
-                <div id={`section-${id}`}>
-                  <Component />
-                </div>
-              </Parallax>
-            );
-          })}
+                <Text style={{ fontSize: '14px', color: '#7f8c8d' }}>
+                  Gracias por ser parte de nuestro día especial.
+                </Text>
+              </div>
+            </Col>
+          </Row>
+        </ParallaxProvider>
+      </div>
 
-            <div style={{ textAlign: 'center', marginTop: '50px', paddingTop: '20px', borderTop: '1px solid #e1e1e1' }}>
-              <Text style={{ fontSize: '14px', color: '#7f8c8d' }}>
-                Gracias por ser parte de nuestro día especial.
-              </Text>
-            </div>
-          </Col>
-        </Row>
-      </ParallaxProvider>
-    </div>
-
-    <InvitationPremiumSideBar 
-      sectionOrder={sectionOrder}
-      setSectionOrder={setSectionOrder}
-      sections={initialSections}
-    />
+      <InvitationPremiumSideBar
+        sections={initialSections}
+        activeSectionOrder={activeSectionOrder}
+        setActiveSectionOrder={setActiveSectionOrder}
+        inactiveSectionOrder={inactiveSectionOrder}
+        setInactiveSectionOrder={setInactiveSectionOrder}
+      />
     </>
   );
 };
