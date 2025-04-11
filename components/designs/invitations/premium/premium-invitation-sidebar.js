@@ -1,10 +1,18 @@
 import { Layout, Typography, Card } from 'antd';
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
+import { useEffect, useState } from 'react';
 
 const { Sider } = Layout;
 const { Text, Title } = Typography;
 
 const InvitationPremiumSideBar = ({ sectionOrder, setSectionOrder, sections }) => {
+
+  const [isClient, setIsClient] = useState(false);
+
+  useEffect(() => {
+    setIsClient(true);
+  }, []);
+
   const handleDragEnd = (result) => {
     if (!result.destination) return;
   
@@ -52,6 +60,7 @@ const InvitationPremiumSideBar = ({ sectionOrder, setSectionOrder, sections }) =
         Arrastra para reordenar
       </Text>
 
+      {isClient && (
       <DragDropContext onDragEnd={handleDragEnd}>
         <Droppable droppableId="sections">
           {(provided) => (
@@ -71,7 +80,6 @@ const InvitationPremiumSideBar = ({ sectionOrder, setSectionOrder, sections }) =
                         onClick={() => handleCardClick(id)}
                         ref={provided.innerRef}
                         {...provided.draggableProps}
-                        {...provided.dragHandleProps}
                         size="small"
                         hoverable
                         style={{
@@ -83,7 +91,9 @@ const InvitationPremiumSideBar = ({ sectionOrder, setSectionOrder, sections }) =
                           ...provided.draggableProps.style,
                         }}
                       >
-                        <Text strong style={{ color: '#333' }}>{section.label}</Text>
+                        <div {...provided.dragHandleProps}>
+                          <Text strong style={{ color: '#333' }}>{section.label}</Text>
+                        </div>
                       </Card>
                     )}
                   </Draggable>
@@ -94,6 +104,8 @@ const InvitationPremiumSideBar = ({ sectionOrder, setSectionOrder, sections }) =
           )}
         </Droppable>
       </DragDropContext>
+    )}
+
     </Sider>
   );
 };
