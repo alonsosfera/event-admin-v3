@@ -12,7 +12,7 @@ import PremiumInvitationVideo from '@/components/designs/invitations/premium/pre
 import PremiumInvitationGift from '@/components/designs/invitations/premium/premium-invitation-gifts'
 import PremiumInvitationContact from '@/components/designs/invitations/premium/premium-invitation-contact'
 import PremiumInvitationMusicPlayer from '@/components/designs/invitations/premium/premium-invitation-music'
-// import InvitationPremiumSideBar from '@/components/designs/invitations/premium/premium-invitation-sidebar'
+import InvitationPremiumSideBar from '@/components/designs/invitations/premium/premium-invitation-sidebar'
 
 
 const { Text } = Typography
@@ -72,11 +72,11 @@ const PremiumInvitationPage = () => {
       </ParallaxProvider>
     </div>
 
-    {/* <InvitationPremiumSideBar 
+    <InvitationPremiumSideBar 
       sectionOrder={sectionOrder}
       setSectionOrder={setSectionOrder}
       sections={initialSections}
-    /> */}
+    />
     </>
   );
 };
