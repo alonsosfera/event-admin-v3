@@ -57,7 +57,9 @@ const PremiumInvitationPage = () => {
                 opacity={[0, 5]}
                 easing="ease"
               >
-                <Component />
+                <div id={`section-${id}`}>
+                  <Component />
+                </div>
               </Parallax>
             );
           })}

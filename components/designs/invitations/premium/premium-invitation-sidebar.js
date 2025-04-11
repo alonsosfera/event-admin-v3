@@ -7,12 +7,27 @@ const { Text, Title } = Typography;
 const InvitationPremiumSideBar = ({ sectionOrder, setSectionOrder, sections }) => {
   const handleDragEnd = (result) => {
     if (!result.destination) return;
-
+  
     const updated = Array.from(sectionOrder);
     const [moved] = updated.splice(result.source.index, 1);
     updated.splice(result.destination.index, 0, moved);
     setSectionOrder(updated);
+  
+    setTimeout(() => {
+      const sectionEl = document.getElementById(`section-${moved}`);
+      if (sectionEl) {
+        sectionEl.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
+    }, 200)
   };
+
+  const handleCardClick = (id) => {
+    const sectionEl = document.getElementById(`section-${id}`);
+    if (sectionEl) {
+      sectionEl.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+  };
+  
 
   return (
     <Sider
@@ -33,6 +48,10 @@ const InvitationPremiumSideBar = ({ sectionOrder, setSectionOrder, sections }) =
         ✨ Personalizar Secciones
       </Title>
 
+      <Text type="secondary" style={{ display: 'block', fontSize: 12, textAlign: 'center', marginBottom: 24 }}>
+        Arrastra para reordenar
+      </Text>
+
       <DragDropContext onDragEnd={handleDragEnd}>
         <Droppable droppableId="sections">
           {(provided) => (
@@ -49,6 +68,7 @@ const InvitationPremiumSideBar = ({ sectionOrder, setSectionOrder, sections }) =
                   <Draggable key={id} draggableId={id} index={index}>
                     {(provided, snapshot) => (
                       <Card
+                        onClick={() => handleCardClick(id)}
                         ref={provided.innerRef}
                         {...provided.draggableProps}
                         {...provided.dragHandleProps}
