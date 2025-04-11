@@ -35,21 +35,23 @@ const defaultInactiveSections = ['video', 'family', 'gift', 'contact']
 const PremiumInvitationPage = () => {
   const [activeSectionOrder, setActiveSectionOrder] = useState(defaultActiveSections)
   const [inactiveSectionOrder, setInactiveSectionOrder] = useState(defaultInactiveSections)
+  const [isEditing, setIsEditing] = useState(true)
 
   return (
     <Layout style={{ minHeight: '100vh' }}>
-      {/* SIDEBAR */}
-      <InvitationPremiumSideBar
-        sections={initialSections}
-        activeSectionOrder={activeSectionOrder}
-        setActiveSectionOrder={setActiveSectionOrder}
-        inactiveSectionOrder={inactiveSectionOrder}
-        setInactiveSectionOrder={setInactiveSectionOrder}
-      />
-
+      {isEditing && (
+        <InvitationPremiumSideBar
+          sections={initialSections}
+          activeSectionOrder={activeSectionOrder}
+          setActiveSectionOrder={setActiveSectionOrder}
+          inactiveSectionOrder={inactiveSectionOrder}
+          setInactiveSectionOrder={setInactiveSectionOrder}
+        />
+      )}
+    
       <Content
         style={{
-          marginLeft: 260,
+          marginLeft:  isEditing ? "260px" : "0px"
         }}>
         <PremiumInvitationMusicPlayer />
         <div className="invitation-container">
