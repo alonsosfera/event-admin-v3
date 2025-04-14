@@ -6,13 +6,7 @@ import { useEffect, useState } from 'react'
 const { Sider } = Layout
 const { Text, Title } = Typography
 
-const InvitationPremiumSideBar = ({
-  sections,
-  activeSectionOrder,
-  setActiveSectionOrder,
-  inactiveSectionOrder,
-  setInactiveSectionOrder
-}) => {
+const InvitationPremiumSideBar = ({ sections, activeSectionOrder, setActiveSectionOrder, inactiveSectionOrder, setInactiveSectionOrder }) => {
   const [isClient, setIsClient] = useState(false)
 
   useEffect(() => setIsClient(true), [])
