@@ -85,8 +85,8 @@ const InvitationPremiumSideBar = ({
               const cardStyle = {
                 width: '100%',
                 maxWidth: '210px',
-                fontSize: 13,
-                padding: '4px 8px',
+                fontSize: 11,
+                padding: '2px 6px',
                 margin: '0 auto'
               }
 
@@ -94,7 +94,8 @@ const InvitationPremiumSideBar = ({
                 onClick: () => scrollToSection(id),
                 size: "small",
                 hoverable: true,
-                bodyStyle: { padding: '8px 12px' }
+                bodyStyle: { padding: '6px 8px' },
+                fontSize: 11
               }
 
               if (id === 'cover') {
