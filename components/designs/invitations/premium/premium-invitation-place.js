@@ -66,7 +66,7 @@ const PremiumInvitationPlace = ({ isEditing, onDataChange }) => {
               style={{ borderRadius: "8px" }}
             />
             {isEditing && (
-              <div style={{ marginTop: 10 }}>
+              <div style={{ marginTop: 20, marginBottom: 20}}>
                 <Upload
                   accept="image/*"
                   showUploadList={false}
@@ -88,7 +88,7 @@ const PremiumInvitationPlace = ({ isEditing, onDataChange }) => {
             >
               {data.section1Title2}
             </Title>
-            <Text style={{ fontSize: '18px', color: '#7f8c8d', fontWeight: "bold" }}>Fecha:</Text><br />
+            <Text style={{ fontSize: '18px', color: '#7f8c8d', fontWeight: "bold" }}>Fecha: </Text>
             <Text
               editable={isEditing ? {
                 triggerType: ['icon', 'text'],
@@ -99,7 +99,7 @@ const PremiumInvitationPlace = ({ isEditing, onDataChange }) => {
               {data.section1Subtitle1}
             </Text>
             <br />
-            <Text style={{ fontSize: '18px', color: '#7f8c8d', fontWeight: "bold" }}>Dirección:</Text><br />
+            <Text style={{ fontSize: '18px', color: '#7f8c8d', fontWeight: "bold" }}>Dirección: </Text>
             <Text
               editable={isEditing ? {
                 triggerType: ['icon', 'text'],
@@ -126,7 +126,7 @@ const PremiumInvitationPlace = ({ isEditing, onDataChange }) => {
               style={{ borderRadius: "8px" }}
             />
             {isEditing && (
-              <div style={{ marginTop: 10 }}>
+              <div style={{ marginTop: 20, marginBottom: 20}}>
                 <Upload
                   accept="image/*"
                   showUploadList={false}
@@ -148,7 +148,7 @@ const PremiumInvitationPlace = ({ isEditing, onDataChange }) => {
             >
               {data.section2Title2}
             </Title>
-            <Text style={{ fontSize: '18px', color: '#7f8c8d', fontWeight: "bold" }}>Fecha:</Text><br />
+            <Text style={{ fontSize: '18px', color: '#7f8c8d', fontWeight: "bold" }}>Fecha: </Text>
             <Text
               editable={isEditing ? {
                 triggerType: ['icon', 'text'],
@@ -159,7 +159,7 @@ const PremiumInvitationPlace = ({ isEditing, onDataChange }) => {
               {data.section2Subtitle1}
             </Text>
             <br />
-            <Text style={{ fontSize: '18px', color: '#7f8c8d', fontWeight: "bold" }}>Dirección:</Text><br />
+            <Text style={{ fontSize: '18px', color: '#7f8c8d', fontWeight: "bold" }}>Dirección: </Text>
             <Text
               editable={isEditing ? {
                 triggerType: ['icon', 'text'],
