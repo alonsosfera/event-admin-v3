@@ -1,34 +1,69 @@
-import { Card, Image, Typography } from "antd"
+import { useState } from "react"
+import { Card, Image, Typography, Button, Upload } from "antd"
+import { UploadOutlined } from "@ant-design/icons"
 
 const { Title, Text } = Typography
 
-const PremiumInvitationCover = ({ isEditing }) => {
+const PremiumInvitationCover = ({ isEditing, onDataChange }) => {
+
+  const [titleText, setTitleText] = useState("Carla & Luis")
+  const [subtitleText, setSubtitleText] = useState("¡Estás invitado a compartir este día tan especial con nosotros!")
+  const [imageUrl, setImageUrl] = useState("/assets/boda2.webp")
+
+  const handleTitleChange = (value) => {
+    setTitleText(value)
+    onDataChange?.({ titleText: value, subtitleText })
+  }
+
+  const handleSubtitleChange = (value) => {
+    setSubtitleText(value)
+    onDataChange?.({ titleText, subtitleText: value })
+  }
+
+  const handleImageChange = (file) => {
+    const url = URL.createObjectURL(file)
+    setImageUrl(url)
+    onDataChange?.({ titleText, subtitleText, imageUrl: url, imageFile: file })
+    return false 
+  }
+
   return (
+    <>
     <div className='invitation-container-image'>
       <Card className='card-invitation'>
         <div style={{ textAlign: 'center', position: 'relative' }}>
           <Image
             preview={false}
-            src="/assets/boda2.webp"
-            alt="Banner de Boda"     
+            src={imageUrl}
+            alt="Banner de Boda"
           />
           <div style={{
             position: 'absolute',
             top: '10%',
             left: '50%',
             transform: 'translate(-50%, -50%)',
-
           }}>
-            <Title level={1} style={{ 
-              fontSize: '50px', 
-              fontWeight: 'bold', 
-              color: 'green',
-              margin: 0,
-              '@media (maxWidth: 768px)': {
-                fontSize: '30px',
+            <Title
+              level={1}
+              editable={
+                isEditing
+                  ? {
+                      triggerType: ['icon', 'text'],
+                      onChange: handleTitleChange
+                    }
+                  : false
               }
-            }}>
-              Carla & Luis
+              style={{
+                fontSize: '50px',
+                fontWeight: 'bold',
+                color: 'green',
+                margin: 0,
+                '@media (maxWidth: 768px)': {
+                  fontSize: '30px',
+                }
+              }}
+            >
+              {titleText}
             </Title>
           </div>
 
@@ -38,15 +73,25 @@ const PremiumInvitationCover = ({ isEditing }) => {
             left: '50%',
             transform: 'translate(-50%, -50%)',
           }}>
-            <Text style={{ 
-              fontSize: '20px', 
-              color: '#8f8f8f', 
-              display: 'block',
-              '@media (maxWidth: 768px)': {
-                fontSize: '16px',
+            <Text
+              editable={
+                isEditing
+                  ? {
+                      triggerType: ['icon', 'text'],
+                      onChange: handleSubtitleChange
+                    }
+                  : false
               }
-            }}>
-              ¡Estás invitado a compartir este día tan especial con nosotros!
+              style={{
+                fontSize: '20px',
+                color: '#8f8f8f',
+                display: 'block',
+                '@media (maxWidth: 768px)': {
+                  fontSize: '16px',
+                }
+              }}
+            >
+              {subtitleText}
             </Text>
           </div>
 
@@ -75,6 +120,24 @@ const PremiumInvitationCover = ({ isEditing }) => {
         </div>
       </Card>
     </div>
+    {isEditing && (
+            <div style={{ display: "flex", justifyContent: "center" }}>
+              <Upload
+                accept="image/*"
+                showUploadList={false}
+                beforeUpload={(file) => handleImageChange(file)}
+              >
+                <Button  
+                  icon={<UploadOutlined />} size="small"
+                  type="primary">
+                  Cargar imagen
+                </Button>
+              </Upload>
+            </div>
+          )}
+    </>
+
+    
   )
 }
 

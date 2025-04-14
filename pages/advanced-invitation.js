@@ -36,6 +36,10 @@ const PremiumInvitationPage = () => {
   const [activeSectionOrder, setActiveSectionOrder] = useState(defaultActiveSections)
   const [inactiveSectionOrder, setInactiveSectionOrder] = useState(defaultInactiveSections)
   const [isEditing, setIsEditing] = useState(true)
+  const [sectionData, setSectionData] = useState({})
+  console.log("sectionData : ", sectionData);
+  
+
 
   return (
     <Layout style={{ minHeight: '100vh' }}>
@@ -74,7 +78,12 @@ const PremiumInvitationPage = () => {
                     easing="ease"
                   >
                     <div id={`section-${id}`}>
-                      <Component isEditing={isEditing}/>
+                    <Component
+                      isEditing={isEditing}
+                      onDataChange={(data) =>
+                        setSectionData(prev => ({ ...prev, [id]: data }))
+                      }
+                    />
                     </div>
                   </Parallax>
                 )
