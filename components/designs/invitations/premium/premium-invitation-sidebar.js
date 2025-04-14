@@ -1,4 +1,5 @@
-import { Layout, Typography, Card } from 'antd'
+import { Layout, Typography, Card, Collapse, Button, Divider, Row, Col } from 'antd'
+import { AudioOutlined, PictureOutlined, AppstoreAddOutlined } from '@ant-design/icons'
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd'
 import { useEffect, useState } from 'react'
 
@@ -74,7 +75,7 @@ const InvitationPremiumSideBar = ({
               display: 'flex',
               flexDirection: 'column',
               gap: 8,
-              minHeight: 40
+              minHeight: 1
             }}
           >
             {list.map((id, index) => {
@@ -162,7 +163,7 @@ const InvitationPremiumSideBar = ({
       <Title level={4} style={{ marginBottom: 16, textAlign: 'center', fontSize: 16 }}>
         Personalizar Secciones
       </Title>
-
+  
       <Text
         type="secondary"
         style={{
@@ -174,15 +175,47 @@ const InvitationPremiumSideBar = ({
       >
         Arrastra para mover secciones
       </Text>
-
+  
       {isClient && (
         <DragDropContext onDragEnd={handleDragEnd}>
           {renderDroppableList('active', '📌 Activas', activeSectionOrder)}
           {renderDroppableList('inactive', '📂 Disponibles', inactiveSectionOrder)}
         </DragDropContext>
       )}
+
+      <Collapse ghost>
+        <Collapse.Panel header="🎨 Color y canción" key="1">
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
+            <Button icon={<AudioOutlined />} block>
+              Elegir Canción
+            </Button>
+            <Button icon={<PictureOutlined />} block>
+              Fondo General
+            </Button>
+            <Button icon={<AppstoreAddOutlined />} block>
+              Fondo de las Cards
+            </Button>
+          </div>
+        </Collapse.Panel>
+      </Collapse>
+  
+      <Row gutter={16} style={{ marginTop: 16, marginBottom: "16px" }}>
+        <Col sm={12}>
+          <Button type='primary' danger style={{ width: "100%" }}>
+            Cancelar
+          </Button>
+        </Col>
+        <Col sm={12}>
+          <Button type="primary" style={{ width: "100%" }}>
+            Guardar
+          </Button>
+        </Col>
+      </Row>
+
+      <Divider></Divider>
     </Sider>
   )
+  
 }
 
 export default InvitationPremiumSideBar
