@@ -2,7 +2,7 @@ import { Card, Row, Col, Image, Typography } from "antd"
 
 const { Title, Text } = Typography
 
-  const PremiumInvitationPass = () => {
+  const PremiumInvitationPass = ({ isEditing }) => {
 
     return (
   

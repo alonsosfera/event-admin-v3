@@ -2,7 +2,7 @@ import { Card, Typography, Row, Col, Avatar } from "antd"
 
 const { Title, Text } = Typography
 
-const PremiumInvitationFamily = () => {
+const PremiumInvitationFamily = ({ isEditing }) => {
 
   const familyMembers = [
     { name: "María & Carlos", role: "Padres de la Novia", avatar: "/assets/esposos.jpeg" },

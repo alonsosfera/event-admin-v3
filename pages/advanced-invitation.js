@@ -74,7 +74,7 @@ const PremiumInvitationPage = () => {
                     easing="ease"
                   >
                     <div id={`section-${id}`}>
-                      <Component />
+                      <Component isEditing={isEditing}/>
                     </div>
                   </Parallax>
                 )

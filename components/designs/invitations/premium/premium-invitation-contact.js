@@ -3,7 +3,7 @@ import { PhoneOutlined, UserOutlined } from '@ant-design/icons'
 
 const { Title, Text } = Typography
 
-const PremiumInvitationContact = () => {
+const PremiumInvitationContact = ({ isEditing }) => {
   const contacts = [
     { name: "Carla", phone: "555-901-3030", avatar: "/assets/mujer.jpg" },
     { name: "Luis", phone: "555-901-3030", avatar: "/assets/hombre.jpg" }

@@ -2,7 +2,7 @@ import { Card, Image, Typography } from "antd"
 
 const { Title, Text } = Typography
 
-const PremiumInvitationCover = () => {
+const PremiumInvitationCover = ({ isEditing }) => {
   return (
     <div className='invitation-container-image'>
       <Card className='card-invitation'>

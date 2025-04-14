@@ -1,7 +1,7 @@
 import { Card } from "antd"
 
 
-const PremiumInvitationVideo = () => {
+const PremiumInvitationVideo = ({ isEditing }) => {
   return (
 
     <Card className='card-invitation'> 

@@ -2,7 +2,7 @@ import { Carousel, Card, Typography, Image } from "antd"
 
 const { Title, Text } = Typography
 
-const PremiumInvitationCarousel = () => {
+const PremiumInvitationCarousel = ({ isEditing }) => {
 
   const carrouselImages = [
     { src: "/assets/carousel1.jpg", alt: "Recuerdo 1" },

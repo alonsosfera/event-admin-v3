@@ -3,7 +3,7 @@ import { GiftOutlined, BankOutlined } from '@ant-design/icons'
 
 const { Text, Title } = Typography
 
-const PremiumInvitationGift = () => {
+const PremiumInvitationGift = ({ isEditing }) => {
 
   return (
 
