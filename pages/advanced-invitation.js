@@ -81,7 +81,7 @@ const PremiumInvitationPage = () => {
                     <Component
                       isEditing={isEditing}
                       onDataChange={(data) =>
-                        setSectionData(prev => ({ ...prev, [id]: data }))
+                      setSectionData(prev => ({ ...prev, [id]: data }))
                       }
                     />
                     </div>
