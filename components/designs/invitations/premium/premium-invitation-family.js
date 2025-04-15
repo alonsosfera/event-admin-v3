@@ -29,7 +29,10 @@ const PremiumInvitationFamily = ({ isEditing, onDataChange }) => {
 
   const handleImageChange = (index) => (file) => {
     const newUrl = URL.createObjectURL(file)
-    updateMember(index, "avatar", newUrl)
+    const updated = [...familyMembers]
+    updated[index].avatar = newUrl
+    updated[index].file = file
+    updateFamily(updated)
     return false
   }
 
