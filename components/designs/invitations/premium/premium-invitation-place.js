@@ -42,7 +42,7 @@ const PremiumInvitationPlace = ({ isEditing, onDataChange }) => {
   }
   
   return (
-    <Card className='card-invitation'>
+    <>
       <div style={{ textAlign: 'center' }}>
         <Row gutter={[24, 24]}>
           <Col xs={24}>
@@ -172,7 +172,7 @@ const PremiumInvitationPlace = ({ isEditing, onDataChange }) => {
           </Col>
         </Row>
       </div>
-    </Card>
+    </>
   )
 }
 

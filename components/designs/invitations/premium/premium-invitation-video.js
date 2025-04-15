@@ -36,7 +36,7 @@ const PremiumInvitationVideo = ({ isEditing, onDataChange }) => {
   const embedUrl = `https://www.youtube.com/embed/${videoId}?rel=0&modestbranding=1`
 
   return (
-    <Card className='card-invitation'>
+    <>
       {isEditing && (
         <div style={{ marginBottom: '20px', textAlign: 'center' }}>
           <Row gutter={[16,16]}>
@@ -84,7 +84,7 @@ const PremiumInvitationVideo = ({ isEditing, onDataChange }) => {
           }}
         />
       </div>
-    </Card>
+    </>
   )
 }
 

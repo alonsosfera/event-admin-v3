@@ -29,7 +29,6 @@ const PremiumInvitationCover = ({ isEditing, onDataChange }) => {
 
   return (
     <div className='invitation-container-image'>
-      <Card className='card-invitation'>
         <div style={{ textAlign: 'center', position: 'relative' }}>
           <Image
             preview={false}
@@ -132,7 +131,6 @@ const PremiumInvitationCover = ({ isEditing, onDataChange }) => {
               </Upload>
             </div>
           )}
-      </Card>
     </div>
   )
 }

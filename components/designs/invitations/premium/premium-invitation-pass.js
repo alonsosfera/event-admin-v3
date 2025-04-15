@@ -12,8 +12,7 @@ const { Title, Text } = Typography
     }
 
     return (
-  
-      <Card className='card-invitation'>
+      <>
         <Row gutter={[0, 24]} style={{ marginTop: '20px' }}>
           <Col xs={{ span: 24, order: 2 }} sm={{ span: 8, order: 1  }} style={{ textAlign: 'center' }}>
             <div style={{ display: "flex", justifyContent: "center", alignItems: "center", height: "100%" }}  >
@@ -74,7 +73,7 @@ const { Title, Text } = Typography
             </Text>
           </Col>
         </Row>
-      </Card>
+      </>
 
     )
   }

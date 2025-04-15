@@ -18,7 +18,7 @@ const PremiumInvitationAttendance = ({ isEditing, onDataChange }) => {
   }
 
   return (
-    <Card className='card-invitation' style={{ textAlign: "center" }}>
+    <>
       <Row justify="center">
         <Col xs={24} sm={16}>
           <Title
@@ -55,7 +55,7 @@ const PremiumInvitationAttendance = ({ isEditing, onDataChange }) => {
           Confirmar Asistencia
         </Button>
       </div>
-    </Card>
+    </>
   )
 }
 

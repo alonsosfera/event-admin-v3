@@ -72,7 +72,7 @@ const PremiumInvitationGift = ({ isEditing, onDataChange }) => {
   }
 
   return (
-    <Card className='card-invitation' style={{ textAlign: "center" }}>
+    <>
       <Title
         level={1}
         style={{ color: '#4c4c4c', marginBottom: '10px', fontWeight: 'bold' }}
@@ -168,7 +168,7 @@ const PremiumInvitationGift = ({ isEditing, onDataChange }) => {
           Agregar otro botón
         </Button>
       )}
-    </Card>
+    </>
   )
 }
 

@@ -4,7 +4,7 @@ import { PhoneOutlined, UserOutlined, UploadOutlined, CloseOutlined, PlusOutline
 
 const { Title, Text } = Typography
 
-const PremiumInvitationContact = ({ isEditing, onDataChange }) => {
+const PremiumInvitationContact = ({ isEditing, onDataChange, cardBackgroundImage }) => {
   const [subtitle, setSubtitle] = useState("Si tienes alguna duda, no dudes en contactarnos")
   const [contacts, setContacts] = useState([
     { name: "Carla", phone: "555-901-3030", avatar: "/assets/mujer.jpg" },
@@ -52,7 +52,7 @@ const PremiumInvitationContact = ({ isEditing, onDataChange }) => {
   }
 
   return (
-    <Card className='card-invitation' style={{ textAlign: "center" }}>
+    <>
       <Title level={1} style={{ color: '#4c4c4c', marginBottom: '30px', fontWeight: 'bold' }}>
         Contacto
       </Title>
@@ -168,7 +168,7 @@ const PremiumInvitationContact = ({ isEditing, onDataChange }) => {
           </Button>
         </div>
       )}
-    </Card>
+    </>
   )
 }
 

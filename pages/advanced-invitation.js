@@ -1,4 +1,4 @@
-import { Layout, Typography, Row, Col } from 'antd'
+import { Layout, Typography, Row, Col, Card } from 'antd'
 import { ParallaxProvider, Parallax } from 'react-scroll-parallax'
 import { useState } from 'react'
 
@@ -37,6 +37,10 @@ const PremiumInvitationPage = () => {
   const [inactiveSectionOrder, setInactiveSectionOrder] = useState(defaultInactiveSections)
   const [isEditing, setIsEditing] = useState(true)
   const [sectionData, setSectionData] = useState({})
+  const [backgroundImage, setBackgroundImage] = useState("/assets/background1.jpg")
+  const [cardBackgroundImage, setCardBackgroundImage] = useState("/assets/background1.jpg")
+
+
   console.log("sectionData : ", sectionData);
   
 
@@ -58,7 +62,9 @@ const PremiumInvitationPage = () => {
           marginLeft:  isEditing ? "260px" : "0px"
         }}>
         <PremiumInvitationMusicPlayer />
-        <div className="invitation-container">
+        <div 
+          className="invitation-container"
+          style={{ backgroundImage:  `url(${backgroundImage})` }}>
         <ParallaxProvider>
           <Row justify="center">
             <Col xs={24} sm={22} md={20} lg={16}>
@@ -78,12 +84,15 @@ const PremiumInvitationPage = () => {
                     easing="ease"
                   >
                     <div id={`section-${id}`}>
-                    <Component
-                      isEditing={isEditing}
-                      onDataChange={(data) =>
-                      setSectionData(prev => ({ ...prev, [id]: data }))
-                      }
-                    />
+                      <Card className='card-invitation' style={{ textAlign: "center", backgroundImage: `url(${cardBackgroundImage})` }}>
+                        <Component
+                          isEditing={isEditing}
+                          cardBackgroundImage={cardBackgroundImage}
+                          onDataChange={(data) =>
+                          setSectionData(prev => ({ ...prev, [id]: data }))
+                          }
+                        />
+                      </Card>
                     </div>
                   </Parallax>
                 )

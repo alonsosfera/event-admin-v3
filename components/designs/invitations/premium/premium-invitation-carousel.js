@@ -49,7 +49,7 @@ const PremiumInvitationCarousel = ({ isEditing, onDataChange }) => {
   }
 
   return (
-    <Card className='card-invitation'>
+    <>
       <div style={{ textAlign: 'center', marginBottom: '20px' }}>
         <Title
           level={2}
@@ -148,7 +148,7 @@ const PremiumInvitationCarousel = ({ isEditing, onDataChange }) => {
           </Row>
         </div>
       )}
-    </Card>
+    </>
   )
 }
 

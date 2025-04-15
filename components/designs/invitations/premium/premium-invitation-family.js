@@ -56,7 +56,7 @@ const PremiumInvitationFamily = ({ isEditing, onDataChange }) => {
   }
 
   return (
-    <Card className='card-invitation'>
+    <>
       <div style={{ textAlign: 'center' }}>
         <Title
           level={1}
@@ -155,7 +155,7 @@ const PremiumInvitationFamily = ({ isEditing, onDataChange }) => {
           </div>
         )}
       </div>
-    </Card>
+    </>
   )
 }
 
