@@ -100,7 +100,7 @@ const PremiumInvitationGift = ({ isEditing, onDataChange }) => {
         {subtitle}
       </Text>
 
-      <Row gutter={[16, 16]} justify="center" style={{ marginTop: "60px" }}>
+      <Row gutter={[16, 16]} justify="center" style={{ marginTop: "50px" }}>
         {buttons.map((button, index) => (
           <Col xs={24} sm={12} key={index} style={{ position: 'relative' }}>
             {isEditing && (
