@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react"
-import { Card, Input, Typography } from "antd"
+import { Card, Input, Typography, Row, Col, Alert } from "antd"
 import { CheckCircleTwoTone } from "@ant-design/icons"
 
 const { Text } = Typography
@@ -39,17 +39,27 @@ const PremiumInvitationVideo = ({ isEditing, onDataChange }) => {
     <Card className='card-invitation'>
       {isEditing && (
         <div style={{ marginBottom: '20px', textAlign: 'center' }}>
-          <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', gap: 10 }}>
-            <Input
-              placeholder="Ingresa el link del video de YouTube"
-              value={videoInput}
-              onChange={handleChange}
-              style={{ maxWidth: 500 }}
-            />
+          <Row gutter={[16,16]}>
+            <Col md={24} style={{ display: 'flex', justifyContent: 'center' }}>
+              <Alert
+                showIcon
+                type="info"
+                message="Agrega tu link de youtube"
+                style={{ fontSize: "12px", padding: "8px 16px", marginBottom: "4px", maxWidth: 500, width: "100%" }}
+              />
+            </Col>
+            <Col md={24}>
+              <Input
+                placeholder="Ingresa el link del video de YouTube"
+                value={videoInput}
+                onChange={handleChange}
+                style={{ maxWidth: 500 }}
+              />
+            </Col>
             {showSaved && (
               <CheckCircleTwoTone twoToneColor="#52c41a" style={{ fontSize: 24 }} />
             )}
-          </div>
+          </Row>
           {showSaved && (
             <Text type="success" style={{ marginTop: 5, display: 'block' }}>
               ¡Link guardado!
