@@ -1,5 +1,5 @@
 import { Layout, Typography, Card, Collapse, Button, Divider, Row, Col, Upload } from 'antd'
-import { AudioOutlined, PictureOutlined, AppstoreAddOutlined, UploadOutlined } from '@ant-design/icons'
+import { AudioOutlined, PictureOutlined, AppstoreAddOutlined } from '@ant-design/icons'
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd'
 import { useEffect, useState } from 'react'
 
