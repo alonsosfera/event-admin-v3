@@ -39,6 +39,8 @@ const PremiumInvitationPage = () => {
   const [sectionData, setSectionData] = useState({})
   const [backgroundImage, setBackgroundImage] = useState("/assets/background1.jpg")
   const [cardBackgroundImage, setCardBackgroundImage] = useState("/assets/background1.jpg")
+  const [musicUrl, setMusicUrl] = useState("/assets/thousand-years.mp3")
+
 
 
   console.log("sectionData : ", sectionData);
@@ -55,19 +57,21 @@ const PremiumInvitationPage = () => {
           inactiveSectionOrder={inactiveSectionOrder}
           setInactiveSectionOrder={setInactiveSectionOrder}
           onDataChange={(data) => {
-          setSectionData((prev) => ({ ...prev, ...data }))
+            setSectionData((prev) => ({ ...prev, ...data }))
             if (data.backgroundImage) setBackgroundImage(data.backgroundImage)
             if (data.cardBackgroundImage) setCardBackgroundImage(data.cardBackgroundImage)
+            if (data.musicUrl) setMusicUrl(data.musicUrl)
           }}
+          
         />
         
         )}
-        
+
       <Content
         style={{
           marginLeft:  isEditing ? "260px" : "0px"
         }}>
-        <PremiumInvitationMusicPlayer />
+        <PremiumInvitationMusicPlayer  musicUrl={musicUrl} />
         <div 
           className="invitation-container"
           style={{ backgroundImage:  `url(${backgroundImage})` }}>

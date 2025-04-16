@@ -2,7 +2,7 @@ import { useRef, useState } from 'react'
 import { Tooltip, FloatButton } from 'antd'
 import { PlayCircleOutlined, PauseCircleOutlined } from '@ant-design/icons'
 
-const PremiumInvitationMusicPlayer = () => {
+const PremiumInvitationMusicPlayer = ({ musicUrl }) => {
   const audioRef = useRef(null)
   const [isPlaying, setIsPlaying] = useState(false)
 
@@ -20,7 +20,7 @@ const PremiumInvitationMusicPlayer = () => {
 
   return (
     <>
-      <audio ref={audioRef} src="/assets/thousand-years.mp3" loop preload="auto" />
+      <audio ref={audioRef} src={musicUrl} loop preload="auto" />
 
       <Tooltip title={isPlaying ? 'Pausar música' : 'Reproducir música'} placement="left">
         <FloatButton

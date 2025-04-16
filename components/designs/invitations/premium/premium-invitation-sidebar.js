@@ -25,7 +25,7 @@ const InvitationPremiumSideBar = ({
     }
   }
 
-  const handleImageUpload = (type) => {
+  const handleUpload = (type) => {
     return (file) => {
       const url = URL.createObjectURL(file)
   
@@ -37,11 +37,14 @@ const InvitationPremiumSideBar = ({
         onDataChange?.({ cardBackgroundImage: url, cardBackgroundImageFile: file })
       }
   
+      if (type === 'audio') {
+        onDataChange?.({ musicUrl: url, musicFile: file })
+      }
+  
       return false
     }
   }
-  
-
+   
   const handleDragEnd = ({ source, destination, draggableId }) => {
     if (!destination || draggableId === 'cover') return
 
@@ -205,13 +208,20 @@ const InvitationPremiumSideBar = ({
       <Collapse ghost>
         <Collapse.Panel header="🎨 Color y canción" key="1">
           <div className='collapse-buttons' style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
+          <Upload
+            accept="audio/*"
+            showUploadList={false}
+            beforeUpload={handleUpload('audio')}
+            className="upload-full-width"
+          >
             <Button icon={<AudioOutlined />} block>
               Elegir Canción
             </Button>
+          </Upload>
           <Upload
             accept="image/*"
             showUploadList={false}
-            beforeUpload={handleImageUpload('background')}
+            beforeUpload={handleUpload('background')}
             className="upload-full-width"
           >
             <Button icon={<PictureOutlined />} block>
@@ -221,7 +231,7 @@ const InvitationPremiumSideBar = ({
           <Upload
             accept="image/*"
             showUploadList={false}
-            beforeUpload={handleImageUpload('card')}
+            beforeUpload={handleUpload('card')}
             className="upload-full-width"
           >
             <Button icon={<AppstoreAddOutlined />} block>
