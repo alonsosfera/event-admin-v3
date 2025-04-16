@@ -1,9 +1,7 @@
   .invitation-container {
-    // background-image: url('/assets/background1.jpg');
   
   .card-invitation {
     position: relative;
-    // background-image: url('/assets/background1.jpg');
     border-radius: 8px;
     overflow: hidden;
   }
@@ -74,15 +72,11 @@
     font-weight: 400;
   }
 
-  .buttons-carousel { 
-
-    .upload-full-width .ant-upload {
+  .upload-full-width .ant-upload {
       display: block;
       width: 100%;
-    }
-    
   }
-  
+
   @media (max-width: 576px) {
 
     .ant-image {
@@ -125,4 +119,13 @@
     }
   }
  
+}
+
+.layout-sidebar{
+  
+  .upload-full-width .ant-upload {
+    display: block;
+    width: 100%;
+  }
+
 }

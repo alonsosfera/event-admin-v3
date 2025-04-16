@@ -1,12 +1,19 @@
-import { Layout, Typography, Card, Collapse, Button, Divider, Row, Col } from 'antd'
-import { AudioOutlined, PictureOutlined, AppstoreAddOutlined } from '@ant-design/icons'
+import { Layout, Typography, Card, Collapse, Button, Divider, Row, Col, Upload } from 'antd'
+import { AudioOutlined, PictureOutlined, AppstoreAddOutlined, UploadOutlined } from '@ant-design/icons'
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd'
 import { useEffect, useState } from 'react'
 
 const { Sider } = Layout
 const { Text, Title } = Typography
 
-const InvitationPremiumSideBar = ({ sections, activeSectionOrder, setActiveSectionOrder, inactiveSectionOrder, setInactiveSectionOrder }) => {
+const InvitationPremiumSideBar = ({
+  sections,
+  activeSectionOrder,
+  setActiveSectionOrder,
+  inactiveSectionOrder,
+  setInactiveSectionOrder,
+  onDataChange
+}) => {
   const [isClient, setIsClient] = useState(false)
 
   useEffect(() => setIsClient(true), [])
@@ -17,6 +24,23 @@ const InvitationPremiumSideBar = ({ sections, activeSectionOrder, setActiveSecti
       el.scrollIntoView({ behavior: 'smooth', block: 'start' })
     }
   }
+
+  const handleImageUpload = (type) => {
+    return (file) => {
+      const url = URL.createObjectURL(file)
+  
+      if (type === 'background') {
+        onDataChange?.({ backgroundImage: url, backgroundImageFile: file })
+      }
+  
+      if (type === 'card') {
+        onDataChange?.({ cardBackgroundImage: url, cardBackgroundImageFile: file })
+      }
+  
+      return false
+    }
+  }
+  
 
   const handleDragEnd = ({ source, destination, draggableId }) => {
     if (!destination || draggableId === 'cover') return
@@ -158,7 +182,7 @@ const InvitationPremiumSideBar = ({ sections, activeSectionOrder, setActiveSecti
       <Title level={4} style={{ marginBottom: 16, textAlign: 'center', fontSize: 16 }}>
         Personalizar Secciones
       </Title>
-  
+
       <Text
         type="secondary"
         style={{
@@ -170,7 +194,7 @@ const InvitationPremiumSideBar = ({ sections, activeSectionOrder, setActiveSecti
       >
         Arrastra para mover secciones
       </Text>
-  
+
       {isClient && (
         <DragDropContext onDragEnd={handleDragEnd}>
           {renderDroppableList('active', '📌 Activas', activeSectionOrder)}
@@ -180,20 +204,36 @@ const InvitationPremiumSideBar = ({ sections, activeSectionOrder, setActiveSecti
 
       <Collapse ghost>
         <Collapse.Panel header="🎨 Color y canción" key="1">
-          <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
+          <div className='collapse-buttons' style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
             <Button icon={<AudioOutlined />} block>
               Elegir Canción
             </Button>
+          <Upload
+            accept="image/*"
+            showUploadList={false}
+            beforeUpload={handleImageUpload('background')}
+            className="upload-full-width"
+          >
             <Button icon={<PictureOutlined />} block>
               Fondo General
             </Button>
+          </Upload>
+          <Upload
+            accept="image/*"
+            showUploadList={false}
+            beforeUpload={handleImageUpload('card')}
+            className="upload-full-width"
+          >
             <Button icon={<AppstoreAddOutlined />} block>
               Fondo de las Cards
             </Button>
+          </Upload>
+
           </div>
         </Collapse.Panel>
+
       </Collapse>
-  
+
       <Row gutter={16} style={{ marginTop: 16, marginBottom: "16px" }}>
         <Col sm={12}>
           <Button type='primary' danger style={{ width: "100%" }}>
@@ -207,10 +247,9 @@ const InvitationPremiumSideBar = ({ sections, activeSectionOrder, setActiveSecti
         </Col>
       </Row>
 
-      <Divider></Divider>
+      <Divider />
     </Sider>
   )
-  
 }
 
 export default InvitationPremiumSideBar

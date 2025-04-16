@@ -46,7 +46,7 @@ const PremiumInvitationPage = () => {
 
 
   return (
-    <Layout style={{ minHeight: '100vh' }}>
+    <Layout className='layout-sidebar' style={{ minHeight: '100vh' }}>
       {isEditing && (
         <InvitationPremiumSideBar
           sections={initialSections}
@@ -54,9 +54,15 @@ const PremiumInvitationPage = () => {
           setActiveSectionOrder={setActiveSectionOrder}
           inactiveSectionOrder={inactiveSectionOrder}
           setInactiveSectionOrder={setInactiveSectionOrder}
+          onDataChange={(data) => {
+          setSectionData((prev) => ({ ...prev, ...data }))
+            if (data.backgroundImage) setBackgroundImage(data.backgroundImage)
+            if (data.cardBackgroundImage) setCardBackgroundImage(data.cardBackgroundImage)
+          }}
         />
-      )}
-    
+        
+        )}
+        
       <Content
         style={{
           marginLeft:  isEditing ? "260px" : "0px"
