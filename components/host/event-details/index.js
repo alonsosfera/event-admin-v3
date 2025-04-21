@@ -100,7 +100,9 @@ const EventDetails = ({ data, refetchEvent, fullSize, fetchedEvent }) => {
 
   const onDownload = async () => {
     if (isPassLoading) return
-    let pdf = new JsPDF("l", "px", [dimensions?.width || designW, dimensions?.height || designH])
+    // Determine if the image is portrait or landscape based on dimensions
+    const orientation = dimensions && dimensions.height > dimensions.width ? "p" : "l"
+    let pdf = new JsPDF(orientation, "px", [dimensions?.width || designW, dimensions?.height || designH])
 
     for (const invitation of invitations) {
       if (invitations.indexOf(invitation) !== 0) {
@@ -113,7 +115,9 @@ const EventDetails = ({ data, refetchEvent, fullSize, fetchedEvent }) => {
 
   const onSingleDownload = async invitation => {
     if (isPassLoading) return
-    let pdf = new JsPDF("l", "px", [dimensions?.width || designW, dimensions?.height || designH])
+    // Determine if the image is portrait or landscape based on dimensions
+    const orientation = dimensions && dimensions.height > dimensions.width ? "p" : "l"
+    let pdf = new JsPDF(orientation, "px", [dimensions?.width || designW, dimensions?.height || designH])
     pdf = await invitationPDF(fetchedEvent, invitation, pdf, dimensions)
 
     const { invitationName } = invitation
@@ -123,7 +127,9 @@ const EventDetails = ({ data, refetchEvent, fullSize, fetchedEvent }) => {
 
   const onResendInvitation = async invitation => {
     if (!invitation.phone || isPassLoading) return
-    let pdf = new JsPDF("l", "px", [dimensions?.width || designW, dimensions?.height || designH])
+    // Determine if the image is portrait or landscape based on dimensions
+    const orientation = dimensions && dimensions.height > dimensions.width ? "p" : "l"
+    let pdf = new JsPDF(orientation, "px", [dimensions?.width || designW, dimensions?.height || designH])
     pdf = await invitationPDF(fetchedEvent, invitation, pdf, dimensions)
 
     const file = pdf.output("blob")

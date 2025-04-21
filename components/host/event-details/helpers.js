@@ -191,7 +191,14 @@ export const sendInvitation = async (invitation, file) => {
 
 export const generatePDF = async (event, invitation, dimensions) => {
   if (invitation.phone) {
-    let pdf = new JsPDF("l", "px", [dimensions?.width || 960, dimensions?.height || 540])
+    // Determine if the image is portrait or landscape based on dimensions
+    const orientation = dimensions && dimensions.height > dimensions.width ? "p" : "l"
+    
+    let pdf = new JsPDF(orientation, "px", [
+      dimensions?.width || 960, 
+      dimensions?.height || 540
+    ])
+    
     pdf = await invitationPDF(event, invitation, pdf, dimensions)
 
     const file = pdf.output("blob")
