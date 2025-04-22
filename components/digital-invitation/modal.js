@@ -222,10 +222,9 @@ export const DigitalInvitationModal = ({ isOpen, onCancel, onSubmit, event }) =>
         }
       })
 
-      const { room, room_name, ...eventToSave } = event
-
-      await axios.put(`/api/events/update/${event.id}`, {
-        ...eventToSave,
+      // Use the more efficient endpoint that only updates digital invitation
+      // This reduces database load by only updating the relevant part instead of the entire event
+      await axios.put(`/api/events/digital-invitation/${event.id}`, {
         digitalInvitation: {
           ...event?.digitalInvitation,
           fileUrl,
