@@ -385,3 +385,66 @@ export async function updateTablesDistribution(req, res) {
     })
   }
 }
+
+export async function updateDigitalPass(req, res) {
+  const { eventId } = req.query
+  const { digitalPass } = req.body
+  
+  if (!digitalPass) {
+    return res.status(400).json({
+      error: "No digital pass data provided",
+      message: "Digital pass data is required"
+    })
+  }
+
+  try {
+    const createDigitalPass = createCanvaMapData(digitalPass.canvaMap)
+
+    const updateData = {
+      digitalPass: {
+        upsert: {
+          create: {
+            ...digitalPass,
+            canvaMap: {
+              create: createDigitalPass
+            }
+          },
+          update: {
+            ...digitalPass,
+            canvaMap: {
+              delete: true,
+              create: createDigitalPass
+            }
+          }
+        }
+      }
+    }
+
+    const updatedResult = await prisma.event.update({
+      where: { id: eventId },
+      data: updateData,
+      include: {
+        digitalPass: {
+          include: {
+            canvaMap: {
+              include: {
+                coordinates: true
+              }
+            }
+          }
+        }
+      }
+    })
+
+    res.status(200).json({
+      message: "Digital pass successfully updated!",
+      result: updatedResult.digitalPass
+    })
+  } catch (error) {
+    console.error(error)
+    res.status(400).json({
+      error,
+      message: "An error occurred while updating the digital pass."
+    })
+  }
+}

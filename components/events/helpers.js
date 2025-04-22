@@ -241,3 +241,14 @@ export const updateTablesDistribution = async (tablesDistribution, id) => {
   })
   return result
 }
+
+export const updateDigitalPass = async (digitalPass, id) => {
+  const { data: { result } } = await axios.put(`/api/events/digital-pass/${id}`, {
+    digitalPass
+  }, {
+    headers: {
+      "Authorization": `Bearer ${token}`
+    }
+  })
+  return result
+}
