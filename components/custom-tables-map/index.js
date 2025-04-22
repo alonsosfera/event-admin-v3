@@ -123,7 +123,7 @@ const CustomTablesMap = ({
       <Stage
         ref={stageRef}
         width={902}
-        height={720}>
+        height={760}>
         <Layer>
           <Group
             x={321}

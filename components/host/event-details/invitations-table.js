@@ -8,21 +8,10 @@ import { useSession } from "next-auth/react"
 
 const InvitationsTable = ({
   data, onNew, onDownload, onSingleDownload, loadingRoomMap, roomMapRefetch, roomMapData, refetchEvent,
-  onResendInvitation, remove, event, invitedGuests
+  onResendInvitation, remove, event, invitedGuests, openModalInvitation, setOpenModalInvitation, showAlert, onCancelInvitationModal
 }) => {
-  const [openModalInvitation, setOpenModalInvitation] = useState(false)
   const [isInviteButtonDisabled, setIsInviteButtonDisabled] = useState(false)
   const [openEditMapModal, setOpenEditMapModal] = useState(false)
-  const [showAlert, setShowAlert] = useState(false)
-
-  const handleDigitalModalToggle = () => {
-    const coordinates = event?.digitalInvitation?.canvaMap?.coordinates || []
-    if (coordinates.length === 0) {
-      setShowAlert(true)
-    } else {
-      setOpenModalInvitation(!openModalInvitation)
-    }
-  }
 
   const handleEditMapModalToggle = () => {
     setOpenEditMapModal(!openEditMapModal)
@@ -48,18 +37,11 @@ const InvitationsTable = ({
 
   const menuDropDown = (
     <Menu>
-      {user?.role === "ADMIN" && (
         <Menu.Item key="1">
           <a className="invite-btn" onClick={handleEditMapModalToggle}>
             Editar Mapa
           </a>
         </Menu.Item>
-      )}
-      <Menu.Item key="2">
-        <a onClick={onDownload}>
-          Descargar invitaciones
-        </a>
-      </Menu.Item>
     </Menu>
   )
 
@@ -88,9 +70,10 @@ const InvitationsTable = ({
                 Invitar
               </Button>
             </Tooltip>
-            <Button onClick={handleDigitalModalToggle}>
-              Invitación Digital
+            <Button onClick={onDownload}>
+              Descargar Invitaciones
             </Button>
+            {user?.role === "ADMIN" && (
             <Dropdown
               overlay={menuDropDown}
               trigger={["click"]}>
@@ -98,6 +81,7 @@ const InvitationsTable = ({
                 <SmallDashOutlined />
               </Button>
             </Dropdown>
+            )}
           </Space>
         )}
         rowKey={row => row.id}
@@ -153,8 +137,11 @@ const InvitationsTable = ({
       <DigitalInvitationModal
         event={event}
         isOpen={openModalInvitation}
-        onCancel={handleDigitalModalToggle}
-        onSubmit={handleDigitalModalToggle} />
+        onCancel={onCancelInvitationModal}
+        onSubmit={async () => {
+          await refetchEvent()
+          setOpenModalInvitation(false)
+        }} />
       <EditRoomMap
         event={event}
         eventId={event.id}

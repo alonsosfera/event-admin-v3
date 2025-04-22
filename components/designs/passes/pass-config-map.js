@@ -66,20 +66,49 @@ const PassConfigMap = ({ items, selectedFile, scaleFactor, setScaleFactor, onUpd
   }, [])
 
   const dragBoundFunc = (pos, item) => {
+    if (item.key === "QR_CODE") {
+      const qrSize = (item.customConfig.qrSize || 250) * scaleFactor
+      const newX = Math.max(0, Math.min(pos.x, displaySize.width - qrSize))
+      const newY = Math.max(0, Math.min(pos.y, displaySize.height - qrSize))
+      return { x: newX, y: newY }
+    }
+    
     const textWidth = item.key.length * FONT_SIZE * scaleFactor * 0.4
     const textHeight = FONT_SIZE * scaleFactor
-    const newX = Math.max(0, Math.min(pos.x, displaySize.width - textWidth))
+    
+    // Use alignment to determine boundaries
+    let newX
+    if (item.customConfig?.textAlign === "left") {
+      // For left alignment, bound based on the entire text width
+      newX = Math.max(0, Math.min(pos.x, displaySize.width - textWidth))
+    } else {
+      // For center alignment, continue with the current implementation
+      newX = Math.max(0, Math.min(pos.x, displaySize.width - textWidth))
+    }
+    
     const newY = Math.max(0, Math.min(pos.y, displaySize.height - textHeight))
     return { x: newX, y: newY }
   }
 
   const handleDragEnd = useCallback((event, item) => {
-    const coordinateX = item.key === "QR_CODE"
-      ? event.target.x()
-      : event.target.x() + event.target.width() / 2
+    let coordinateX
+    if (item.key === "QR_CODE") {
+      coordinateX = event.target.x()
+    } else {
+      // Handle different text alignments
+      if (item.customConfig?.textAlign === "left") {
+        // For left alignment, use the left edge position directly
+        coordinateX = event.target.x()
+      } else {
+        // For center alignment (default), use center point
+        coordinateX = event.target.x() + event.target.width() / 2
+      }
+    }
+    
     const coordinateY = item.key === "QR_CODE"
       ? event.target.y()
       : event.target.y() + event.target.height() / 2
+      
     onUpdateItemPosition(item, {
       coordinateY: parseInt(coordinateY / scaleFactor),
       coordinateX: parseInt(coordinateX / scaleFactor)
