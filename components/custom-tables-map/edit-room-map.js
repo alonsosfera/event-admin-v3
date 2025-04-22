@@ -14,7 +14,7 @@ export const EditRoomMap = ({
   eventId,
   eventName,
   roomMapData,
-  refetchEvent,
+  setEvent,
   roomMapRefetch,
   loadingRoomMap,
   openEditMapModal,
@@ -44,7 +44,7 @@ export const EditRoomMap = ({
   const onDeleteTable = (tableName) => {
     const newTableDistribution = JSON.parse(JSON.stringify(tablesDistribution))
     delete newTableDistribution[tableName]
-    refetchEvent({ ...event, tablesDistribution: newTableDistribution })
+    setEvent({ ...event, tablesDistribution: newTableDistribution })
   }
   const onAddTable = () => {
     const clonedTableDistribution = JSON.parse(JSON.stringify(tablesDistribution))
@@ -65,7 +65,7 @@ export const EditRoomMap = ({
       "key": nextTableName
     }
     setRoomMapCoordinates(prev => [...prev, newTableCoordinates])
-    refetchEvent({ ...event, tablesDistribution: newTableDistribution })
+    setEvent({ ...event, tablesDistribution: newTableDistribution })
   }
 
   return (
