@@ -2,8 +2,7 @@ import { Button, Card, Col, List, Space, Spin, Typography } from "antd"
 import { BackButton } from ".."
 
 export const Heading = ({ backDisabled, isLoading, onClick, title, fullSize, customActions }) => {
-  const actions = [
-  ]
+  const actions = []
 
   if (onClick) actions.push((
     <Button
@@ -19,7 +18,7 @@ export const Heading = ({ backDisabled, isLoading, onClick, title, fullSize, cus
     <Col
       span={!fullSize ? 24 : 18}
       offset={!fullSize ? 0 : 3}>
-      <Card bordered={false} bodyStyle={{ padding: "0 20px" }}>
+      <Card variant="borderless" styles={{ body: { padding: "0 20px" } }}>
         <List>
           <List.Item actions={actions.length > 0 && actions}>
             <Space size="middle">

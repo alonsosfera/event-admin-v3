@@ -11,8 +11,9 @@ import { useService } from "../../../hooks/use-service"
 import { useImageSize } from "react-image-size"
 import Link from "next/link"
 import { DigitalPassModal } from "../../digital-pass/modal"
+import { DigitalInvitationModal } from "@/components/digital-invitation/modal";
 
-const EventDetails = ({ data, refetchEvent, fullSize, fetchedEvent }) => {
+const EventDetails = ({ data, fullSize, fetchedEvent, setEvent, resetEvent }) => {
   const [state, setState] = useState({ isModalOpen: false })
   const [invitations, setInvitations] = useState([])
   const [dimensions] = useImageSize(data.digitalPass?.fileUrl)
@@ -20,7 +21,7 @@ const EventDetails = ({ data, refetchEvent, fullSize, fetchedEvent }) => {
   const [openModalPass, setOpenModalPass] = useState(false)
   const [showAlert, setShowAlert] = useState(false)
   const [originalEvent, setOriginalEvent] = useState(null)
-  
+
   const isPassLoading = data.digitalPass && !dimensions
 
   const designH = 540, designW = 960
@@ -47,7 +48,7 @@ const EventDetails = ({ data, refetchEvent, fullSize, fetchedEvent }) => {
 
   const onCancelInvitationModal = () => {
     if (originalEvent) {
-      refetchEvent(originalEvent)
+      setEvent(originalEvent)
       setOriginalEvent(null)
     }
     setOpenModalInvitation(false)
@@ -55,16 +56,17 @@ const EventDetails = ({ data, refetchEvent, fullSize, fetchedEvent }) => {
 
   const onCancelPassModal = () => {
     if (originalEvent) {
-      refetchEvent(originalEvent)
+      setEvent(originalEvent)
       setOriginalEvent(null)
     }
     setOpenModalPass(false)
   }
 
+  const getEventInvitations = () => getInvitations(data.id).then(setInvitations)
+
   useEffect(() => {
     if (data.id) {
-      getInvitations(data.id)
-        .then(setInvitations)
+      getEventInvitations()
       roomMapRefetch({ eventId: data.id }).then()
     }
   }, [data])
@@ -95,7 +97,7 @@ const EventDetails = ({ data, refetchEvent, fullSize, fetchedEvent }) => {
       }
     })
     const newEvent = await updateEvent({ tablesDistribution }, fetchedEvent.id)
-    refetchEvent(newEvent)
+    setEvent(newEvent)
   }
 
   const onDownload = async () => {
@@ -134,7 +136,7 @@ const EventDetails = ({ data, refetchEvent, fullSize, fetchedEvent }) => {
 
     const file = pdf.output("blob")
     await sendInvitation(invitation, file)
-    refetchEvent(fetchedEvent)
+    setEvent(fetchedEvent)
   }
 
   const invitedGuests = invitations.reduce((prev, current) => prev + current.numberGuests, 0)
@@ -163,7 +165,7 @@ const EventDetails = ({ data, refetchEvent, fullSize, fetchedEvent }) => {
                 <Col xs={24} sm={8} md={8}><b>Fecha: </b>{dayjs(fetchedEvent.eventDate).format("DD/MM/YYYY hh:mm a")}</Col>
                 <Col xs={24} sm={8} md={8}><b>Capacidad: </b>{fetchedEvent.assistance}</Col>
               </Row>
-              <Row style={{ padding: "0" }} >               
+              <Row style={{ padding: "0" }} >
                 <Col xs={24} sm={8} md={8}><b>Invitados: </b>{invitedGuests} </Col>
                 <Col xs={24} sm={8} md={8}><b>Confirmados: </b>{addConfirmed}</Col>
               </Row>
@@ -185,9 +187,9 @@ const EventDetails = ({ data, refetchEvent, fullSize, fetchedEvent }) => {
                       style={{ display: "block" }}
                       >Editar pase</Link>
                   </Col>
-                  <Col 
+                  <Col
                     onClick={handleDigitalModalToggle} sm={12}
-                    style={{ cursor: "pointer" }}>         
+                    style={{ cursor: "pointer" }}>
                     <Image
                       alt="invitation"
                       preview={false}
@@ -201,20 +203,20 @@ const EventDetails = ({ data, refetchEvent, fullSize, fetchedEvent }) => {
                       >Editar invitación</Link>
                   </Col>
                 </Row>
-              </Col>            
+              </Col>
             </Row>
           <Alert
             className="mobile-alert"
             message="Favor de utilizar un dispositivo de escritorio para editar los pases e invitaciones digitales"
             type="info" />
           <InvitationsTable
+            resetEvent={resetEvent}
+            setEvent={setEvent}
             event={fetchedEvent}
             originalEvent={originalEvent}
-            onCancelInvitationModal={onCancelInvitationModal}
             remove={onRemove}
             data={invitations}
             roomMapData={roomMapData}
-            refetchEvent={refetchEvent}
             loadingRoomMap={loadingRoomMap}
             roomMapRefetch={roomMapRefetch}
             onDownload={onDownload}
@@ -224,8 +226,6 @@ const EventDetails = ({ data, refetchEvent, fullSize, fetchedEvent }) => {
             isPassLoading={isPassLoading}
             invitedGuests={invitedGuests}
             handleDigitalModalToggle={handleDigitalModalToggle}
-            openModalInvitation={openModalInvitation}
-            setOpenModalInvitation={setOpenModalInvitation}
             showAlert={showAlert} />
           {state.isModalOpen && (
             <NewInvitation
@@ -233,18 +233,26 @@ const EventDetails = ({ data, refetchEvent, fullSize, fetchedEvent }) => {
               dimensions={dimensions}
               roomMapData={roomMapData}
               invitations={invitations}
-              refetchEvent={refetchEvent}
+              getEventInvitations={getEventInvitations}
               onCancel={onCancel}
               open={state.isModalOpen}
               refetchInvitations={refetchInvitations}
               invitedGuests={invitedGuests} />
           )}
+          <DigitalInvitationModal
+            event={fetchedEvent}
+            isOpen={openModalInvitation}
+            onCancel={onCancelInvitationModal}
+            onSubmit={() => {
+              resetEvent()
+              setOpenModalInvitation(false)
+            }} />
           <DigitalPassModal
             isOpen={openModalPass}
             onCancel={onCancelPassModal}
             onSubmit={() => {
+              resetEvent()
               setOpenModalPass(false)
-              refetchEvent()
             }}
             event={fetchedEvent}
           />

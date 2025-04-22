@@ -265,10 +265,7 @@ export const DigitalPassModal = ({ isOpen, onCancel, onSubmit, event }) => {
         fileUrl = uploadRes.data.fileUrl
       }
 
-      const { room, room_name, ...eventToSave } = event
-
-      await axios.put(`/api/events/update/${event.id}`, {
-        ...eventToSave,
+      await axios.put(`/api/events/digital-pass/${event.id}`, {
         digitalPass: {
           ...event?.digitalPass,
           fileUrl,

@@ -12,6 +12,13 @@ const FILE_SELECT = {
   }
 }
 
+const createCanvaMapData = canvaMap => ({
+  ...canvaMap,
+  coordinates: canvaMap.coordinates ? {
+    create: canvaMap.coordinates
+  } : undefined
+})
+
 export async function getEventById(req, res) {
   const eventId = req.query.id
   try {
@@ -131,12 +138,7 @@ export async function postNewEvent(req, res) {
 export async function putEditEventId(req, res) {
   const { eventId } = req.query
   const eventProperties = req.body
-  const createCanvaMapData = canvaMap => ({
-    ...canvaMap,
-    coordinates: canvaMap.coordinates ? {
-      create: canvaMap.coordinates
-    } : undefined
-  })
+  
   const createRoomMap = eventProperties.roomMap
     ? createCanvaMapData(eventProperties.roomMap.canvaMap)
     : undefined
@@ -281,6 +283,168 @@ export async function deleteEventById(req, res) {
     res.status(500).json({
       error,
       message: "Ocurrió un error al eliminar el evento"
+    })
+  }
+}
+
+export async function updateDigitalInvitation(req, res) {
+  const { eventId } = req.query
+  const { digitalInvitation } = req.body
+  
+  if (!digitalInvitation) {
+    return res.status(400).json({
+      error: "No digital invitation data provided",
+      message: "Digital invitation data is required"
+    })
+  }
+
+  try {
+    const createDigitalInvitation = createCanvaMapData(digitalInvitation.canvaMap)
+
+    const updateData = {
+      digitalInvitation: {
+        upsert: {
+          create: {
+            ...digitalInvitation,
+            canvaMap: {
+              create: createDigitalInvitation
+            }
+          },
+          update: {
+            ...digitalInvitation,
+            canvaMap: {
+              delete: true,
+              create: createDigitalInvitation
+            }
+          }
+        }
+      }
+    }
+
+    const updatedResult = await prisma.event.update({
+      where: { id: eventId },
+      data: updateData,
+      include: {
+        digitalInvitation: {
+          include: {
+            canvaMap: {
+              include: {
+                coordinates: true
+              }
+            }
+          }
+        }
+      }
+    })
+
+    res.status(200).json({
+      message: "Digital invitation successfully updated!",
+      result: updatedResult.digitalInvitation
+    })
+  } catch (error) {
+    console.error(error)
+    res.status(400).json({
+      error,
+      message: "An error occurred while updating the digital invitation."
+    })
+  }
+}
+
+export async function updateTablesDistribution(req, res) {
+  const { eventId } = req.query
+  const { tablesDistribution } = req.body
+  
+  if (!tablesDistribution) {
+    return res.status(400).json({
+      error: "No tables distribution data provided",
+      message: "Tables distribution data is required"
+    })
+  }
+
+  try {
+    const updatedResult = await prisma.event.update({
+      where: { id: eventId },
+      data: {
+        tablesDistribution
+      },
+      select: {
+        id: true,
+        tablesDistribution: true
+      }
+    })
+
+    res.status(200).json({
+      message: "Tables distribution successfully updated!",
+      result: updatedResult
+    })
+  } catch (error) {
+    console.error(error)
+    res.status(400).json({
+      error,
+      message: "An error occurred while updating the tables distribution."
+    })
+  }
+}
+
+export async function updateDigitalPass(req, res) {
+  const { eventId } = req.query
+  const { digitalPass } = req.body
+  
+  if (!digitalPass) {
+    return res.status(400).json({
+      error: "No digital pass data provided",
+      message: "Digital pass data is required"
+    })
+  }
+
+  try {
+    const createDigitalPass = createCanvaMapData(digitalPass.canvaMap)
+
+    const updateData = {
+      digitalPass: {
+        upsert: {
+          create: {
+            ...digitalPass,
+            canvaMap: {
+              create: createDigitalPass
+            }
+          },
+          update: {
+            ...digitalPass,
+            canvaMap: {
+              delete: true,
+              create: createDigitalPass
+            }
+          }
+        }
+      }
+    }
+
+    const updatedResult = await prisma.event.update({
+      where: { id: eventId },
+      data: updateData,
+      include: {
+        digitalPass: {
+          include: {
+            canvaMap: {
+              include: {
+                coordinates: true
+              }
+            }
+          }
+        }
+      }
+    })
+
+    res.status(200).json({
+      message: "Digital pass successfully updated!",
+      result: updatedResult.digitalPass
+    })
+  } catch (error) {
+    console.error(error)
+    res.status(400).json({
+      error,
+      message: "An error occurred while updating the digital pass."
     })
   }
 }

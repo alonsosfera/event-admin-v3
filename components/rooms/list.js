@@ -9,7 +9,7 @@ const RoomsList = ({ data, onDelete, onEdit }) => (
         <Card
           extra={<ActionsButton onDelete={() => onDelete(room.id)} onEdit={() => onEdit(room)} />}
           title={room.name}
-          bordered={false}>
+          variant="borderless">
           <Space direction="vertical">
             <img src={`/assets/${room.name.split(" ").join("_")}.jpg`} style={{ height: "120px" }} />
             <>

@@ -7,8 +7,8 @@ import { EditRoomMap } from "../../custom-tables-map/edit-room-map"
 import { useSession } from "next-auth/react"
 
 const InvitationsTable = ({
-  data, onNew, onDownload, onSingleDownload, loadingRoomMap, roomMapRefetch, roomMapData, refetchEvent,
-  onResendInvitation, remove, event, invitedGuests, openModalInvitation, setOpenModalInvitation, showAlert, onCancelInvitationModal
+  data, onNew, onDownload, onSingleDownload, loadingRoomMap, roomMapRefetch, roomMapData, setEvent,
+  onResendInvitation, remove, event, invitedGuests, showAlert
 }) => {
   const [isInviteButtonDisabled, setIsInviteButtonDisabled] = useState(false)
   const [openEditMapModal, setOpenEditMapModal] = useState(false)
@@ -35,15 +35,9 @@ const InvitationsTable = ({
 
   const { data: { user } = {} } = useSession()
 
-  const menuDropDown = (
-    <Menu>
-        <Menu.Item key="1">
-          <a className="invite-btn" onClick={handleEditMapModalToggle}>
-            Editar Mapa
-          </a>
-        </Menu.Item>
-    </Menu>
-  )
+  const menuDropDownItems = [
+    { label: <a className="invite-btn" onClick={handleEditMapModalToggle}>Editar Mapa</a>, key: "edit-map" },
+  ]
 
   return (
     <div>
@@ -75,7 +69,7 @@ const InvitationsTable = ({
             </Button>
             {user?.role === "ADMIN" && (
             <Dropdown
-              overlay={menuDropDown}
+              menu={{ items: menuDropDownItems }}
               trigger={["click"]}>
               <Button>
                 <SmallDashOutlined />
@@ -134,20 +128,12 @@ const InvitationsTable = ({
           )}
           width={1} />
       </Table>
-      <DigitalInvitationModal
-        event={event}
-        isOpen={openModalInvitation}
-        onCancel={onCancelInvitationModal}
-        onSubmit={async () => {
-          await refetchEvent()
-          setOpenModalInvitation(false)
-        }} />
       <EditRoomMap
         event={event}
         eventId={event.id}
+        setEvent={setEvent}
         eventName={event.name}
         roomMapData={roomMapData}
-        refetchEvent={refetchEvent}
         loadingRoomMap={loadingRoomMap}
         roomMapRefetch={roomMapRefetch}
         tablesDistribution={event.tablesDistribution}

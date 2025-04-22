@@ -11,7 +11,7 @@ const CustomTablesMap = dynamic(() => import("../../custom-tables-map"), {
 export const NewInvitation = ({
   invitations,
   event,
-  refetchEvent,
+  getEventInvitations,
   refetchInvitations,
   invitedGuests,
   roomMapData,
@@ -31,7 +31,7 @@ export const NewInvitation = ({
     try {
       const invitation = await handleSaveHelper(event, form, guests)
       await generatePDF(event, invitation, dimensions)
-      refetchEvent(event)
+      getEventInvitations()
       await refetchInvitations()
     } catch (e) {
       console.error(e)

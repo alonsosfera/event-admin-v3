@@ -25,29 +25,23 @@ export const HostDashboard = ({ eventId }) => {
 
   const hideEventsList =  Boolean(eventId) || hideHostEventsList
 
+  const resetEvent = () => {
+    refetchEvent({ eventId }).then(res => {
+      setState({ edit: false, isModalOpen: false, isLoading: false, events: [res] })
+      setEvent(res)
+    })
+  }
+
   useEffect(() => {
-    if (eventId && user) {
-      if (user.role === "ADMIN") {
-        refetchEvent({ eventId }).then(res => {
-          setState({ edit: false, isModalOpen: false, isLoading: false, events: [res] })
-          setEvent(res)
-        })
-      } else {
-        getEventsByHost(user.id, (hostState) => {
-          const matchedEvent = hostState.events.find(ev => ev.id === eventId)
-          if (matchedEvent) {
-            setState({ ...hostState, isLoading: false, events: [matchedEvent] })
-            setEvent(matchedEvent)
-          }
-        })
-      }
+    if (eventId) {
+      resetEvent()
     } else if (user) {
       getEventsByHost(user.id, setState)
     }
-  
+
     getRooms(setRooms)
   }, [user])
-  
+
 
   useEffect(() => {
     if (state.events.length === 1) {
@@ -91,19 +85,9 @@ export const HostDashboard = ({ eventId }) => {
       <EventDetails
         isLoading={state.isLoading}
         data={eventData || event}
+        setEvent={setEvent}
         fetchedEvent={event}
-        refetchEvent={async () => {
-          if (user?.role === "ADMIN") {
-            const res = await refetchEvent({ eventId: event.id })
-            setEvent(res)
-            return res
-          } else {
-            getEventsByHost(user.id, (hostState) => {
-              const updated = hostState.events.find(ev => ev.id === event.id)
-              if (updated) setEvent(updated)
-            })
-          }
-        }}
+        resetEvent={resetEvent}
         fullSize={hideEventsList}
       />
     </Row>

@@ -2,7 +2,7 @@ import { Button, Modal } from "antd"
 import { JoyaColumns, JoyaLobby } from "../host/event-details/constants"
 import React, { useState } from "react"
 import dynamic from "next/dynamic"
-import { createRoomMap, updateEvent, updateRoomMap } from "../events/helpers"
+import { createRoomMap, updateTablesDistribution, updateRoomMap } from "../events/helpers"
 import { getNextTable } from "../../helpers/getNextTable"
 import { DEFAULT_POSITION } from "./helpers"
 const CustomTablesMap = dynamic(() => import("../custom-tables-map"), {
@@ -14,7 +14,7 @@ export const EditRoomMap = ({
   eventId,
   eventName,
   roomMapData,
-  refetchEvent,
+  setEvent,
   roomMapRefetch,
   loadingRoomMap,
   openEditMapModal,
@@ -28,10 +28,14 @@ export const EditRoomMap = ({
   const handleSave = async () => {
     setLoading(true)
     try {
+      // First update or create the room map
       if (roomMapData?.id) await updateRoomMap(roomMapData?.id, { roomMapCoordinates })
       else await createRoomMap({ roomMapCoordinates, roomMapName: eventName, eventId })
       await roomMapRefetch({ eventId })
-      await updateEvent({ tablesDistribution }, eventId)
+      
+      // Use the more efficient endpoint that only updates tables distribution
+      // This reduces database load by only updating the relevant part instead of the entire event
+      await updateTablesDistribution(tablesDistribution, eventId)
       handleRoomMapModalSubmit()
     } catch (err) {
       console.error(err)
@@ -44,7 +48,7 @@ export const EditRoomMap = ({
   const onDeleteTable = (tableName) => {
     const newTableDistribution = JSON.parse(JSON.stringify(tablesDistribution))
     delete newTableDistribution[tableName]
-    refetchEvent({ ...event, tablesDistribution: newTableDistribution })
+    setEvent({ ...event, tablesDistribution: newTableDistribution })
   }
   const onAddTable = () => {
     const clonedTableDistribution = JSON.parse(JSON.stringify(tablesDistribution))
@@ -65,7 +69,7 @@ export const EditRoomMap = ({
       "key": nextTableName
     }
     setRoomMapCoordinates(prev => [...prev, newTableCoordinates])
-    refetchEvent({ ...event, tablesDistribution: newTableDistribution })
+    setEvent({ ...event, tablesDistribution: newTableDistribution })
   }
 
   return (

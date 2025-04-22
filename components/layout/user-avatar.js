@@ -7,33 +7,21 @@ import ROLES from "../../enums/roles"
 export const UserAvatar = () => {
   const { data: { user } = {} } = useSession()
 
-  const menu = (
-    <Menu>
-      <Menu.Item disabled>{user?.name}</Menu.Item>
-      <Menu.Item>
-        <Link href="/dashboard">
-          Home
-        </Link>
-      </Menu.Item>
-      {user?.role === ROLES.ADMIN && (
-        <Menu.Item>
-          <Link href="/users">
-            Usuarios
-          </Link>
-        </Menu.Item>,
-          <Menu.Item>
-            <Link href="/events">
-              Eventos
-            </Link>
-          </Menu.Item>
-      )}
-      <Menu.Divider />
-      <Menu.Item onClick={signOut}>Cerrar sesion</Menu.Item>
-    </Menu>
-  )
+  const items = user?.role === ROLES.ADMIN ? [
+    { label: user?.name, disabled: true },
+    { label: (<Link href="/users">Usuarios</Link>), key: "users" },
+    { label: (<Link href="/events">Eventos</Link>), key: "events" },
+    { type: 'divider' },
+    { label: "Cerrar sesión", key: "logout", onClick: signOut }
+  ] : [
+    { label: user?.name, disabled: true },
+    { label: (<Link href="/dashboard">Home</Link>), key: "home" },
+    { type: 'divider' },
+    { label: "Cerrar sesión", key: "logout", onClick: signOut }
+  ]
 
   return (
-    <Dropdown overlay={menu} trigger={["click"]}>
+    <Dropdown menu={{ items }} trigger={["click"]}>
       <Space>
         <Typography.Text style={{ color: "white", cursor: "pointer" }}>{user?.name}</Typography.Text>
         <Button
