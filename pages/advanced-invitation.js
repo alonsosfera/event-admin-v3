@@ -35,7 +35,7 @@ const defaultInactiveSections = ['video', 'family', 'gift', 'contact']
 const PremiumInvitationPage = () => {
   const [activeSectionOrder, setActiveSectionOrder] = useState(defaultActiveSections)
   const [inactiveSectionOrder, setInactiveSectionOrder] = useState(defaultInactiveSections)
-  const [isEditing, setIsEditing] = useState(true)
+  const [isEditing, setIsEditing] = useState(false)
   const [sectionData, setSectionData] = useState({})
   const [backgroundImage, setBackgroundImage] = useState("/assets/background1.jpg")
   const [cardBackgroundImage, setCardBackgroundImage] = useState("/assets/background1.jpg")
@@ -93,7 +93,7 @@ const PremiumInvitationPage = () => {
                     opacity={[0, 5]}
                     easing="ease"
                   >
-                    <div id={`section-${id}`}>
+                    <div className={`section-${id}`} id={`section-${id}`}>
                       <Card className='card-invitation' style={{ textAlign: "center", backgroundImage: `url(${cardBackgroundImage})` }}>
                         <Component
                           isEditing={isEditing}
