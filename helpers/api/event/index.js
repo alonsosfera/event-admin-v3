@@ -349,3 +349,39 @@ export async function updateDigitalInvitation(req, res) {
     })
   }
 }
+
+export async function updateTablesDistribution(req, res) {
+  const { eventId } = req.query
+  const { tablesDistribution } = req.body
+  
+  if (!tablesDistribution) {
+    return res.status(400).json({
+      error: "No tables distribution data provided",
+      message: "Tables distribution data is required"
+    })
+  }
+
+  try {
+    const updatedResult = await prisma.event.update({
+      where: { id: eventId },
+      data: {
+        tablesDistribution
+      },
+      select: {
+        id: true,
+        tablesDistribution: true
+      }
+    })
+
+    res.status(200).json({
+      message: "Tables distribution successfully updated!",
+      result: updatedResult
+    })
+  } catch (error) {
+    console.error(error)
+    res.status(400).json({
+      error,
+      message: "An error occurred while updating the tables distribution."
+    })
+  }
+}

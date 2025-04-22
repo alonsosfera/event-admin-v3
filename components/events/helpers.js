@@ -230,3 +230,14 @@ export async function getPassDesigns(eventId) {
     console.error("Error al obtener pases:", error)
   }
 }
+
+export const updateTablesDistribution = async (tablesDistribution, id) => {
+  const { data: { result } } = await axios.put(`/api/events/tables-distribution/${id}`, {
+    tablesDistribution
+  }, {
+    headers: {
+      "Authorization": `Bearer ${token}`
+    }
+  })
+  return result
+}
