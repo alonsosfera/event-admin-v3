@@ -24,31 +24,13 @@ const PremiumInvitationCarousel = ({ isEditing, onDataChange }) => {
     });
   };
 
-  const handleEditImage = ({ fileList }, index) => {
+  const handleEditImage = (index) => (file) => {
+    const newUrl = URL.createObjectURL(file)
     const updatedImages = [...carouselImages]
-    if (fileList.length > 0) {
-      const file = fileList[0]
-      updatedImages[index] = {
-        src: file.url || URL.createObjectURL(file.originFileObj),
-        alt: `Recuerdo ${index + 1}`,
-        file: file,
-      };
-      updateParent(updatedImages)
-    }
-  };
-
-  const handleAddImage = ({ fileList }) => {
-    if (fileList && fileList.length > 0) {
-      const file = fileList[0];
-      const newImage = {
-        src: file.url || URL.createObjectURL(file.originFileObj),
-        alt: `Recuerdo ${carouselImages.length + 1}`,
-        file: file,
-      };
-      const updatedImages = [...carouselImages, newImage];
-      updateParent(updatedImages)
-    }
-  };
+    updatedImages[index] = { src: newUrl, alt: `Recuerdo ${index + 1}`, file }
+    updateParent(updatedImages)
+    return false
+  }
 
   const handleDeleteImage = (index) => {
     const updated = [...carouselImages];
@@ -122,9 +104,8 @@ const PremiumInvitationCarousel = ({ isEditing, onDataChange }) => {
                       <Upload
                         accept="image/*"
                         showUploadList={false}
-                        onChange={({ fileList }) => handleEditImage({ fileList }, index)}
                         listType="picture"
-                        beforeUpload={() => false}
+                        beforeUpload={handleEditImage(index)}
                       >
                         <EditOutlined style={{ fontSize: "16px", color: "#fff" }} />
                       </Upload>
@@ -136,9 +117,8 @@ const PremiumInvitationCarousel = ({ isEditing, onDataChange }) => {
             <Upload
               accept="image/*"
               showUploadList={false}
-              onChange={handleAddImage}
               listType="picture"
-              beforeUpload={() => false}
+              beforeUpload={handleEditImage(carouselImages.length)}
             >
               <div className="upload-container">
                 <PlusOutlined style={{ fontSize: "36px", color: "#7f8c8d" }} />
