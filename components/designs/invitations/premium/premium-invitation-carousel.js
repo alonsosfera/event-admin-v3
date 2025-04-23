@@ -83,7 +83,7 @@ const PremiumInvitationCarousel = ({ isEditing, onDataChange }) => {
       {isEditing && (
         <div style={{ marginTop: 20, textAlign: "center" }}>
           <Col style={{ marginBottom: 20 }}>
-            <Text style={{ fontSize: '36px', color: '#7f8c8d' }}>Cambiar imagen</Text>
+            <Text style={{ fontSize: '36px', color: '#7f8c8d' }}>Edición de imagenes del carrusel</Text>
           </Col>
           <Row gutter={[16, 16]}>
             {carouselImages.map((image, index) => (
@@ -123,7 +123,7 @@ const PremiumInvitationCarousel = ({ isEditing, onDataChange }) => {
               >
                 <div className="upload-container">
                   <PlusOutlined style={{ fontSize: "36px", color: "#7f8c8d" }} />
-                  <div style={{ marginTop: 8, fontSize: "14px", color: "#7f8c8d" }}>Agregar imagen</div>
+                  <div style={{ marginTop: 8, fontSize: "14px", color: "#7f8c8d" }}>Agregar</div>
                 </div>
               </Upload>
             </Col>
