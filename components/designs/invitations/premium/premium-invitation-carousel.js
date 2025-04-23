@@ -1,8 +1,8 @@
-import { useState } from "react"
-import { Carousel, Typography, Image, Upload, Button, Row, Col, Card, Empty } from "antd"
-import { PlusOutlined, DeleteOutlined } from "@ant-design/icons"
+import { useState } from "react";
+import { Carousel, Typography, Image, Upload, Row, Col, Empty } from "antd";
+import { PlusOutlined, DeleteOutlined, EditOutlined } from "@ant-design/icons";
 
-const { Title, Text } = Typography
+const { Title, Text } = Typography;
 
 const PremiumInvitationCarousel = ({ isEditing, onDataChange }) => {
   const [carouselImages, setCarouselImages] = useState([
@@ -10,43 +10,61 @@ const PremiumInvitationCarousel = ({ isEditing, onDataChange }) => {
     { src: "/assets/carousel2.jpeg", alt: "Recuerdo 2" },
     { src: "/assets/carousel3.webp", alt: "Recuerdo 3" },
     { src: "/assets/carousel4.webp", alt: "Recuerdo 4" }
-  ])
+  ]);
 
-  const [title, setTitle] = useState("Recuerdos Especiales")
-  const [subtitle, setSubtitle] = useState("Un vistazo a los momentos que nos han traído hasta aquí")
+  const [title, setTitle] = useState("Recuerdos Especiales");
+  const [subtitle, setSubtitle] = useState("Un vistazo a los momentos que nos han traído hasta aquí");
 
   const updateParent = (images) => {
-    setCarouselImages(images)
+    setCarouselImages(images);
     onDataChange?.({
       images,
       title,
-      subtitle
-    })
-  }
+      subtitle,
+    });
+  };
 
-  const handleImageChange = ({ fileList }) => {
+  const handleEditImage = ({ fileList }, index) => {
     const updatedImages = [...carouselImages]
     if (fileList.length > 0) {
-      updatedImages.push({ src: fileList[0].url || URL.createObjectURL(fileList[0].originFileObj), alt: `Recuerdo ${carouselImages.length + 1}`, file: fileList[0] })
+      const file = fileList[0]
+      updatedImages[index] = {
+        src: file.url || URL.createObjectURL(file.originFileObj),
+        alt: `Recuerdo ${index + 1}`,
+        file: file,
+      };
+      updateParent(updatedImages)
     }
-    updateParent(updatedImages)
-  }
+  };
+
+  const handleAddImage = ({ fileList }) => {
+    if (fileList && fileList.length > 0) {
+      const file = fileList[0];
+      const newImage = {
+        src: file.url || URL.createObjectURL(file.originFileObj),
+        alt: `Recuerdo ${carouselImages.length + 1}`,
+        file: file,
+      };
+      const updatedImages = [...carouselImages, newImage];
+      updateParent(updatedImages)
+    }
+  };
 
   const handleDeleteImage = (index) => {
-    const updated = [...carouselImages]
-    updated.splice(index, 1)
-    updateParent(updated)
-  }
+    const updated = [...carouselImages];
+    updated.splice(index, 1);
+    updateParent(updated);
+  };
 
   const handleTitleChange = (val) => {
-    setTitle(val)
-    onDataChange?.({ images: carouselImages, title: val, subtitle })
-  }
+    setTitle(val);
+    onDataChange?.({ images: carouselImages, title: val, subtitle });
+  };
 
   const handleSubtitleChange = (val) => {
-    setSubtitle(val)
-    onDataChange?.({ images: carouselImages, title, subtitle: val })
-  }
+    setSubtitle(val);
+    onDataChange?.({ images: carouselImages, title, subtitle: val });
+  };
 
   return (
     <>
@@ -70,17 +88,11 @@ const PremiumInvitationCarousel = ({ isEditing, onDataChange }) => {
         {carouselImages.length > 0 ? (
           carouselImages.map((image, index) => (
             <div key={index}>
-              <Image
-                src={image.src}
-                alt={image.alt}
-                preview={false}
-                width="100%"
-                style={{ objectFit: 'cover', borderRadius: '10px', maxHeight: "600px" }}
-              />
+              <Image src={image.src} alt={image.alt} preview={false} width="100%" style={{ objectFit: "cover", borderRadius: "10px", maxHeight: "600px" }} />
             </div>
           ))
         ) : (
-          <div style={{ padding: '40px 0' }}>
+          <div style={{ padding: "40px 0" }}>
             <Empty description="No hay imágenes" />
           </div>
         )}
@@ -89,89 +101,55 @@ const PremiumInvitationCarousel = ({ isEditing, onDataChange }) => {
       {isEditing && (
         <div style={{ marginTop: 20, textAlign: "center" }}>
           <Col style={{ marginBottom: 20 }}>
-            <Text style={{ fontSize: '36px', color: '#7f8c8d' }}>
-              Cambiar imagen
-            </Text>
+            <Text style={{ fontSize: '36px', color: '#7f8c8d' }}>Cambiar imagen</Text>
           </Col>
           <Row gutter={[16, 16]}>
             {carouselImages.map((image, index) => (
               <Col xs={24} md={12} xl={6} key={index}>
-                <Card
-                  hoverable
-                  style={{
-                    position: 'relative',
-                    overflow: 'hidden',
-                    height: '150px',
-                  }}
-                  cover={
-                    <Image
-                      alt={image.alt}
-                      src={image.src}
-                      style={{
-                        width: '100%',
-                        height: '100%',
-                        objectFit: 'contain',
-                      }}
-                    />
-                  }
-                  onMouseEnter={(e) => {
-                    const deleteButton = e.currentTarget.querySelector('.delete-button')
-                    if (deleteButton) {
-                      deleteButton.style.display = 'block'
-                    }
-                  }}
-                  onMouseLeave={(e) => {
-                    const deleteButton = e.currentTarget.querySelector('.delete-button')
-                    if (deleteButton) {
-                      deleteButton.style.display = 'none'
-                    }
-                  }}
-                >
-                  <div
-                    className="delete-button"
-                    style={{
-                      position: 'absolute',
-                      top: '10px',
-                      right: '10px',
-                      backgroundColor: 'rgba(0, 0, 0, 0.5)',
-                      color: 'white',
-                      borderRadius: '50%',
-                      cursor: 'pointer',
-                      padding: '5px',
-                      display: 'none',
-                    }}
-                    onClick={() => handleDeleteImage(index)}
-                  >
-                    <DeleteOutlined />
-                  </div>
-                </Card>
+                <div className="image-container">
+                  <Image
+                    alt={image.alt}
+                    src={image.src}
+                    style={{ width: '100%', height: '100%', objectFit: 'contain' }}
+                  />
+                  {isEditing && (
+                    <div className="delete-button" onClick={() => handleDeleteImage(index)}>
+                      <DeleteOutlined />
+                    </div>
+                  )}
+                  {isEditing && (
+                    <div className="change-button">
+                      <Upload
+                        accept="image/*"
+                        showUploadList={false}
+                        onChange={({ fileList }) => handleEditImage({ fileList }, index)}
+                        listType="picture"
+                        beforeUpload={() => false}
+                      >
+                        <EditOutlined style={{ fontSize: "16px", color: "#fff" }} />
+                      </Upload>
+                    </div>
+                  )}
+                </div>
               </Col>
             ))}
-          </Row>
-
-          <Row gutter={[16, 16]}>
-            <Col span={24}>
-              <Upload
-                accept="image/*"
-                showUploadList={false}
-                onChange={handleImageChange}
-                beforeUpload={() => false}
-              >
-                <Button
-                  icon={<PlusOutlined />}
-                  size="small"
-                  type="primary"
-                  block
-                >
-                  Subir imagen
-                </Button>
-              </Upload>
-            </Col>
+            <Upload
+              accept="image/*"
+              showUploadList={false}
+              onChange={handleAddImage}
+              listType="picture"
+              beforeUpload={() => false}
+            >
+              <div className="upload-container">
+                <PlusOutlined style={{ fontSize: "36px", color: "#7f8c8d" }} />
+                <div style={{ marginTop: 8, fontSize: "14px", color: "#7f8c8d" }}>Upload</div>
+              </div>
+            </Upload>
           </Row>
         </div>
       )}
     </>
-  )
-}
+  );
+};
 
 export default PremiumInvitationCarousel

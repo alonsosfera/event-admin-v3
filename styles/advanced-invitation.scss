@@ -77,6 +77,69 @@
       width: 100%;
   }
 
+//COVER ADVANCE-INVITATION
+
+  .upload-container {
+    min-width: 150px;
+    height: 150px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 10px;
+    background-color: #f0f0f0;
+    
+  
+    &:hover {
+      border: 2px dashed #7f8c8d;
+      cursor: pointer;
+    }
+  }
+  
+  .delete-button {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background-color: rgba(0, 0, 0, 0.5);
+    color: white;
+    border-radius: 50%;
+    cursor: pointer;
+    padding: 5px;
+    display: none;
+  }
+  
+  .delete-button:hover {
+    background-color: rgba(0, 0, 0, 0.7);
+  }
+  
+  .image-container {
+    position: relative;
+    overflow: hidden;
+    height: 150px;
+  }
+  
+  .image-container:hover .delete-button,
+  .image-container:hover .change-button {
+    display: block;
+  }
+
+  .change-button {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    background-color: rgba(0, 0, 0, 0.5);
+    color: white;
+    border-radius: 50%;
+    cursor: pointer;
+    padding: 5px;
+    display: none;
+  }
+
+  .change-button:hover {
+    background-color: rgba(0, 0, 0, 0.7);
+  }
+  
+  // Fin cover Advance invitation
+
   @media (max-width: 576px) {
 
     .ant-image {
