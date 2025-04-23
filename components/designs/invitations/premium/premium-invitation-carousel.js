@@ -1,6 +1,6 @@
 import { useState } from "react"
-import { Carousel, Card, Typography, Image, Upload, Button, Row, Col, Popconfirm, Empty } from "antd"
-import { UploadOutlined, DeleteOutlined } from "@ant-design/icons"
+import { Carousel, Typography, Image, Upload, Button, Row, Col, Card, Empty } from "antd"
+import { PlusOutlined, DeleteOutlined } from "@ant-design/icons"
 
 const { Title, Text } = Typography
 
@@ -24,17 +24,17 @@ const PremiumInvitationCarousel = ({ isEditing, onDataChange }) => {
     })
   }
 
-  const handleImageChange = (index) => (file) => {
-    const newUrl = URL.createObjectURL(file)
+  const handleImageChange = ({ fileList }) => {
     const updatedImages = [...carouselImages]
-    updatedImages[index] = { src: newUrl, alt: `Recuerdo ${index + 1}`, file }
+    if (fileList.length > 0) {
+      updatedImages.push({ src: fileList[0].url || URL.createObjectURL(fileList[0].originFileObj), alt: `Recuerdo ${carouselImages.length + 1}`, file: fileList[0] })
+    }
     updateParent(updatedImages)
-    return false
   }
 
   const handleDeleteImage = (index) => {
     const updated = [...carouselImages]
-    updated[index] = {} // Mantén el slot, pero sin imagen
+    updated.splice(index, 1)
     updateParent(updated)
   }
 
@@ -54,38 +54,30 @@ const PremiumInvitationCarousel = ({ isEditing, onDataChange }) => {
         <Title
           level={2}
           style={{ color: '#4c4c4c', fontWeight: 'bold' }}
-          editable={isEditing ? {
-            triggerType: ['icon', 'text'],
-            onChange: handleTitleChange
-          } : false}
+          editable={isEditing ? { triggerType: ['icon', 'text'], onChange: handleTitleChange } : false}
         >
           {title}
         </Title>
         <Text
           style={{ fontSize: '18px', color: '#7f8c8d' }}
-          editable={isEditing ? {
-            triggerType: ['icon', 'text'],
-            onChange: handleSubtitleChange
-          } : false}
+          editable={isEditing ? { triggerType: ['icon', 'text'], onChange: handleSubtitleChange } : false}
         >
           {subtitle}
         </Text>
       </div>
 
       <Carousel arrows autoplay>
-        {carouselImages.filter(img => img.src).length > 0 ? (
+        {carouselImages.length > 0 ? (
           carouselImages.map((image, index) => (
-            image.src && (
-              <div key={index}>
-                <Image
-                  src={image.src}
-                  alt={image.alt}
-                  preview={false}
-                  width="100%"
-                  style={{ objectFit: 'cover', borderRadius: '10px', maxHeight: "600px" }}
-                />
-              </div>
-            )
+            <div key={index}>
+              <Image
+                src={image.src}
+                alt={image.alt}
+                preview={false}
+                width="100%"
+                style={{ objectFit: 'cover', borderRadius: '10px', maxHeight: "600px" }}
+              />
+            </div>
           ))
         ) : (
           <div style={{ padding: '40px 0' }}>
@@ -98,53 +90,83 @@ const PremiumInvitationCarousel = ({ isEditing, onDataChange }) => {
         <div style={{ marginTop: 20, textAlign: "center" }}>
           <Col style={{ marginBottom: 20 }}>
             <Text style={{ fontSize: '36px', color: '#7f8c8d' }}>
-              Cambiar imágenes
+              Cambiar imagen
             </Text>
           </Col>
           <Row gutter={[16, 16]}>
             {carouselImages.map((image, index) => (
               <Col xs={24} md={12} xl={6} key={index}>
-                <Row gutter={8}>
-                  <Col span={12}>
-                    <Upload
-                      accept="image/*"
-                      showUploadList={false}
-                      beforeUpload={handleImageChange(index)}
-                      className="upload-full-width"
-                    >
-                      <Button
-                        icon={<UploadOutlined />}
-                        size="small"
-                        type="primary"
-                        block
-                      >
-                        Imagen {index + 1}
-                      </Button>
-                    </Upload>
-                  </Col>
-                  <Col span={12}>
-                    {image.src && (
-                      <Popconfirm
-                        title="¿Eliminar esta imagen?"
-                        onConfirm={() => handleDeleteImage(index)}
-                        okText="Sí"
-                        cancelText="No"
-                      >
-                        <Button
-                          icon={<DeleteOutlined />}
-                          type="primary"
-                          size="small"
-                          danger
-                          block
-                        >
-                          Eliminar
-                        </Button>
-                      </Popconfirm>
-                    )}
-                  </Col>
-                </Row>
+                <Card
+                  hoverable
+                  style={{
+                    position: 'relative',
+                    overflow: 'hidden',
+                    height: '150px',
+                  }}
+                  cover={
+                    <Image
+                      alt={image.alt}
+                      src={image.src}
+                      style={{
+                        width: '100%',
+                        height: '100%',
+                        objectFit: 'contain',
+                      }}
+                    />
+                  }
+                  onMouseEnter={(e) => {
+                    const deleteButton = e.currentTarget.querySelector('.delete-button')
+                    if (deleteButton) {
+                      deleteButton.style.display = 'block'
+                    }
+                  }}
+                  onMouseLeave={(e) => {
+                    const deleteButton = e.currentTarget.querySelector('.delete-button')
+                    if (deleteButton) {
+                      deleteButton.style.display = 'none'
+                    }
+                  }}
+                >
+                  <div
+                    className="delete-button"
+                    style={{
+                      position: 'absolute',
+                      top: '10px',
+                      right: '10px',
+                      backgroundColor: 'rgba(0, 0, 0, 0.5)',
+                      color: 'white',
+                      borderRadius: '50%',
+                      cursor: 'pointer',
+                      padding: '5px',
+                      display: 'none',
+                    }}
+                    onClick={() => handleDeleteImage(index)}
+                  >
+                    <DeleteOutlined />
+                  </div>
+                </Card>
               </Col>
             ))}
+          </Row>
+
+          <Row gutter={[16, 16]}>
+            <Col span={24}>
+              <Upload
+                accept="image/*"
+                showUploadList={false}
+                onChange={handleImageChange}
+                beforeUpload={() => false}
+              >
+                <Button
+                  icon={<PlusOutlined />}
+                  size="small"
+                  type="primary"
+                  block
+                >
+                  Subir imagen
+                </Button>
+              </Upload>
+            </Col>
           </Row>
         </div>
       )}
