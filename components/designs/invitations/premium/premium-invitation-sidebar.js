@@ -12,7 +12,8 @@ const InvitationPremiumSideBar = ({
   setActiveSectionOrder,
   inactiveSectionOrder,
   setInactiveSectionOrder,
-  onDataChange
+  onDataChange,
+  setIsPlaying
 }) => {
   const [isClient, setIsClient] = useState(false)
 
@@ -39,6 +40,7 @@ const InvitationPremiumSideBar = ({
   
       if (type === 'audio') {
         onDataChange?.({ musicUrl: url, musicFile: file })
+        setIsPlaying(true)
       }
   
       return false

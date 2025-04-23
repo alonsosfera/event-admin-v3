@@ -35,11 +35,12 @@ const defaultInactiveSections = ['video', 'family', 'gift', 'contact']
 const PremiumInvitationPage = () => {
   const [activeSectionOrder, setActiveSectionOrder] = useState(defaultActiveSections)
   const [inactiveSectionOrder, setInactiveSectionOrder] = useState(defaultInactiveSections)
-  const [isEditing, setIsEditing] = useState(false)
+  const [isEditing, setIsEditing] = useState(true)
   const [sectionData, setSectionData] = useState({})
   const [backgroundImage, setBackgroundImage] = useState("/assets/background1.jpg")
   const [cardBackgroundImage, setCardBackgroundImage] = useState("/assets/background1.jpg")
   const [musicUrl, setMusicUrl] = useState("/assets/thousand-years.mp3")
+  const [isPlaying, setIsPlaying] = useState(false)
 
 
 
@@ -62,6 +63,7 @@ const PremiumInvitationPage = () => {
             if (data.cardBackgroundImage) setCardBackgroundImage(data.cardBackgroundImage)
             if (data.musicUrl) setMusicUrl(data.musicUrl)
           }}
+          setIsPlaying={setIsPlaying}
           
         />
         
@@ -71,7 +73,7 @@ const PremiumInvitationPage = () => {
         style={{
           marginLeft:  isEditing ? "260px" : "0px"
         }}>
-        <PremiumInvitationMusicPlayer  musicUrl={musicUrl} />
+        <PremiumInvitationMusicPlayer isPlaying={isPlaying} setIsPlaying={setIsPlaying} musicUrl={musicUrl} />
         <div 
           className="invitation-container"
           style={{ backgroundImage:  `url(${backgroundImage})` }}>
