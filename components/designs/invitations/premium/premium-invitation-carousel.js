@@ -92,39 +92,41 @@ const PremiumInvitationCarousel = ({ isEditing, onDataChange }) => {
                   <Image
                     alt={image.alt}
                     src={image.src}
-                    style={{ width: '100%', height: '100%', objectFit: 'contain' }}
+                    style={{ width: '100%', height: '100%', objectFit: 'cover', borderRadius: '10px' }}
                   />
                   {isEditing && (
-                    <div className="delete-button" onClick={() => handleDeleteImage(index)}>
-                      <DeleteOutlined />
-                    </div>
-                  )}
-                  {isEditing && (
-                    <div className="change-button">
-                      <Upload
-                        accept="image/*"
-                        showUploadList={false}
-                        listType="picture"
-                        beforeUpload={handleEditImage(index)}
-                      >
-                        <EditOutlined style={{ fontSize: "16px", color: "#fff" }} />
-                      </Upload>
-                    </div>
+                    <>
+                      <div className="delete-button" onClick={() => handleDeleteImage(index)}>
+                        <DeleteOutlined />
+                      </div>
+                      <div className="change-button">
+                        <Upload
+                          accept="image/*"
+                          showUploadList={false}
+                          listType="picture"
+                          beforeUpload={handleEditImage(index)}
+                        >
+                          <EditOutlined style={{ fontSize: "16px", color: "#fff" }} />
+                        </Upload>
+                      </div>
+                    </>
                   )}
                 </div>
               </Col>
             ))}
-            <Upload
-              accept="image/*"
-              showUploadList={false}
-              listType="picture"
-              beforeUpload={handleEditImage(carouselImages.length)}
-            >
-              <div className="upload-container">
-                <PlusOutlined style={{ fontSize: "36px", color: "#7f8c8d" }} />
-                <div style={{ marginTop: 8, fontSize: "14px", color: "#7f8c8d" }}>Upload</div>
-              </div>
-            </Upload>
+            <Col xs={24} md={12} xl={6}>
+              <Upload
+                accept="image/*"
+                showUploadList={false}
+                listType="picture"
+                beforeUpload={handleEditImage(carouselImages.length)}
+              >
+                <div className="upload-container">
+                  <PlusOutlined style={{ fontSize: "36px", color: "#7f8c8d" }} />
+                  <div style={{ marginTop: 8, fontSize: "14px", color: "#7f8c8d" }}>Agregar imagen</div>
+                </div>
+              </Upload>
+            </Col>
           </Row>
         </div>
       )}
@@ -132,4 +134,5 @@ const PremiumInvitationCarousel = ({ isEditing, onDataChange }) => {
   );
 };
 
-export default PremiumInvitationCarousel
+export default PremiumInvitationCarousel;
+
