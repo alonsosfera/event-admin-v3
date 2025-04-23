@@ -117,7 +117,7 @@ const InvitationPremiumSideBar = ({
                 onClick: () => scrollToSection(id),
                 size: "small",
                 hoverable: true,
-                bodyStyle: { padding: '6px 8px' },
+                styles: { body: { padding: '6px 8px' } },
                 fontSize: 11
               }
 
@@ -248,7 +248,7 @@ const InvitationPremiumSideBar = ({
         </DragDropContext>
       )}
 
-      <Collapse ghost  items={collapseItems} />
+      <Collapse ghost items={collapseItems} />
 
       <Row gutter={16} style={{ marginTop: 16, marginBottom: "16px" }}>
         <Col sm={12}>
