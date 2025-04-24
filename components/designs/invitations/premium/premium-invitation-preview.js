@@ -1,7 +1,7 @@
 import { Tooltip, FloatButton } from 'antd'
-import { EyeOutlined } from '@ant-design/icons'
+import { EditOutlined, EyeOutlined } from '@ant-design/icons'
 
-const PremiumInvitationPreview = ({ setIsEditing, setIsPreviewShown }) => {
+const PremiumInvitationPreview = ({ isEditing, setIsEditing, setIsPreviewShown }) => {
    
   const invitationPreview = () => {
     setIsEditing(prev => !prev)
@@ -9,7 +9,7 @@ const PremiumInvitationPreview = ({ setIsEditing, setIsPreviewShown }) => {
   }
 
   return (
-    <Tooltip title="Vista previa" placement="left">
+    <Tooltip title={ isEditing ? "Ver vista previa" : "Ir a modo edición" }  placement="left">
       <FloatButton
         type="primary"
         shape="square"
@@ -22,7 +22,7 @@ const PremiumInvitationPreview = ({ setIsEditing, setIsPreviewShown }) => {
           width: '70px',
           height: '40px',
         }}
-        icon={<EyeOutlined style={{ fontSize: '23px' }} />}
+        icon={ isEditing ? (<EyeOutlined style={{ fontSize: '23px' }} /> ) : (<EditOutlined style={{ fontSize: '23px' }}   />)}
         onClick={invitationPreview}
       />
     </Tooltip>

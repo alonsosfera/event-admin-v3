@@ -73,7 +73,7 @@ const PremiumInvitationPage = () => {
         }}>
         <PremiumInvitationMusicPlayer isPlaying={isPlaying} setIsPlaying={setIsPlaying} musicUrl={musicUrl} />
         {(isEditing || isPreviewShown) && (
-        <PremiumInvitationPreview setIsEditing={setIsEditing} setIsPreviewShown={setIsPreviewShown} />
+        <PremiumInvitationPreview isEditing={isEditing} setIsEditing={setIsEditing} setIsPreviewShown={setIsPreviewShown} />
       )}
         <div 
           className="invitation-container"
