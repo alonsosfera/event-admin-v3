@@ -13,6 +13,7 @@ import PremiumInvitationGift from '@/components/designs/invitations/premium/prem
 import PremiumInvitationContact from '@/components/designs/invitations/premium/premium-invitation-contact'
 import PremiumInvitationMusicPlayer from '@/components/designs/invitations/premium/premium-invitation-music'
 import InvitationPremiumSideBar from '@/components/designs/invitations/premium/premium-invitation-sidebar'
+import PremiumInvitationPreview from '@/components/designs/invitations/premium/premium-invitation-preview'
 
 const { Text } = Typography
 const { Content } = Layout
@@ -41,13 +42,10 @@ const PremiumInvitationPage = () => {
   const [cardBackgroundImage, setCardBackgroundImage] = useState("/assets/background1.jpg")
   const [musicUrl, setMusicUrl] = useState("/assets/thousand-years.mp3")
   const [isPlaying, setIsPlaying] = useState(false)
-
-
+  const [isPreviewShown, setIsPreviewShown] = useState(false);
 
   console.log("sectionData : ", sectionData);
   
-
-
   return (
     <Layout className='layout-sidebar' style={{ minHeight: '100vh' }}>
       {isEditing && (
@@ -74,6 +72,9 @@ const PremiumInvitationPage = () => {
           marginLeft:  isEditing ? "260px" : "0px"
         }}>
         <PremiumInvitationMusicPlayer isPlaying={isPlaying} setIsPlaying={setIsPlaying} musicUrl={musicUrl} />
+        {(isEditing || isPreviewShown) && (
+        <PremiumInvitationPreview setIsEditing={setIsEditing} setIsPreviewShown={setIsPreviewShown} />
+      )}
         <div 
           className="invitation-container"
           style={{ backgroundImage:  `url(${backgroundImage})` }}>
