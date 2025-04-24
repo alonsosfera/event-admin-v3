@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Carousel, Typography, Image, Upload, Row, Col, Empty } from "antd";
+import { Carousel, Typography, Image, Upload, Row, Col, Empty, Button } from "antd";
 import { PlusOutlined, DeleteOutlined, EditOutlined } from "@ant-design/icons";
 
 const { Title, Text } = Typography;
@@ -66,11 +66,37 @@ const PremiumInvitationCarousel = ({ isEditing, onDataChange }) => {
         </Text>
       </div>
 
-      <Carousel arrows autoplay>
+      <Carousel arrows autoplay effect="fade">
         {carouselImages.length > 0 ? (
           carouselImages.map((image, index) => (
-            <div key={index}>
-              <Image src={image.src} alt={image.alt} preview={false} width="100%" style={{ objectFit: "cover", borderRadius: "10px", maxHeight: "600px" }} />
+            <div className="image-container" key={index} style={{ position: "relative" }}>
+              <Image
+                src={image.src}
+                alt={image.alt}
+                preview={false}
+                width="100%"
+                style={{ objectFit: "cover", borderRadius: "10px", maxHeight: "600px" }}
+              />
+              {isEditing && (
+                <>
+                  <div
+                    className="delete-button"
+                    onClick={() => handleDeleteImage(index)}
+                  >
+                    <DeleteOutlined style={{ fontSize: "30px", color: "#fff" }} />
+                  </div>
+                  <div className="change-button">
+                    <Upload
+                      accept="image/*"
+                      showUploadList={false}
+                      listType="picture"
+                      beforeUpload={handleEditImage(index)}
+                    >
+                      <EditOutlined style={{ fontSize: "30px", color: "#fff" }} />
+                    </Upload>
+                  </div>
+                </>
+              )}
             </div>
           ))
         ) : (
@@ -79,57 +105,19 @@ const PremiumInvitationCarousel = ({ isEditing, onDataChange }) => {
           </div>
         )}
       </Carousel>
-
-      {isEditing && (
-        <div style={{ marginTop: 20, textAlign: "center" }}>
-          <Col style={{ marginBottom: 20 }}>
-            <Text style={{ fontSize: '36px', color: '#7f8c8d' }}>Edición de imagenes del carrusel</Text>
-          </Col>
-          <Row gutter={[16, 16]}>
-            {carouselImages.map((image, index) => (
-              <Col xs={24} md={12} xl={6} key={index}>
-                <div className="image-container">
-                  <Image
-                    alt={image.alt}
-                    src={image.src}
-                    style={{ width: '100%', height: '100%', objectFit: 'cover', borderRadius: '10px' }}
-                  />
-                  {isEditing && (
-                    <>
-                      <div className="delete-button" onClick={() => handleDeleteImage(index)}>
-                        <DeleteOutlined />
-                      </div>
-                      <div className="change-button">
-                        <Upload
-                          accept="image/*"
-                          showUploadList={false}
-                          listType="picture"
-                          beforeUpload={handleEditImage(index)}
-                        >
-                          <EditOutlined style={{ fontSize: "16px", color: "#fff" }} />
-                        </Upload>
-                      </div>
-                    </>
-                  )}
-                </div>
-              </Col>
-            ))}
-            <Col xs={24} md={12} xl={6}>
-              <Upload
-                accept="image/*"
-                showUploadList={false}
-                listType="picture"
-                beforeUpload={handleEditImage(carouselImages.length)}
-              >
-                <div className="upload-container">
-                  <PlusOutlined style={{ fontSize: "36px", color: "#7f8c8d" }} />
-                  <div style={{ marginTop: 8, fontSize: "14px", color: "#7f8c8d" }}>Agregar</div>
-                </div>
-              </Upload>
-            </Col>
-          </Row>
-        </div>
-      )}
+      <Row justify="center" style={{ marginTop: 20 }}>
+        <Col xs={24} sm={22} md={20} lg={16}>
+          <Upload
+            accept="image/*"
+            beforeUpload={handleEditImage(carouselImages.length)}
+          >
+            <Button type="primary">
+              <PlusOutlined />
+              Agregar Fotos
+            </Button>
+          </Upload>
+        </Col>
+      </Row>
     </>
   );
 };

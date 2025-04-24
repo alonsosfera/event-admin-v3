@@ -1,4 +1,4 @@
-  .invitation-container {
+.invitation-container {
   
   .card-invitation {
     position: relative;
@@ -79,71 +79,46 @@
 
 //Carousel ADVANCE-INVITATION
 
-  .upload-container {
-    min-width: 150px;
-    height: 150px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    border-radius: 10px;
-    background-color: #f0f0f0;
-    
-  
-    &:hover {
-      border: 3px solid #7f8c8d;
+  .image-container {
+    .delete-button {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      background-color: rgba(255, 0, 0, 0.5);
+      color: white;
+      border-radius: 50%;
       cursor: pointer;
+      padding: 17px;
+      display: none;
+      transition: all 0.3s ease;
     }
-  }
+    
+    .delete-button:hover {
+      background-color: red
   
-  .delete-button {
-    position: absolute;
-    top: 10px;
-    right: 10px;
-    background-color: rgba(255, 0, 0, 0.5);
-    color: white;
-    border-radius: 50%;
-    cursor: pointer;
-    padding: 5px;
-    display: none;
-    transition: all 0.3s ease;
-  }
+    }
+
+    .change-button {
+      position: absolute;
+      top: 10px;
+      left: 10px;
+      background-color: rgba(5, 31, 216, 0.5);
+      color: white;
+      border-radius: 50%;
+      cursor: pointer;
+      padding: 17px;
+      display: none;
+    }
   
-  .delete-button:hover {
-    background-color: red
+    .change-button:hover {
+      background-color: blue
+    }
 
   }
-  
-  .image-container {
-    position: relative;
-    overflow: hidden;
-    height: 150px;
-    border: 1px solid #e8e8e8; 
-    border-radius: 15px;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-    display: flex;
-    align-items: center;
-  }
-  
-  
+
   .image-container:hover .delete-button,
   .image-container:hover .change-button {
     display: block;
-  }
-
-  .change-button {
-    position: absolute;
-    top: 10px;
-    left: 10px;
-    background-color: rgba(0, 0, 0, 0.5);
-    color: white;
-    border-radius: 50%;
-    cursor: pointer;
-    padding: 5px;
-    display: none;
-  }
-
-  .change-button:hover {
-    background-color: blue
   }
   
   // Fin carousel Advance invitation
