@@ -12,7 +12,8 @@ const InvitationPremiumSideBar = ({
   setActiveSectionOrder,
   inactiveSectionOrder,
   setInactiveSectionOrder,
-  onDataChange
+  onDataChange,
+  setIsPlaying
 }) => {
   const [isClient, setIsClient] = useState(false)
 
@@ -39,6 +40,7 @@ const InvitationPremiumSideBar = ({
   
       if (type === 'audio') {
         onDataChange?.({ musicUrl: url, musicFile: file })
+        setIsPlaying(true)
       }
   
       return false
@@ -115,7 +117,7 @@ const InvitationPremiumSideBar = ({
                 onClick: () => scrollToSection(id),
                 size: "small",
                 hoverable: true,
-                bodyStyle: { padding: '6px 8px' },
+                styles: { body: { padding: '6px 8px' } },
                 fontSize: 11
               }
 
@@ -168,6 +170,47 @@ const InvitationPremiumSideBar = ({
     </div>
   )
 
+  const collapseItems = [
+    {
+      key: "1",
+      label: "🎨 Fondo y canción",
+      children: (
+        <div className='collapse-buttons' style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
+          <Upload
+            accept="audio/*"
+            showUploadList={false}
+            beforeUpload={handleUpload('audio')}
+            className="upload-full-width"
+          >
+            <Button icon={<AudioOutlined />} block>
+              Elegir Canción
+            </Button>
+          </Upload>
+          <Upload
+            accept="image/*"
+            showUploadList={false}
+            beforeUpload={handleUpload('background')}
+            className="upload-full-width"
+          >
+            <Button icon={<PictureOutlined />} block>
+              Fondo General
+            </Button>
+          </Upload>
+          <Upload
+            accept="image/*"
+            showUploadList={false}
+            beforeUpload={handleUpload('card')}
+            className="upload-full-width"
+          >
+            <Button icon={<AppstoreAddOutlined />} block>
+              Fondo de las Cards
+            </Button>
+          </Upload>
+        </div>
+      )
+    }
+  ]
+
   return (
     <Sider
       width={260}
@@ -205,44 +248,7 @@ const InvitationPremiumSideBar = ({
         </DragDropContext>
       )}
 
-      <Collapse ghost>
-        <Collapse.Panel header="🎨 Color y canción" key="1">
-          <div className='collapse-buttons' style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
-          <Upload
-            accept="audio/*"
-            showUploadList={false}
-            beforeUpload={handleUpload('audio')}
-            className="upload-full-width"
-          >
-            <Button icon={<AudioOutlined />} block>
-              Elegir Canción
-            </Button>
-          </Upload>
-          <Upload
-            accept="image/*"
-            showUploadList={false}
-            beforeUpload={handleUpload('background')}
-            className="upload-full-width"
-          >
-            <Button icon={<PictureOutlined />} block>
-              Fondo General
-            </Button>
-          </Upload>
-          <Upload
-            accept="image/*"
-            showUploadList={false}
-            beforeUpload={handleUpload('card')}
-            className="upload-full-width"
-          >
-            <Button icon={<AppstoreAddOutlined />} block>
-              Fondo de las Cards
-            </Button>
-          </Upload>
-
-          </div>
-        </Collapse.Panel>
-
-      </Collapse>
+      <Collapse ghost items={collapseItems} />
 
       <Row gutter={16} style={{ marginTop: 16, marginBottom: "16px" }}>
         <Col sm={12}>

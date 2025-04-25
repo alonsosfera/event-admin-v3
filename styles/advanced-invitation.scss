@@ -1,4 +1,4 @@
-  .invitation-container {
+.invitation-container {
   
   .card-invitation {
     position: relative;
@@ -76,6 +76,52 @@
       display: block;
       width: 100%;
   }
+
+//Carousel ADVANCE-INVITATION
+
+  .image-container {
+    .delete-button {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      background-color: rgba(255, 0, 0, 0.5);
+      color: white;
+      border-radius: 50%;
+      cursor: pointer;
+      padding: 17px;
+      display: none;
+      transition: all 0.3s ease;
+    }
+    
+    .delete-button:hover {
+      background-color: red
+  
+    }
+
+    .change-button {
+      position: absolute;
+      top: 10px;
+      left: 10px;
+      background-color: rgba(5, 31, 216, 0.5);
+      color: white;
+      border-radius: 50%;
+      cursor: pointer;
+      padding: 17px;
+      display: none;
+    }
+  
+    .change-button:hover {
+      background-color: blue
+    }
+
+  }
+
+  .image-container:hover .delete-button,
+  .image-container:hover .change-button {
+    display: block;
+  }
+  
+  // Fin carousel Advance invitation
 
   @media (max-width: 576px) {
 

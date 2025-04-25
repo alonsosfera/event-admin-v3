@@ -13,6 +13,7 @@ import PremiumInvitationGift from '@/components/designs/invitations/premium/prem
 import PremiumInvitationContact from '@/components/designs/invitations/premium/premium-invitation-contact'
 import PremiumInvitationMusicPlayer from '@/components/designs/invitations/premium/premium-invitation-music'
 import InvitationPremiumSideBar from '@/components/designs/invitations/premium/premium-invitation-sidebar'
+import PremiumInvitationPreview from '@/components/designs/invitations/premium/premium-invitation-preview'
 
 const { Text } = Typography
 const { Content } = Layout
@@ -35,18 +36,16 @@ const defaultInactiveSections = ['video', 'family', 'gift', 'contact']
 const PremiumInvitationPage = () => {
   const [activeSectionOrder, setActiveSectionOrder] = useState(defaultActiveSections)
   const [inactiveSectionOrder, setInactiveSectionOrder] = useState(defaultInactiveSections)
-  const [isEditing, setIsEditing] = useState(false)
+  const [isEditing, setIsEditing] = useState(true)
   const [sectionData, setSectionData] = useState({})
   const [backgroundImage, setBackgroundImage] = useState("/assets/background1.jpg")
   const [cardBackgroundImage, setCardBackgroundImage] = useState("/assets/background1.jpg")
   const [musicUrl, setMusicUrl] = useState("/assets/thousand-years.mp3")
-
-
+  const [isPlaying, setIsPlaying] = useState(false)
+  const [isPreviewShown, setIsPreviewShown] = useState(false);
 
   console.log("sectionData : ", sectionData);
   
-
-
   return (
     <Layout className='layout-sidebar' style={{ minHeight: '100vh' }}>
       {isEditing && (
@@ -62,6 +61,7 @@ const PremiumInvitationPage = () => {
             if (data.cardBackgroundImage) setCardBackgroundImage(data.cardBackgroundImage)
             if (data.musicUrl) setMusicUrl(data.musicUrl)
           }}
+          setIsPlaying={setIsPlaying}
           
         />
         
@@ -71,7 +71,10 @@ const PremiumInvitationPage = () => {
         style={{
           marginLeft:  isEditing ? "260px" : "0px"
         }}>
-        <PremiumInvitationMusicPlayer  musicUrl={musicUrl} />
+        <PremiumInvitationMusicPlayer isPlaying={isPlaying} setIsPlaying={setIsPlaying} musicUrl={musicUrl} />
+        {(isEditing || isPreviewShown) && (
+        <PremiumInvitationPreview isEditing={isEditing} setIsEditing={setIsEditing} setIsPreviewShown={setIsPreviewShown} />
+      )}
         <div 
           className="invitation-container"
           style={{ backgroundImage:  `url(${backgroundImage})` }}>
