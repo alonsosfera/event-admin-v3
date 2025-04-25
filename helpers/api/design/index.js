@@ -1,4 +1,5 @@
 import { prisma } from "../../../lib/prisma"
+import { deleteFileFromS3 } from "../../../lib/s3AwsDelete"
 
 export async function getInvitationDesigns(req, res) {
   try {
@@ -70,14 +71,46 @@ export async function updateInvitationDesign(req, res) {
 export const deleteInvitationDesignById = async (req, res) => {
   try {
     const { id } = req.query
+    
+    // Get the invitation to be deleted to access its fileUrl
+    const invitationToDelete = await prisma.digitalInvitation.findUnique({
+      where: { id },
+      select: { fileUrl: true }
+    })
+    
+    if (!invitationToDelete) {
+      return res.status(404).json({ message: "Invitación no encontrada." })
+    }
+    
+    // Delete the invitation from the database
     await prisma.digitalInvitation.delete({ where: { id } })
+    
+    // If there's a fileUrl, check if it's used by any other invitation
+    if (invitationToDelete.fileUrl) {
+      const otherInvitationsWithSameFile = await prisma.digitalInvitation.findFirst({
+        where: { 
+          fileUrl: invitationToDelete.fileUrl,
+          id: { not: id }
+        }
+      })
+      
+      // If no other invitation uses this file, delete it from S3
+      if (!otherInvitationsWithSameFile) {
+        try {
+          await deleteFileFromS3(invitationToDelete.fileUrl)
+        } catch (s3Error) {
+          console.error("Error deleting S3 file:", s3Error)
+          // Continue even if S3 deletion fails
+        }
+      }
+    }
+    
     res.status(200).end()
   } catch (error) {
     console.error(error)
     res.status(500).json({ error, message: "Error al eliminar la invitación." })
   }
 }
-
 
 export async function getPassDesigns(req, res) {
   try {
@@ -149,7 +182,40 @@ export async function updatePassDesign(req, res) {
 export async function deletePassDesignById(req, res) {
   try {
     const { id } = req.query
+    
+    // Get the pass to be deleted to access its fileUrl
+    const passToDelete = await prisma.digitalPass.findUnique({
+      where: { id },
+      select: { fileUrl: true }
+    })
+    
+    if (!passToDelete) {
+      return res.status(404).json({ message: "Pase no encontrado." })
+    }
+    
+    // Delete the pass from the database
     await prisma.digitalPass.delete({ where: { id } })
+    
+    // If there's a fileUrl, check if it's used by any other pass
+    if (passToDelete.fileUrl) {
+      const otherPassesWithSameFile = await prisma.digitalPass.findFirst({
+        where: { 
+          fileUrl: passToDelete.fileUrl,
+          id: { not: id }
+        }
+      })
+      
+      // If no other pass uses this file, delete it from S3
+      if (!otherPassesWithSameFile) {
+        try {
+          await deleteFileFromS3(passToDelete.fileUrl)
+        } catch (s3Error) {
+          console.error("Error deleting S3 file:", s3Error)
+          // Continue even if S3 deletion fails
+        }
+      }
+    }
+    
     res.status(200).end()
   } catch (error) {
     console.error(error)
