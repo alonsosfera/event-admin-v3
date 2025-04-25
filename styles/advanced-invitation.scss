@@ -79,6 +79,29 @@
 
 //Carousel ADVANCE-INVITATION
 
+  .ant-carousel .slick-next,
+  .ant-carousel .slick-prev {
+    width: 30px;
+    height: 35px;
+    background-color: black;
+  }
+
+  .ant-carousel .slick-next::after,
+  .ant-carousel .slick-prev::after {
+      width: 20px;
+      height: 20px;
+      border-width: 4px 0 0 4px;
+      top: 20%;
+  }
+
+  .ant-carousel .slick-prev::after{
+    left: 30%;
+  }
+
+  .ant-carousel .slick-next::after{
+    left: 0%;
+  }
+
   .image-container {
     .delete-button {
       position: absolute;
@@ -88,7 +111,7 @@
       color: white;
       border-radius: 50%;
       cursor: pointer;
-      padding: 17px;
+      padding: 13px;
       display: none;
       transition: all 0.3s ease;
     }
@@ -106,7 +129,7 @@
       color: white;
       border-radius: 50%;
       cursor: pointer;
-      padding: 17px;
+      padding: 13px;
       display: none;
     }
   
