@@ -1,12 +1,18 @@
 import { Card, Row, Col, Image, Typography } from "antd"  
+import { useState } from "react"
 
 const { Title, Text } = Typography
 
-  const PremiumInvitationPass = () => {
+  const PremiumInvitationPass = ({ isEditing, onDataChange }) => {
+    const [subtitleText, setSubtitleText] = useState("Con alegría en el corazón, los esperamos para compartir nuestra unión y recibir juntos la bendición de Dios")
+
+    const handleSubtitleChange = (value) => {
+      setSubtitleText(value)
+      onDataChange?.({ subtitleText: value })
+    }
 
     return (
-  
-      <Card className='card-invitation'>
+      <>
         <Row gutter={[0, 24]} style={{ marginTop: '20px' }}>
           <Col xs={{ span: 24, order: 2 }} sm={{ span: 8, order: 1  }} style={{ textAlign: 'center' }}>
             <div style={{ display: "flex", justifyContent: "center", alignItems: "center", height: "100%" }}  >
@@ -53,12 +59,21 @@ const { Title, Text } = Typography
               MENSAJE
             </Text>
             <br />
-            <Text style={{ fontSize: '18px', color: '#7f8c8d' }}>
-            Con alegría en el corazón, los esperamos para compartir nuestra unión y recibir juntos la bendición de Dios
+            <Text 
+              style={{ fontSize: '18px', color: '#7f8c8d' }}
+              editable={
+                isEditing
+                  ? {
+                      triggerType: ['icon', 'text'],
+                      onChange: handleSubtitleChange
+                    }
+                  : false
+              }>
+              {subtitleText}
             </Text>
           </Col>
         </Row>
-      </Card>
+      </>
 
     )
   }

@@ -1,26 +1,27 @@
-import { useRef, useState } from 'react'
+import { useRef, useEffect } from 'react'
 import { Tooltip, FloatButton } from 'antd'
 import { PlayCircleOutlined, PauseCircleOutlined } from '@ant-design/icons'
 
-const PremiumInvitationMusicPlayer = () => {
+const PremiumInvitationMusicPlayer = ({ musicUrl, isPlaying, setIsPlaying }) => {
   const audioRef = useRef(null)
-  const [isPlaying, setIsPlaying] = useState(false)
 
-  const toggleAudio = () => {
+  useEffect(() => {
     if (audioRef.current) {
-      if (audioRef.current.paused) {
+      if (isPlaying) {
         audioRef.current.play()
-        setIsPlaying(true)
       } else {
         audioRef.current.pause()
-        setIsPlaying(false)
       }
     }
+  }, [musicUrl, isPlaying])
+
+  const toggleAudio = () => {
+    setIsPlaying(prev => !prev)
   }
 
   return (
     <>
-      <audio ref={audioRef} src="/assets/thousand-years.mp3" loop preload="auto" />
+      <audio ref={audioRef} src={musicUrl} loop preload="auto" />
 
       <Tooltip title={isPlaying ? 'Pausar música' : 'Reproducir música'} placement="left">
         <FloatButton
