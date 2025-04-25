@@ -16,7 +16,7 @@ export const config = {
 async function uploadFile(fileName, folder, fileBuffer) {
   try {
     const [name] = fileName.split(".")
-    const fileKey = `EventAdminV2/${folder}/${name}_${uuidv4()}.webp`
+    const fileKey = `${folder}/${name}_${uuidv4()}.webp`
 
     const signedUrl = await getSignedUrl(
       s3Client,
@@ -30,7 +30,7 @@ async function uploadFile(fileName, folder, fileBuffer) {
       }
     )
     const fileUrl =
-      `https://${CONFIG.storage.DCM_AWS_BUCKET_NAME}.${CONFIG.storage.DCM_AWS_REGION}.digitaloceanspaces.com/${fileKey}`
+      `${CONFIG.storage.DCM_AWS_ENDPOINT}/object/public/${CONFIG.storage.DCM_AWS_BUCKET_NAME}/${fileKey}`
 
     await s3Client.send(
       new PutObjectCommand({
