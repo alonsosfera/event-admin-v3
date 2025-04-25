@@ -134,13 +134,10 @@ model PasswordRecovery {
 }
 
 model PremiumInvitation {
-  id                  String @id @default(uuid())
-  backgroundColorName String
-  backgroundColorFUrl String
-  sectionColorName    String
-  sectionColorUrl     String
-  songName            String
-  songUrl             String
+  id                   String @id @default(uuid())
+  backgroundUrl        String
+  sectionBackgroundUrl String
+  songUrl              String
 
   eventId String? @unique
   event   Event?  @relation(fields: [eventId], references: [id], onDelete: Cascade)
