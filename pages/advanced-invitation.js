@@ -13,6 +13,7 @@ import PremiumInvitationGift from '@/components/designs/invitations/premium/prem
 import PremiumInvitationContact from '@/components/designs/invitations/premium/premium-invitation-contact'
 import PremiumInvitationMusicPlayer from '@/components/designs/invitations/premium/premium-invitation-music'
 import InvitationPremiumSideBar from '@/components/designs/invitations/premium/premium-invitation-sidebar'
+import PremiumInvitationPreview from '@/components/designs/invitations/premium/premium-invitation-preview'
 
 const { Text } = Typography
 const { Content } = Layout
@@ -39,14 +40,14 @@ const PremiumInvitationPage = () => {
   const [sectionData, setSectionData] = useState({})
   const [backgroundImage, setBackgroundImage] = useState("/assets/background1.jpg")
   const [cardBackgroundImage, setCardBackgroundImage] = useState("/assets/background1.jpg")
-
+  const [musicUrl, setMusicUrl] = useState("/assets/thousand-years.mp3")
+  const [isPlaying, setIsPlaying] = useState(false)
+  const [isPreviewShown, setIsPreviewShown] = useState(false);
 
   console.log("sectionData : ", sectionData);
   
-
-
   return (
-    <Layout style={{ minHeight: '100vh' }}>
+    <Layout className='layout-sidebar' style={{ minHeight: '100vh' }}>
       {isEditing && (
         <InvitationPremiumSideBar
           sections={initialSections}
@@ -54,14 +55,26 @@ const PremiumInvitationPage = () => {
           setActiveSectionOrder={setActiveSectionOrder}
           inactiveSectionOrder={inactiveSectionOrder}
           setInactiveSectionOrder={setInactiveSectionOrder}
+          onDataChange={(data) => {
+            setSectionData((prev) => ({ ...prev, ...data }))
+            if (data.backgroundImage) setBackgroundImage(data.backgroundImage)
+            if (data.cardBackgroundImage) setCardBackgroundImage(data.cardBackgroundImage)
+            if (data.musicUrl) setMusicUrl(data.musicUrl)
+          }}
+          setIsPlaying={setIsPlaying}
+          
         />
-      )}
-    
+        
+        )}
+
       <Content
         style={{
           marginLeft:  isEditing ? "260px" : "0px"
         }}>
-        <PremiumInvitationMusicPlayer />
+        <PremiumInvitationMusicPlayer isPlaying={isPlaying} setIsPlaying={setIsPlaying} musicUrl={musicUrl} />
+        {(isEditing || isPreviewShown) && (
+        <PremiumInvitationPreview isEditing={isEditing} setIsEditing={setIsEditing} setIsPreviewShown={setIsPreviewShown} />
+      )}
         <div 
           className="invitation-container"
           style={{ backgroundImage:  `url(${backgroundImage})` }}>
@@ -83,7 +96,7 @@ const PremiumInvitationPage = () => {
                     opacity={[0, 5]}
                     easing="ease"
                   >
-                    <div id={`section-${id}`}>
+                    <div className={`section-${id}`} id={`section-${id}`}>
                       <Card className='card-invitation' style={{ textAlign: "center", backgroundImage: `url(${cardBackgroundImage})` }}>
                         <Component
                           isEditing={isEditing}
