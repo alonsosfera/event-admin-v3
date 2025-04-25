@@ -1,6 +1,8 @@
-import { Layout, Typography, Row, Col, Card } from 'antd'
+import { useEffect, useState } from 'react'
+import { useRouter } from 'next/router'
+import { Layout, Typography, Row, Col, Card, Spin } from 'antd'
 import { ParallaxProvider, Parallax } from 'react-scroll-parallax'
-import { useState } from 'react'
+import axios from 'axios'
 
 import PremiumInvitationCover from '@/components/designs/invitations/premium/premium-invitation-cover'
 import PremiumInvitationPass from '@/components/designs/invitations/premium/premium-invitation-pass'
@@ -34,19 +36,81 @@ const defaultActiveSections = ['cover', 'pass', 'place', 'carousel', 'attendance
 const defaultInactiveSections = ['video', 'family', 'gift', 'contact']
 
 const PremiumInvitationPage = () => {
+
+  const router = useRouter();
+  const { eventId } = router.query
+
   const [activeSectionOrder, setActiveSectionOrder] = useState(defaultActiveSections)
   const [inactiveSectionOrder, setInactiveSectionOrder] = useState(defaultInactiveSections)
   const [isEditing, setIsEditing] = useState(true)
   const [sectionData, setSectionData] = useState({})
-  const [backgroundImage, setBackgroundImage] = useState("/assets/background1.jpg")
-  const [cardBackgroundImage, setCardBackgroundImage] = useState("/assets/background1.jpg")
-  const [musicUrl, setMusicUrl] = useState("/assets/thousand-years.mp3")
+  const [backgroundImage, setBackgroundImage] = useState(null)
+  const [cardBackgroundImage, setCardBackgroundImage] = useState(null)
+  const [musicUrl, setMusicUrl] = useState(null)
   const [isPlaying, setIsPlaying] = useState(false)
-  const [isPreviewShown, setIsPreviewShown] = useState(false);
+  const [isPreviewShown, setIsPreviewShown] = useState(false)
+  const [isLoading, setIsLoading] = useState(true)
 
-  console.log("sectionData : ", sectionData);
+
+  useEffect(() => {
+    if (!eventId) return
+  
+    const fetchPremiumInvitation = async () => {
+      try {
+        const { data } = await axios.get(`/api/premium-invitation/${eventId}`)
+  
+        if (data) {
+          setBackgroundImage(data.backgroundUrl || "/assets/background1.jpg")
+          setCardBackgroundImage(data.sectionBackgroundUrl || "/assets/background1.jpg")
+          setMusicUrl(data.songUrl || "/assets/thousand-years.mp3")
+  
+          const newSectionData = {}
+  
+          if (Array.isArray(data.sections) && data.sections.length > 0) {
+            data.sections.forEach((section) => {
+              newSectionData[section.type] = section.data
+            })
+            const sectionOrder = data.sections.map((section) => section.type)
+            setActiveSectionOrder(sectionOrder)
+          } else {
+            setActiveSectionOrder(defaultActiveSections)
+            setInactiveSectionOrder(defaultInactiveSections)
+          }
+  
+          setSectionData(newSectionData)
+        }
+      } catch (error) {
+        console.error('Error fetching premium invitation data', error)
+      } finally {
+        setIsLoading(false)
+      }
+    }
+  
+    fetchPremiumInvitation()
+  }, [eventId])
+  
+
+  console.log("sectionData : ", sectionData)
+
+  if (isLoading) {
+    return (
+      <div style={{ 
+        height: '100vh', 
+        display: 'flex', 
+        justifyContent: 'center', 
+        alignItems: 'center',
+        flexDirection: 'column',
+        backgroundColor: '#fff'
+      }}>
+        <Spin size="large" />
+        <Text style={{ marginTop: '20px', fontSize: '18px', color: '#555' }}>Cargando invitación...</Text>
+      </div>
+    )
+  }
+  
   
   return (
+    
     <Layout className='layout-sidebar' style={{ minHeight: '100vh' }}>
       {isEditing && (
         <InvitationPremiumSideBar
