@@ -109,10 +109,13 @@
       right: 10px;
       background-color: rgba(255, 0, 0, 0.5);
       color: white;
-      border-radius: 50%;
+      border-radius: 50px;
+      width: 35px;
+      height: 35px;
       cursor: pointer;
-      padding: 13px;
       display: none;
+      align-items: center;
+      justify-content: center;
       transition: all 0.3s ease;
     }
     
@@ -127,10 +130,14 @@
       left: 10px;
       background-color: rgba(5, 31, 216, 0.5);
       color: white;
-      border-radius: 50%;
+      border-radius: 50px;
+      width: 35px;
+      height: 35px;
       cursor: pointer;
-      padding: 13px;
       display: none;
+      justify-content: center;
+      align-items: center;
+      transition: all 0.3s ease;
     }
   
     .change-button:hover {
@@ -141,7 +148,7 @@
 
   .image-container:hover .delete-button,
   .image-container:hover .change-button {
-    display: block;
+    display: flex;
   }
   
   // Fin carousel Advance invitation

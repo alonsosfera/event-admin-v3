@@ -83,7 +83,7 @@ const PremiumInvitationCarousel = ({ isEditing, onDataChange }) => {
                     className="delete-button"
                     onClick={() => handleDeleteImage(index)}
                   >
-                    <DeleteOutlined style={{ fontSize: "25px", color: "#fff" }} />
+                    <DeleteOutlined style={{ fontSize: "18px", color: "#fff" }} />
                   </div>
                   <div className="change-button">
                     <Upload
@@ -92,7 +92,7 @@ const PremiumInvitationCarousel = ({ isEditing, onDataChange }) => {
                       listType="picture"
                       beforeUpload={handleEditImage(index)}
                     >
-                      <EditOutlined style={{ fontSize: "25px", color: "#fff" }} />
+                      <EditOutlined style={{ fontSize: "18px", color: "#fff" }} />
                     </Upload>
                   </div>
                 </>
