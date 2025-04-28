@@ -79,6 +79,29 @@
 
 //Carousel ADVANCE-INVITATION
 
+  .ant-carousel .slick-next,
+  .ant-carousel .slick-prev {
+    width: 30px;
+    height: 35px;
+    background-color: black;
+  }
+
+  .ant-carousel .slick-next::after,
+  .ant-carousel .slick-prev::after {
+      width: 20px;
+      height: 20px;
+      border-width: 4px 0 0 4px;
+      top: 20%;
+  }
+
+  .ant-carousel .slick-prev::after{
+    left: 30%;
+  }
+
+  .ant-carousel .slick-next::after{
+    left: 0%;
+  }
+
   .image-container {
     .delete-button {
       position: absolute;
@@ -86,10 +109,13 @@
       right: 10px;
       background-color: rgba(255, 0, 0, 0.5);
       color: white;
-      border-radius: 50%;
+      border-radius: 50px;
+      width: 35px;
+      height: 35px;
       cursor: pointer;
-      padding: 17px;
       display: none;
+      align-items: center;
+      justify-content: center;
       transition: all 0.3s ease;
     }
     
@@ -104,10 +130,14 @@
       left: 10px;
       background-color: rgba(5, 31, 216, 0.5);
       color: white;
-      border-radius: 50%;
+      border-radius: 50px;
+      width: 35px;
+      height: 35px;
       cursor: pointer;
-      padding: 17px;
       display: none;
+      justify-content: center;
+      align-items: center;
+      transition: all 0.3s ease;
     }
   
     .change-button:hover {
@@ -118,7 +148,7 @@
 
   .image-container:hover .delete-button,
   .image-container:hover .change-button {
-    display: block;
+    display: flex;
   }
   
   // Fin carousel Advance invitation
