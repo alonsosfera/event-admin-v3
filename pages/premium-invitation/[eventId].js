@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 import { useRouter } from 'next/router'
-import { Layout, Typography, Row, Col, Card, Spin } from 'antd'
+import { Layout, Typography, Row, Col, Card, Spin, Modal } from 'antd'
 import { ParallaxProvider, Parallax } from 'react-scroll-parallax'
 import axios from 'axios'
 import { parseCookies } from "nookies"
@@ -53,6 +53,8 @@ const PremiumInvitationPage = () => {
   const [isPlaying, setIsPlaying] = useState(false)
   const [isPreviewShown, setIsPreviewShown] = useState(false)
   const [isLoading, setIsLoading] = useState(true)
+  const [uploadProgress, setUploadProgress] = useState(0)
+  const [isUploading, setIsUploading] = useState(false)
 
 
   useEffect(() => {
@@ -114,58 +116,79 @@ const PremiumInvitationPage = () => {
 
   const saveInvitation = async () => {
     try {
+      setIsUploading(true);
+      setUploadProgress(0);
+
       let uploadedBackgroundUrl = backgroundImage;
       let uploadedSectionBackgroundUrl = cardBackgroundImage;
       let uploadedMusicUrl = musicUrl;
-  
+
       if (sectionData.backgroundImageFile) {
         const buffer = await fileToArrayBuffer(sectionData.backgroundImageFile);
         const fileBuffer = arrayBufferToBase64(buffer);
         const sanitizedFileName = sectionData.backgroundImageFile.name.replace(/\s+/g, '-');
 
-        const uploadRes = await axios.post("/api/storage/upload", {
+        await axios.post("/api/storage/upload", {
           fileName: sanitizedFileName,
           folder: "premium-invitations",
           fileBuffer,
         }, {
-          headers: { Authorization: `Bearer ${token}` }
-        })
-  
-        uploadedBackgroundUrl = uploadRes.data.fileUrl;
+          headers: { Authorization: `Bearer ${token}` },
+          onUploadProgress: (progressEvent) => {
+            if (progressEvent.total) {
+              const percent = Math.round((progressEvent.loaded * 100) / progressEvent.total);
+              setUploadProgress(percent);
+            }
+          }
+        }).then(res => {
+          uploadedBackgroundUrl = res.data.fileUrl;
+        });
       }
-  
+
       if (sectionData.cardBackgroundImageFile) {
         const buffer = await fileToArrayBuffer(sectionData.cardBackgroundImageFile);
         const fileBuffer = arrayBufferToBase64(buffer);
         const sanitizedFileName = sectionData.cardBackgroundImageFile.name.replace(/\s+/g, '-');
 
-        const uploadRes = await axios.post("/api/storage/upload", {
+        await axios.post("/api/storage/upload", {
           fileName: sanitizedFileName,
           folder: "premium-invitations",
           fileBuffer,
         }, {
-          headers: { Authorization: `Bearer ${token}` }
-        })
-  
-        uploadedSectionBackgroundUrl = uploadRes.data.fileUrl;
+          headers: { Authorization: `Bearer ${token}` },
+          onUploadProgress: (progressEvent) => {
+            if (progressEvent.total) {
+              const percent = Math.round((progressEvent.loaded * 100) / progressEvent.total);
+              setUploadProgress(percent);
+            }
+          }
+        }).then(res => {
+          uploadedSectionBackgroundUrl = res.data.fileUrl;
+        });
       }
-  
+
       if (sectionData.musicFile) {
         const buffer = await fileToArrayBuffer(sectionData.musicFile);
         const fileBuffer = arrayBufferToBase64(buffer);
         const sanitizedFileName = sectionData.musicFile.name.replace(/\s+/g, '-');
-      
-        const uploadRes = await axios.post("/api/storage/upload-song", {
+
+        await axios.post("/api/storage/upload-song", {
           fileName: sanitizedFileName,
           folder: "premium-invitations",
           fileBuffer,
         }, {
-          headers: { Authorization: `Bearer ${token}` }
+          headers: { Authorization: `Bearer ${token}` },
+          onUploadProgress: (progressEvent) => {
+            if (progressEvent.total) {
+              const percent = Math.round((progressEvent.loaded * 100) / progressEvent.total);
+              setUploadProgress(percent);
+            }
+          }
+        }).then(res => {
+          uploadedMusicUrl = res.data.fileUrl;
         });
-      
-        uploadedMusicUrl = uploadRes.data.fileUrl;
       }
-  
+
       const metadata = {
         activeSections: activeSectionOrder,
         inactiveSections: inactiveSectionOrder,
@@ -177,16 +200,31 @@ const PremiumInvitationPage = () => {
           eventId,
         },
       };
-  
-      await axios.post('/api/premium-invitation/update', metadata);
-  
-      console.log('Guardado correctamente');
-    } catch (error) {
-      console.error('Error guardando la invitación:', error);
-    }
-  };
-  
-  
+
+    await axios.post('/api/premium-invitation/update', metadata);
+
+    Modal.success({
+      title: '¡Invitación guardada!',
+      content: 'Tu invitación ha sido guardada correctamente.',
+      centered: true,
+      okText: 'Aceptar'
+    });
+
+    console.log('Guardado correctamente');
+  } catch (error) {
+    console.error('Error guardando la invitación:', error);
+    Modal.error({
+      title: 'Error al guardar',
+      content: 'Ocurrió un problema al guardar la invitación. Intenta de nuevo.',
+      centered: true,
+      okText: 'Aceptar'
+    });
+  } finally {
+    setIsUploading(false);
+    setUploadProgress(0);
+  }
+};
+      
   return (
     
     <Layout className='layout-sidebar' style={{ minHeight: '100vh' }}>
@@ -205,6 +243,8 @@ const PremiumInvitationPage = () => {
           }}
           setIsPlaying={setIsPlaying}
           saveInvitation={saveInvitation}
+          isUploading={isUploading}
+          uploadProgress={uploadProgress} 
         />
         
         )}
