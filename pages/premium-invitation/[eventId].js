@@ -3,6 +3,8 @@ import { useRouter } from 'next/router'
 import { Layout, Typography, Row, Col, Card, Spin } from 'antd'
 import { ParallaxProvider, Parallax } from 'react-scroll-parallax'
 import axios from 'axios'
+import { parseCookies } from "nookies"
+import { fileToArrayBuffer, arrayBufferToBase64 } from '@/components/designs/helpers'
 
 import PremiumInvitationCover from '@/components/designs/invitations/premium/premium-invitation-cover'
 import PremiumInvitationPass from '@/components/designs/invitations/premium/premium-invitation-pass'
@@ -39,6 +41,7 @@ const PremiumInvitationPage = () => {
 
   const router = useRouter();
   const { eventId } = router.query
+  const { token } = parseCookies()
 
   const [activeSectionOrder, setActiveSectionOrder] = useState(defaultActiveSections)
   const [inactiveSectionOrder, setInactiveSectionOrder] = useState(defaultInactiveSections)
@@ -63,19 +66,23 @@ const PremiumInvitationPage = () => {
           setBackgroundImage(data.backgroundUrl || "/assets/background1.jpg")
           setCardBackgroundImage(data.sectionBackgroundUrl || "/assets/background1.jpg")
           setMusicUrl(data.songUrl || "/assets/thousand-years.mp3")
-  
+
           const newSectionData = {}
   
           if (Array.isArray(data.sections) && data.sections.length > 0) {
-            data.sections.forEach((section) => {
-              newSectionData[section.type] = section.data
-            })
-            const sectionOrder = data.sections.map((section) => section.type)
-            setActiveSectionOrder(sectionOrder)
+            const sectionOrder = data.sections.map((section) => section.type);
+          
+            setActiveSectionOrder(sectionOrder);
+          
+            const newInactiveSectionOrder = defaultInactiveSections.filter(
+              (sectionId) => !sectionOrder.includes(sectionId)
+            );
+            setInactiveSectionOrder(newInactiveSectionOrder);
           } else {
-            setActiveSectionOrder(defaultActiveSections)
-            setInactiveSectionOrder(defaultInactiveSections)
+            setActiveSectionOrder(defaultActiveSections);
+            setInactiveSectionOrder(defaultInactiveSections);
           }
+          
   
           setSectionData(newSectionData)
         }
@@ -89,9 +96,6 @@ const PremiumInvitationPage = () => {
     fetchPremiumInvitation()
   }, [eventId])
   
-
-  console.log("sectionData : ", sectionData)
-
   if (isLoading) {
     return (
       <div style={{ 
@@ -107,6 +111,78 @@ const PremiumInvitationPage = () => {
       </div>
     )
   }
+
+  const saveInvitation = async () => {
+    try {
+      let uploadedBackgroundUrl = backgroundImage;
+      let uploadedSectionBackgroundUrl = cardBackgroundImage;
+      let uploadedMusicUrl = musicUrl;
+  
+      if (sectionData.backgroundImageFile) {
+        const buffer = await fileToArrayBuffer(sectionData.backgroundImageFile);
+        const fileBuffer = arrayBufferToBase64(buffer);
+        const sanitizedFileName = sectionData.backgroundImageFile.name.replace(/\s+/g, '-');
+
+        const uploadRes = await axios.post("/api/storage/upload", {
+          fileName: sanitizedFileName,
+          folder: "premium-invitations",
+          fileBuffer,
+        }, {
+          headers: { Authorization: `Bearer ${token}` }
+        })
+  
+        uploadedBackgroundUrl = uploadRes.data.fileUrl;
+      }
+  
+      if (sectionData.cardBackgroundImageFile) {
+        const buffer = await fileToArrayBuffer(sectionData.cardBackgroundImageFile);
+        const fileBuffer = arrayBufferToBase64(buffer);
+        const sanitizedFileName = sectionData.cardBackgroundImageFile.name.replace(/\s+/g, '-');
+
+        const uploadRes = await axios.post("/api/storage/upload", {
+          fileName: sanitizedFileName,
+          folder: "premium-invitations",
+          fileBuffer,
+        }, {
+          headers: { Authorization: `Bearer ${token}` }
+        })
+  
+        uploadedSectionBackgroundUrl = uploadRes.data.fileUrl;
+      }
+  
+      // if (sectionData.musicFile) {
+      //   const buffer = await fileToArrayBuffer(sectionData.musicFile);
+      //   const fileBuffer = arrayBufferToBase64(buffer);
+  
+      //   // Usa otro endpoint (ej: /api/storage/upload-audio) que NO pase por sharp
+      //   const uploadRes = await axios.post("/api/storage/upload-audio", {
+      //     fileName: sectionData.musicFile.name,
+      //     folder: "premium-invitations",
+      //     fileBuffer,
+      //   });
+  
+      //   uploadedMusicUrl = uploadRes.data.fileUrl;
+      // }
+  
+      const metadata = {
+        activeSections: activeSectionOrder,
+        inactiveSections: inactiveSectionOrder,
+        otherData: {
+          ...sectionData,
+          backgroundUrl: uploadedBackgroundUrl,
+          sectionBackgroundUrl: uploadedSectionBackgroundUrl,
+          songUrl: uploadedMusicUrl,
+          eventId,
+        },
+      };
+  
+      await axios.post('/api/premium-invitation/update', metadata);
+  
+      console.log('Guardado correctamente');
+    } catch (error) {
+      console.error('Error guardando la invitación:', error);
+    }
+  };
   
   
   return (
@@ -126,7 +202,7 @@ const PremiumInvitationPage = () => {
             if (data.musicUrl) setMusicUrl(data.musicUrl)
           }}
           setIsPlaying={setIsPlaying}
-          
+          saveInvitation={saveInvitation}
         />
         
         )}
