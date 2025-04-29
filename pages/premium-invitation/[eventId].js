@@ -114,6 +114,29 @@ const PremiumInvitationPage = () => {
     )
   }
 
+  const uploadStorage = async (file, folder, endpoint = '/api/storage/upload') => {
+    const buffer = await fileToArrayBuffer(file);
+    const fileBuffer = arrayBufferToBase64(buffer);
+    const sanitizedFileName = file.name.replace(/\s+/g, '-');
+  
+    const response = await axios.post(endpoint, {
+      fileName: sanitizedFileName,
+      folder,
+      fileBuffer,
+    }, {
+      headers: { Authorization: `Bearer ${token}` },
+      onUploadProgress: (progressEvent) => {
+        if (progressEvent.total) {
+          const percent = Math.round((progressEvent.loaded * 100) / progressEvent.total);
+          setUploadProgress(percent);
+        }
+      }
+    });
+  
+    return response.data.fileUrl;
+  };
+  
+
   const saveInvitation = async () => {
     try {
       setIsUploading(true);
@@ -124,69 +147,15 @@ const PremiumInvitationPage = () => {
       let uploadedMusicUrl = musicUrl;
 
       if (sectionData.backgroundImageFile) {
-        const buffer = await fileToArrayBuffer(sectionData.backgroundImageFile);
-        const fileBuffer = arrayBufferToBase64(buffer);
-        const sanitizedFileName = sectionData.backgroundImageFile.name.replace(/\s+/g, '-');
-
-        await axios.post("/api/storage/upload", {
-          fileName: sanitizedFileName,
-          folder: "premium-invitations",
-          fileBuffer,
-        }, {
-          headers: { Authorization: `Bearer ${token}` },
-          onUploadProgress: (progressEvent) => {
-            if (progressEvent.total) {
-              const percent = Math.round((progressEvent.loaded * 100) / progressEvent.total);
-              setUploadProgress(percent);
-            }
-          }
-        }).then(res => {
-          uploadedBackgroundUrl = res.data.fileUrl;
-        });
+        uploadedBackgroundUrl = await uploadStorage(sectionData.backgroundImageFile, "premium-invitations");
       }
-
+  
       if (sectionData.cardBackgroundImageFile) {
-        const buffer = await fileToArrayBuffer(sectionData.cardBackgroundImageFile);
-        const fileBuffer = arrayBufferToBase64(buffer);
-        const sanitizedFileName = sectionData.cardBackgroundImageFile.name.replace(/\s+/g, '-');
-
-        await axios.post("/api/storage/upload", {
-          fileName: sanitizedFileName,
-          folder: "premium-invitations",
-          fileBuffer,
-        }, {
-          headers: { Authorization: `Bearer ${token}` },
-          onUploadProgress: (progressEvent) => {
-            if (progressEvent.total) {
-              const percent = Math.round((progressEvent.loaded * 100) / progressEvent.total);
-              setUploadProgress(percent);
-            }
-          }
-        }).then(res => {
-          uploadedSectionBackgroundUrl = res.data.fileUrl;
-        });
+        uploadedSectionBackgroundUrl = await uploadStorage(sectionData.cardBackgroundImageFile, "premium-invitations");
       }
-
+  
       if (sectionData.musicFile) {
-        const buffer = await fileToArrayBuffer(sectionData.musicFile);
-        const fileBuffer = arrayBufferToBase64(buffer);
-        const sanitizedFileName = sectionData.musicFile.name.replace(/\s+/g, '-');
-
-        await axios.post("/api/storage/upload-song", {
-          fileName: sanitizedFileName,
-          folder: "premium-invitations",
-          fileBuffer,
-        }, {
-          headers: { Authorization: `Bearer ${token}` },
-          onUploadProgress: (progressEvent) => {
-            if (progressEvent.total) {
-              const percent = Math.round((progressEvent.loaded * 100) / progressEvent.total);
-              setUploadProgress(percent);
-            }
-          }
-        }).then(res => {
-          uploadedMusicUrl = res.data.fileUrl;
-        });
+        uploadedMusicUrl = await uploadStorage(sectionData.musicFile, "premium-invitations", "/api/storage/upload-song");
       }
 
       const metadata = {
