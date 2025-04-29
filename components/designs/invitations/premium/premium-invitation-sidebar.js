@@ -254,25 +254,25 @@ const InvitationPremiumSideBar = ({
       <Collapse ghost items={collapseItems} />
 
       <Modal
-  open={isUploading}
-  closable={false}
-  footer={null}
-  centered
-  maskClosable={false}
-  keyboard={false}
-  bodyStyle={{ textAlign: 'center', padding: 30 }}
->
-  <Spin tip="Subiendo archivos..." size="large">
-    <div style={{ marginTop: 20 }}>
-      <Progress
-        type="circle"
-        percent={uploadProgress}
-        status="active"
-        strokeColor="#1890ff"
-      />
-    </div>
-  </Spin>
-</Modal>
+        open={isUploading}
+        closable={false}
+        footer={null}
+        centered
+        maskClosable={false}
+        keyboard={false}
+        style={{ textAlign: 'center', padding: 30 }}
+      >
+      <Spin tip="Subiendo archivos..." size="large">
+        <div style={{ marginTop: 20 }}>
+          <Progress
+            type="circle"
+            percent={uploadProgress}
+            status="active"
+            strokeColor="#1890ff"
+          />
+        </div>
+      </Spin>
+    </Modal>
 
 
 
