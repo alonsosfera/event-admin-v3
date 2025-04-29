@@ -150,19 +150,21 @@ const PremiumInvitationPage = () => {
         uploadedSectionBackgroundUrl = uploadRes.data.fileUrl;
       }
   
-      // if (sectionData.musicFile) {
-      //   const buffer = await fileToArrayBuffer(sectionData.musicFile);
-      //   const fileBuffer = arrayBufferToBase64(buffer);
-  
-      //   // Usa otro endpoint (ej: /api/storage/upload-audio) que NO pase por sharp
-      //   const uploadRes = await axios.post("/api/storage/upload-audio", {
-      //     fileName: sectionData.musicFile.name,
-      //     folder: "premium-invitations",
-      //     fileBuffer,
-      //   });
-  
-      //   uploadedMusicUrl = uploadRes.data.fileUrl;
-      // }
+      if (sectionData.musicFile) {
+        const buffer = await fileToArrayBuffer(sectionData.musicFile);
+        const fileBuffer = arrayBufferToBase64(buffer);
+        const sanitizedFileName = sectionData.musicFile.name.replace(/\s+/g, '-');
+      
+        const uploadRes = await axios.post("/api/storage/upload-song", {
+          fileName: sanitizedFileName,
+          folder: "premium-invitations",
+          fileBuffer,
+        }, {
+          headers: { Authorization: `Bearer ${token}` }
+        });
+      
+        uploadedMusicUrl = uploadRes.data.fileUrl;
+      }
   
       const metadata = {
         activeSections: activeSectionOrder,
