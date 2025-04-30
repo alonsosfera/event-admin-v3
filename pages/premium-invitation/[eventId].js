@@ -55,49 +55,55 @@ const PremiumInvitationPage = () => {
   const [isLoading, setIsLoading] = useState(true)
   const [uploadProgress, setUploadProgress] = useState(0)
   const [isUploading, setIsUploading] = useState(false)
+  const [premiumInvitationSections, setPremiumInvitationSections] = useState(null)
 
+  console.log(activeSectionOrder);
+  
 
   useEffect(() => {
     if (!eventId) return
   
     const fetchPremiumInvitation = async () => {
       try {
-        const { data } = await axios.get(`/api/premium-invitation/${eventId}`)
-  
+        const { data } = await axios.get(`/api/premium-invitation/${eventId}`);
+    
         if (data) {
-          setBackgroundImage(data.backgroundUrl || "/assets/background1.jpg")
-          setCardBackgroundImage(data.sectionBackgroundUrl || "/assets/background1.jpg")
-          setMusicUrl(data.songUrl || "/assets/thousand-years.mp3")
-
-          const newSectionData = {}
-  
+          setBackgroundImage(data.backgroundUrl || "/assets/background1.jpg");
+          setCardBackgroundImage(data.sectionBackgroundUrl || "/assets/background1.jpg");
+          setMusicUrl(data.songUrl || "/assets/thousand-years.mp3");
+          setPremiumInvitationSections(data.sections);
+    
+          const newSectionData = {};
+    
           if (Array.isArray(data.sections) && data.sections.length > 0) {
             const sectionOrder = data.sections.map((section) => section.type);
-          
             setActiveSectionOrder(sectionOrder);
-          
+    
             const newInactiveSectionOrder = defaultInactiveSections.filter(
               (sectionId) => !sectionOrder.includes(sectionId)
             );
             setInactiveSectionOrder(newInactiveSectionOrder);
+    
+            data.sections.forEach((section) => {
+              newSectionData[section.type] = section.data;
+            });
           } else {
             setActiveSectionOrder(defaultActiveSections);
             setInactiveSectionOrder(defaultInactiveSections);
           }
-          
-  
-          setSectionData(newSectionData)
+    
+          setSectionData(newSectionData);
         }
       } catch (error) {
-        console.error('Error fetching premium invitation data', error)
+        console.error('Error fetching premium invitation data', error);
       } finally {
-        setIsLoading(false)
+        setIsLoading(false);
       }
-    }
+    };    
   
     fetchPremiumInvitation()
   }, [eventId])
-  
+    
   if (isLoading) {
     return (
       <div style={{ 
@@ -141,11 +147,11 @@ const PremiumInvitationPage = () => {
     try {
       setIsUploading(true);
       setUploadProgress(0);
-
+  
       let uploadedBackgroundUrl = backgroundImage;
       let uploadedSectionBackgroundUrl = cardBackgroundImage;
       let uploadedMusicUrl = musicUrl;
-
+  
       if (sectionData.backgroundImageFile) {
         uploadedBackgroundUrl = await uploadStorage(sectionData.backgroundImageFile, "premium-invitations");
       }
@@ -157,10 +163,22 @@ const PremiumInvitationPage = () => {
       if (sectionData.musicFile) {
         uploadedMusicUrl = await uploadStorage(sectionData.musicFile, "premium-invitations", "/api/storage/upload-song");
       }
-
+  
+      const sectionsPayload = activeSectionOrder.map((id, index) => {
+        const updated = sectionData[id];
+        const backup = premiumInvitationSections?.find(sec => sec.type === id)?.data;
+        return {
+          type: id,
+          version: "1.0.0",
+          order: index,
+          data: updated || backup || {}
+        };
+      });
+  
       const metadata = {
         activeSections: activeSectionOrder,
         inactiveSections: inactiveSectionOrder,
+        sections: sectionsPayload,
         otherData: {
           ...sectionData,
           backgroundUrl: uploadedBackgroundUrl,
@@ -169,30 +187,29 @@ const PremiumInvitationPage = () => {
           eventId,
         },
       };
-
-    await axios.post('/api/premium-invitation/update', metadata);
-
-    Modal.success({
-      title: '¡Invitación guardada!',
-      content: 'Tu invitación ha sido guardada correctamente.',
-      centered: true,
-      okText: 'Aceptar'
-    });
-
-    console.log('Guardado correctamente');
-  } catch (error) {
-    console.error('Error guardando la invitación:', error);
-    Modal.error({
-      title: 'Error al guardar',
-      content: 'Ocurrió un problema al guardar la invitación. Intenta de nuevo.',
-      centered: true,
-      okText: 'Aceptar'
-    });
-  } finally {
-    setIsUploading(false);
-    setUploadProgress(0);
-  }
-};
+  
+      await axios.post('/api/premium-invitation/update', metadata);
+  
+      Modal.success({
+        title: '¡Invitación guardada!',
+        content: 'Tu invitación ha sido guardada correctamente.',
+        centered: true,
+        okText: 'Aceptar'
+      });
+    } catch (error) {
+      console.error('Error guardando la invitación:', error);
+      Modal.error({
+        title: 'Error al guardar',
+        content: 'Ocurrió un problema al guardar la invitación. Intenta de nuevo.',
+        centered: true,
+        okText: 'Aceptar'
+      });
+    } finally {
+      setIsUploading(false);
+      setUploadProgress(0);
+    }
+  };
+  
       
   return (
     
@@ -251,6 +268,7 @@ const PremiumInvitationPage = () => {
                       <Card className='card-invitation' style={{ textAlign: "center", backgroundImage: `url(${cardBackgroundImage})` }}>
                         <Component
                           isEditing={isEditing}
+                          sectionData={sectionData[id]} 
                           cardBackgroundImage={cardBackgroundImage}
                           onDataChange={(data) =>
                           setSectionData(prev => ({ ...prev, [id]: data }))
