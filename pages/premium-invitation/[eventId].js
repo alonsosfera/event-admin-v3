@@ -165,29 +165,29 @@ const PremiumInvitationPage = () => {
       }
   
       const processedSectionData = { ...sectionData };
-
+  
       for (const sectionId of activeSectionOrder) {
         const section = sectionData[sectionId];
         if (!section) continue;
-
+  
         const newSection = { ...section };
-
+  
         // Subir archivos simples terminados en File
         for (const key in newSection) {
           if (key.endsWith("File") && newSection[key] instanceof File) {
             const fileKey = key;
             const baseKey = key.replace("File", "");
-
+  
             const uploadedUrl = await uploadStorage(newSection[fileKey], "premium-invitations");
             newSection[baseKey] = uploadedUrl;
             delete newSection[fileKey];
           }
         }
-
+  
         // Subir imágenes del arreglo 'images' (carousel)
         if (Array.isArray(newSection.images)) {
           newSection.images = await Promise.all(
-            newSection.images.map(async (imgObj, idx) => {
+            newSection.images.map(async (imgObj) => {
               if (imgObj?.file instanceof File) {
                 const uploadedUrl = await uploadStorage(imgObj.file, "premium-invitations");
                 return { ...imgObj, src: uploadedUrl, file: undefined };
@@ -196,22 +196,36 @@ const PremiumInvitationPage = () => {
             })
           );
         }
-
+  
         // Subir avatares del arreglo 'familyMembers'
         if (Array.isArray(newSection.familyMembers)) {
           newSection.familyMembers = await Promise.all(
             newSection.familyMembers.map(async (member) => {
               if (member?.avatarFile instanceof File) {
                 const uploadedUrl = await uploadStorage(member.avatarFile, "premium-invitations");
-                return { ...member, avatar: uploadedUrl, avatarFile: undefined }
+                return { ...member, avatar: uploadedUrl, avatarFile: undefined };
               }
               return member;
             })
           );
         }
+  
+        // Subir avatares del arreglo 'contacts'
+        if (Array.isArray(newSection.contacts)) {
+          newSection.contacts = await Promise.all(
+            newSection.contacts.map(async (contact) => {
+              if (contact?.avatarFile instanceof File) {
+                const uploadedUrl = await uploadStorage(contact.avatarFile, "premium-invitations");
+                return { ...contact, avatar: uploadedUrl, avatarFile: undefined };
+              }
+              return contact;
+            })
+          );
+        }
+  
         processedSectionData[sectionId] = newSection;
       }
-
+  
       const sectionsPayload = activeSectionOrder.map((id, index) => {
         const updated = processedSectionData[id];
         const backup = premiumInvitationSections?.find(sec => sec.type === id)?.data;
@@ -256,9 +270,7 @@ const PremiumInvitationPage = () => {
       setIsUploading(false);
       setUploadProgress(0);
     }
-  };
-  
-  
+  };  
       
   return (
     
