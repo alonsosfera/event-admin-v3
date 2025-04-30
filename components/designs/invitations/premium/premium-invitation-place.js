@@ -4,18 +4,18 @@ import { UploadOutlined } from "@ant-design/icons"
 
 const { Title, Text } = Typography
 
-const PremiumInvitationPlace = ({ isEditing, onDataChange }) => {
+const PremiumInvitationPlace = ({ isEditing, onDataChange, sectionData }) => {
   const [data, setData] = useState({
-    section1Title: "Ceremonia",
-    section1Title2: "Basílica de Guadalupe Monterrey",
-    section1Subtitle1: "20 de junio de 2025 18:00 hrs",
-    section1Subtitle2: "Guanajuato 715, Independencia, 64720 Monterrey, N.L.",
+    section1Title: sectionData?.section1Title || "Ceremonia",
+    section1Title2: sectionData?.section1Title2 || "Basílica de Guadalupe Monterrey",
+    section1Subtitle1: sectionData?.section1Subtitle1 || "20 de junio de 2025 18:00 hrs",
+    section1Subtitle2: sectionData?.section1Subtitle2 || "Guanajuato 715, Independencia, 64720 Monterrey, N.L.",
     section1Image: "/assets/basílica.jpg",
 
-    section2Title: "Recepción",
-    section2Title2: "Salón La Joya",
-    section2Subtitle1: "20 de junio de 2025 20:00 hrs",
-    section2Subtitle2: "Poner aqui la dirección real del salón",
+    section2Title: sectionData?.section2Title || "Recepción",
+    section2Title2: sectionData?.section2Title2 || "Salón La Joya",
+    section2Subtitle1: sectionData?.section2Subtitle1 || "20 de junio de 2025 20:00 hrs",
+    section2Subtitle2: sectionData?.section2Subtitle2 || "Poner aqui la dirección real del salón",
     section2Image: "/assets/La_joya.jpg",
   })
 

@@ -1,10 +1,10 @@
-import { Card, Row, Col, Image, Typography } from "antd"  
+import { Row, Col, Image, Typography } from "antd"  
 import { useState } from "react"
 
 const { Title, Text } = Typography
 
-  const PremiumInvitationPass = ({ isEditing, onDataChange }) => {
-    const [subtitleText, setSubtitleText] = useState("Con alegría en el corazón, los esperamos para compartir nuestra unión y recibir juntos la bendición de Dios")
+  const PremiumInvitationPass = ({ isEditing, onDataChange, sectionData }) => {
+    const [subtitleText, setSubtitleText] = useState(sectionData?.subtitleText || "Con alegría en el corazón, los esperamos para compartir nuestra unión y recibir juntos la bendición de Dios")
 
     const handleSubtitleChange = (value) => {
       setSubtitleText(value)
@@ -33,7 +33,7 @@ const { Title, Text } = Typography
             </Text>
             <br />
             <Text style={{ fontSize: '18px', color: '#7f8c8d' }}>
-              Arturo Contreras Chaparro
+              Fernando Rascon Perez
             </Text>
               <Row gutter={[ 0 ]}> 
                 <Col xs={24} sm={12}>
