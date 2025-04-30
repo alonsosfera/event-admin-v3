@@ -1,26 +1,42 @@
-import { useState } from "react"
-import { Col, Row, Typography, Card, Button, Input } from 'antd'
+import { useState, useEffect } from "react"
+import { Col, Row, Typography, Button, Input } from 'antd'
 import { GiftOutlined, BankOutlined, CloseOutlined, PlusOutlined } from '@ant-design/icons'
 
 const { Text, Title } = Typography
 
-const PremiumInvitationGift = ({ isEditing, onDataChange }) => {
+const defaultButtons = [
+  {
+    label: "Mesa de Regalos",
+    link: "https://mesaderegalos.liverpool.com.mx/",
+    icon: <GiftOutlined style={{ fontSize: '28px', color: '#8e44ad' }} />
+  },
+  {
+    label: "Sobre de Efectivo",
+    link: "",
+    icon: <BankOutlined style={{ fontSize: '28px', color: '#8e44ad' }} />
+  }
+]
+
+const PremiumInvitationGift = ({ isEditing, onDataChange, sectionData }) => {
   const [title, setTitle] = useState("Regalos")
   const [subtitle, setSubtitle] = useState(
     "Tu presencia es nuestro mayor regalo, pero si deseas contribuir con algo especial, aquí tienes algunas opciones"
   )
-  const [buttons, setButtons] = useState([
-    {
-      label: "Mesa de Regalos",
-      link: "https://mesaderegalos.liverpool.com.mx/",
-      icon: <GiftOutlined style={{ fontSize: '28px', color: '#8e44ad' }} />
-    },
-    {
-      label: "Sobre de Efectivo",
-      link: "#",
-      icon: <BankOutlined style={{ fontSize: '28px', color: '#8e44ad' }} />
-    }
-  ])
+  const [buttons, setButtons] = useState(defaultButtons)
+
+  useEffect(() => {
+    setTitle(sectionData?.title || "Regalos")
+    setSubtitle(
+      sectionData?.subtitle ||
+      "Tu presencia es nuestro mayor regalo, pero si deseas contribuir con algo especial, aquí tienes algunas opciones"
+    )
+    setButtons(
+      sectionData?.buttons?.map((b) => ({
+        ...b,
+        icon: <GiftOutlined style={{ fontSize: '28px', color: '#8e44ad' }} />
+      })) || defaultButtons
+    )
+  }, [sectionData])
 
   const updateButtons = (updated) => {
     setButtons(updated)
@@ -48,7 +64,7 @@ const PremiumInvitationGift = ({ isEditing, onDataChange }) => {
       ...buttons,
       {
         label: "Nuevo Botón",
-        link: "#",
+        link: "",
         icon: <GiftOutlined style={{ fontSize: '28px', color: '#8e44ad' }} />
       }
     ]
@@ -63,12 +79,20 @@ const PremiumInvitationGift = ({ isEditing, onDataChange }) => {
 
   const handleTitleChange = (val) => {
     setTitle(val)
-    onDataChange?.({ title: val, subtitle, buttons: buttons.map(({ label, link }) => ({ label, link })) })
+    onDataChange?.({
+      title: val,
+      subtitle,
+      buttons: buttons.map(({ label, link }) => ({ label, link }))
+    })
   }
 
   const handleSubtitleChange = (val) => {
     setSubtitle(val)
-    onDataChange?.({ title, subtitle: val, buttons: buttons.map(({ label, link }) => ({ label, link })) })
+    onDataChange?.({
+      title,
+      subtitle: val,
+      buttons: buttons.map(({ label, link }) => ({ label, link }))
+    })
   }
 
   return (
@@ -122,9 +146,12 @@ const PremiumInvitationGift = ({ isEditing, onDataChange }) => {
             <Button
               type="default"
               size="large"
-              href={button.link}
-              target="_blank"
               icon={button.icon}
+              onClick={() => {
+                if (button.link && button.link.trim() !== "#" && button.link.trim() !== "") {
+                  window.open(button.link, "_blank")
+                }
+              }}
               style={{
                 padding: '30px 40px',
                 fontSize: '20px',
