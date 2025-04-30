@@ -164,8 +164,43 @@ const PremiumInvitationPage = () => {
         uploadedMusicUrl = await uploadStorage(sectionData.musicFile, "premium-invitations", "/api/storage/upload-song");
       }
   
+      const processedSectionData = { ...sectionData };
+
+      for (const sectionId of activeSectionOrder) {
+        const section = sectionData[sectionId];
+        if (!section) continue;
+
+        const newSection = { ...section };
+
+        for (const key in newSection) {
+          if (key.endsWith("File") && newSection[key] instanceof File) {
+            const fileKey = key;
+            const baseKey = key.replace("File", "");
+
+            const uploadedUrl = await uploadStorage(newSection[fileKey], "premium-invitations");
+            newSection[baseKey] = uploadedUrl;
+            delete newSection[fileKey];
+          }
+        }
+
+        if (Array.isArray(newSection.images)) {
+          newSection.images = await Promise.all(
+            newSection.images.map(async (imgObj, idx) => {
+              if (imgObj?.file instanceof File) {
+                const uploadedUrl = await uploadStorage(imgObj.file, "premium-invitations");
+                return { ...imgObj, src: uploadedUrl, file: undefined };
+              }
+              return imgObj;
+            })
+          );
+        }
+
+        processedSectionData[sectionId] = newSection;
+      }
+
+
       const sectionsPayload = activeSectionOrder.map((id, index) => {
-        const updated = sectionData[id];
+        const updated = processedSectionData[id];
         const backup = premiumInvitationSections?.find(sec => sec.type === id)?.data;
         return {
           type: id,
@@ -180,7 +215,7 @@ const PremiumInvitationPage = () => {
         inactiveSections: inactiveSectionOrder,
         sections: sectionsPayload,
         otherData: {
-          ...sectionData,
+          ...processedSectionData,
           backgroundUrl: uploadedBackgroundUrl,
           sectionBackgroundUrl: uploadedSectionBackgroundUrl,
           songUrl: uploadedMusicUrl,
@@ -209,6 +244,7 @@ const PremiumInvitationPage = () => {
       setUploadProgress(0);
     }
   };
+  
   
       
   return (

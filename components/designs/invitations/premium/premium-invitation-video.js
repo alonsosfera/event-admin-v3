@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react"
-import { Card, Input, Typography, Row, Col, Alert } from "antd"
+import { Input, Typography, Row, Col, Alert, Flex } from "antd"
 import { CheckCircleTwoTone } from "@ant-design/icons"
 
 const { Text } = Typography
@@ -18,28 +18,33 @@ const extractYouTubeId = (url) => {
   return url
 }
 
-const PremiumInvitationVideo = ({ isEditing, onDataChange }) => {
-  const [videoInput, setVideoInput] = useState("https://www.youtube.com/watch?v=7TWzV05kQ4w")
+const PremiumInvitationVideo = ({ isEditing, onDataChange, sectionData }) => {
+  const [videoId, setVideoId] = useState("")
   const [showSaved, setShowSaved] = useState(false)
+
+  useEffect(() => {
+    if (sectionData?.videoId) {
+      setVideoId(sectionData.videoId)
+    } else {
+      setVideoId("7TWzV05kQ4w")
+    }
+  }, [sectionData])
 
   const handleChange = (e) => {
     const input = e.target.value
-    setVideoInput(input)
-
     const extractedId = extractYouTubeId(input)
+    setVideoId(extractedId)
     onDataChange?.({ videoId: extractedId })
-
     setShowSaved(true)
   }
 
-  const videoId = extractYouTubeId(videoInput)
   const embedUrl = `https://www.youtube.com/embed/${videoId}?rel=0&modestbranding=1`
 
   return (
     <>
       {isEditing && (
         <div style={{ marginBottom: '20px', textAlign: 'center' }}>
-          <Row gutter={[16,16]}>
+          <Row gutter={[16, 16]}>
             <Col md={24} style={{ display: 'flex', justifyContent: 'center' }}>
               <Alert
                 showIcon
@@ -51,19 +56,19 @@ const PremiumInvitationVideo = ({ isEditing, onDataChange }) => {
             <Col md={24}>
               <Input
                 placeholder="Ingresa el link del video de YouTube"
-                value={videoInput}
+                value={`https://www.youtube.com/watch?v=${videoId}`}
                 onChange={handleChange}
                 style={{ maxWidth: 500 }}
               />
             </Col>
-            {showSaved && (
-              <CheckCircleTwoTone twoToneColor="#52c41a" style={{ fontSize: 24 }} />
-            )}
           </Row>
           {showSaved && (
-            <Text type="success" style={{ marginTop: 5, display: 'block' }}>
-              ¡Link guardado!
-            </Text>
+            <Row style={{ display: "flex", justifyContent: "center", alignItems: "center", marginTop: "15px" }}>
+            <CheckCircleTwoTone twoToneColor="#52c41a" style={{ fontSize: 24 }} />
+              <Text type="success" style={{ marginTop: 5, display: 'block' }}>
+                ¡Link guardado!
+              </Text>
+            </Row>
           )}
         </div>
       )}

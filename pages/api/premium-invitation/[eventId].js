@@ -11,7 +11,9 @@ export default async function handler(req, res) {
     const premiumInvitation = await prisma.premiumInvitation.findUnique({
       where: { eventId },
       include: {
-        sections: true
+        sections: {
+         orderBy: { order: 'asc' }
+        }
       }
     })
 
