@@ -172,6 +172,7 @@ const PremiumInvitationPage = () => {
 
         const newSection = { ...section };
 
+        // Subir archivos simples terminados en File
         for (const key in newSection) {
           if (key.endsWith("File") && newSection[key] instanceof File) {
             const fileKey = key;
@@ -183,6 +184,7 @@ const PremiumInvitationPage = () => {
           }
         }
 
+        // Subir imágenes del arreglo 'images' (carousel)
         if (Array.isArray(newSection.images)) {
           newSection.images = await Promise.all(
             newSection.images.map(async (imgObj, idx) => {
@@ -195,9 +197,20 @@ const PremiumInvitationPage = () => {
           );
         }
 
+        // Subir avatares del arreglo 'familyMembers'
+        if (Array.isArray(newSection.familyMembers)) {
+          newSection.familyMembers = await Promise.all(
+            newSection.familyMembers.map(async (member) => {
+              if (member?.avatarFile instanceof File) {
+                const uploadedUrl = await uploadStorage(member.avatarFile, "premium-invitations");
+                return { ...member, avatar: uploadedUrl, avatarFile: undefined }
+              }
+              return member;
+            })
+          );
+        }
         processedSectionData[sectionId] = newSection;
       }
-
 
       const sectionsPayload = activeSectionOrder.map((id, index) => {
         const updated = processedSectionData[id];
