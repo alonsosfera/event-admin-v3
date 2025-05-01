@@ -9,19 +9,27 @@ const PremiumInvitationCarousel = ({ isEditing, onDataChange, sectionData }) => 
   const [title, setTitle] = useState("Recuerdos Especiales");
   const [subtitle, setSubtitle] = useState("Un vistazo a los momentos que nos han traído hasta aquí");
 
-  // 🧠 Cargar datos iniciales desde sectionData
   useEffect(() => {
+    const defaultImages = [
+      { src: "/assets/carousel1.jpg", alt: "Recuerdo 1" },
+      { src: "/assets/carousel2.jpeg", alt: "Recuerdo 2" },
+      { src: "/assets/carousel3.webp", alt: "Recuerdo 3" },
+      { src: "/assets/carousel4.webp", alt: "Recuerdo 4" },
+    ]
+  
     if (sectionData) {
-      setCarouselImages(sectionData.images || [
-        { src: "/assets/carousel1.jpg", alt: "Recuerdo 1" },
-        { src: "/assets/carousel2.jpeg", alt: "Recuerdo 2" },
-        { src: "/assets/carousel3.webp", alt: "Recuerdo 3" },
-        { src: "/assets/carousel4.webp", alt: "Recuerdo 4" },
-      ]);
-      setTitle(sectionData.title || "Recuerdos Especiales");
-      setSubtitle(sectionData.subtitle || "Un vistazo a los momentos que nos han traído hasta aquí");
+      setCarouselImages(
+        Array.isArray(sectionData.images) && sectionData.images.length > 0
+          ? sectionData.images
+          : defaultImages
+      )
+      setTitle(sectionData.title || "Recuerdos Especiales")
+      setSubtitle(sectionData.subtitle || "Un vistazo a los momentos que nos han traído hasta aquí")
+    } else {
+      setCarouselImages(defaultImages)
     }
-  }, [sectionData]);
+  }, [sectionData])
+  
 
   const updateParent = (images) => {
     setCarouselImages(images);
