@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react"
-import { Input, Typography, Row, Col, Alert, Flex } from "antd"
+import { Input, Typography, Row, Col, Alert } from "antd"
 import { CheckCircleTwoTone } from "@ant-design/icons"
 
 const { Text } = Typography
@@ -19,32 +19,37 @@ const extractYouTubeId = (url) => {
 }
 
 const PremiumInvitationVideo = ({ isEditing, onDataChange, sectionData }) => {
-  const [videoId, setVideoId] = useState("")
+  const [videoInput, setVideoInput] = useState("https://www.youtube.com/watch?v=7TWzV05kQ4w")
   const [showSaved, setShowSaved] = useState(false)
-
-  useEffect(() => {
-    if (sectionData?.videoId) {
-      setVideoId(sectionData.videoId)
-    } else {
-      setVideoId("7TWzV05kQ4w")
-    }
-  }, [sectionData])
 
   const handleChange = (e) => {
     const input = e.target.value
+    setVideoInput(input)
+
     const extractedId = extractYouTubeId(input)
-    setVideoId(extractedId)
     onDataChange?.({ videoId: extractedId })
+
     setShowSaved(true)
   }
 
+  const videoId = extractYouTubeId(videoInput)
   const embedUrl = `https://www.youtube.com/embed/${videoId}?rel=0&modestbranding=1`
+
+  useEffect(() => {
+    if (sectionData?.videoId) {
+      const fullUrl = `https://www.youtube.com/watch?v=${sectionData.videoId}`
+      setVideoInput(fullUrl)
+    } else {
+      setVideoInput("https://www.youtube.com/watch?v=7TWzV05kQ4w")
+    }
+  }, [sectionData])
+  
 
   return (
     <>
       {isEditing && (
         <div style={{ marginBottom: '20px', textAlign: 'center' }}>
-          <Row gutter={[16, 16]}>
+          <Row gutter={[16,16]}>
             <Col md={24} style={{ display: 'flex', justifyContent: 'center' }}>
               <Alert
                 showIcon
@@ -54,21 +59,21 @@ const PremiumInvitationVideo = ({ isEditing, onDataChange, sectionData }) => {
               />
             </Col>
             <Col md={24}>
-              <Input
-                placeholder="Ingresa el link del video de YouTube"
-                value={`https://www.youtube.com/watch?v=${videoId}`}
-                onChange={handleChange}
-                style={{ maxWidth: 500 }}
+            <Input
+              placeholder="Ingresa el link del video de YouTube"
+              value={`https://www.youtube.com/watch?v=${videoId}`}
+              onChange={handleChange}
+              style={{ maxWidth: 500 }}
               />
             </Col>
+            {showSaved && (
+              <CheckCircleTwoTone twoToneColor="#52c41a" style={{ fontSize: 24 }} />
+            )}
           </Row>
           {showSaved && (
-            <Row style={{ display: "flex", justifyContent: "center", alignItems: "center", marginTop: "15px" }}>
-            <CheckCircleTwoTone twoToneColor="#52c41a" style={{ fontSize: 24 }} />
-              <Text type="success" style={{ marginTop: 5, display: 'block' }}>
-                ¡Link guardado!
-              </Text>
-            </Row>
+            <Text type="success" style={{ marginTop: 5, display: 'block' }}>
+              ¡Link guardado!
+            </Text>
           )}
         </div>
       )}
