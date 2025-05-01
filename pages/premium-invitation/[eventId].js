@@ -76,13 +76,16 @@ const PremiumInvitationPage = () => {
           const newSectionData = {};
     
           if (Array.isArray(data.sections) && data.sections.length > 0) {
+    
+            const allIds = initialSections.map(s => s.id);
             const sectionOrder = data.sections.map((section) => section.type);
             setActiveSectionOrder(sectionOrder);
-    
-            const newInactiveSectionOrder = defaultInactiveSections.filter(
-              (sectionId) => !sectionOrder.includes(sectionId)
+
+            const newInactiveSectionOrder = allIds.filter(
+              (id) => !sectionOrder.includes(id)
             );
             setInactiveSectionOrder(newInactiveSectionOrder);
+
     
             data.sections.forEach((section) => {
               newSectionData[section.type] = section.data;
@@ -103,7 +106,7 @@ const PremiumInvitationPage = () => {
   
     fetchPremiumInvitation()
   }, [eventId])
-    
+
   if (isLoading) {
     return (
       <div style={{ 
@@ -226,16 +229,19 @@ const PremiumInvitationPage = () => {
         processedSectionData[sectionId] = newSection;
       }
   
-      const sectionsPayload = activeSectionOrder.map((id, index) => {
-        const updated = processedSectionData[id];
-        const backup = premiumInvitationSections?.find(sec => sec.type === id)?.data;
-        return {
-          type: id,
-          version: "1.0.0",
-          order: index,
-          data: updated || backup || {}
-        };
-      });
+      const allSectionIds = [...activeSectionOrder, ...inactiveSectionOrder];
+
+      const sectionsPayload = allSectionIds.map((id, index) => {
+      const updated = processedSectionData[id];
+      const backup = premiumInvitationSections?.find(sec => sec.type === id)?.data;
+      return {
+        type: id,
+        version: "1.0.0",
+        order: index,
+        data: updated || backup || {}
+      };
+    });
+
   
       const metadata = {
         activeSections: activeSectionOrder,
