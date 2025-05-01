@@ -56,10 +56,7 @@ const PremiumInvitationPage = () => {
   const [uploadProgress, setUploadProgress] = useState(0)
   const [isUploading, setIsUploading] = useState(false)
   const [premiumInvitationSections, setPremiumInvitationSections] = useState(null)
-
-  console.log(activeSectionOrder);
   
-
   useEffect(() => {
     if (!eventId) return
   

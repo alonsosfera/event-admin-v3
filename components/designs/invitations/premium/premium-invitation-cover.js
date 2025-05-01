@@ -10,8 +10,6 @@ const PremiumInvitationCover = ({ isEditing, onDataChange, sectionData }) => {
   const [subtitleText, setSubtitleText] = useState(sectionData?.subtitleText || "¡Estás invitado a compartir este día tan especial con nosotros!")
   const [imageUrl, setImageUrl] = useState(sectionData?.image || "/assets/boda2.webp")
 
-  console.log("cover ", imageUrl);
-
   const handleTitleChange = (value) => {
     setTitleText(value)
     onDataChange?.({ titleText: value, subtitleText })
