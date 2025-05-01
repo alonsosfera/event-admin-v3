@@ -277,12 +277,7 @@ const InvitationPremiumSideBar = ({
 
 
       <Row gutter={16} style={{ marginTop: 16, marginBottom: "16px" }}>
-        <Col sm={12}>
-          <Button type='primary' danger style={{ width: "100%" }}>
-            Cancelar
-          </Button>
-        </Col>
-        <Col sm={12}>
+        <Col sm={24}>
           <Button type="primary" style={{ width: "100%" }} onClick={saveInvitation} disabled={isUploading}>
             {isUploading ? 'Guardando...' : 'Guardar'}
           </Button>
