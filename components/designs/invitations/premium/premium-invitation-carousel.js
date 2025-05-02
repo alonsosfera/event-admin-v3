@@ -105,19 +105,21 @@ const PremiumInvitationCarousel = ({ isEditing, onDataChange }) => {
           </div>
         )}
       </Carousel>
-      <Row justify="center" style={{ marginTop: 20 }}>
-        <Col xs={24} sm={22} md={20} lg={16}>
-          <Upload
-            accept="image/*"
-            beforeUpload={handleEditImage(carouselImages.length)}
-          >
-            <Button type="primary">
-              <PlusOutlined />
-              Agregar Fotos
-            </Button>
-          </Upload>
-        </Col>
-      </Row>
+      {isEditing && (
+        <Row justify="center" style={{ marginTop: 20 }}>
+          <Col xs={24} sm={22} md={20} lg={16}>
+            <Upload
+              accept="image/*"
+              beforeUpload={handleEditImage(carouselImages.length)}
+            >
+              <Button type="primary">
+                <PlusOutlined />
+                Agregar Fotos
+              </Button>
+            </Upload>
+          </Col>
+        </Row> 
+      )}
     </>
   );
 };

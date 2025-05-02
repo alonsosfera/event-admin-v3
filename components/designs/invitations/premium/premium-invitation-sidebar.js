@@ -1,4 +1,4 @@
-import { Layout, Typography, Card, Collapse, Button, Divider, Row, Col, Upload } from 'antd'
+import { Layout, Typography, Card, Collapse, Button, Divider, Row, Col, Upload, Progress, Modal, Spin } from 'antd'
 import { AudioOutlined, PictureOutlined, AppstoreAddOutlined } from '@ant-design/icons'
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd'
 import { useEffect, useState } from 'react'
@@ -14,7 +14,9 @@ const InvitationPremiumSideBar = ({
   setInactiveSectionOrder,
   onDataChange,
   setIsPlaying,
-  saveInvitation
+  saveInvitation,
+  isUploading,
+  uploadProgress 
 }) => {
   const [isClient, setIsClient] = useState(false)
 
@@ -251,6 +253,29 @@ const InvitationPremiumSideBar = ({
 
       <Collapse ghost items={collapseItems} />
 
+      <Modal
+  open={isUploading}
+  closable={false}
+  footer={null}
+  centered
+  maskClosable={false}
+  keyboard={false}
+  bodyStyle={{ textAlign: 'center', padding: 30 }}
+>
+  <Spin tip="Subiendo archivos..." size="large">
+    <div style={{ marginTop: 20 }}>
+      <Progress
+        type="circle"
+        percent={uploadProgress}
+        status="active"
+        strokeColor="#1890ff"
+      />
+    </div>
+  </Spin>
+</Modal>
+
+
+
       <Row gutter={16} style={{ marginTop: 16, marginBottom: "16px" }}>
         <Col sm={12}>
           <Button type='primary' danger style={{ width: "100%" }}>
@@ -258,12 +283,11 @@ const InvitationPremiumSideBar = ({
           </Button>
         </Col>
         <Col sm={12}>
-          <Button type="primary" style={{ width: "100%" }} onClick={saveInvitation}>
-            Guardar
+          <Button type="primary" style={{ width: "100%" }} onClick={saveInvitation} disabled={isUploading}>
+            {isUploading ? 'Guardando...' : 'Guardar'}
           </Button>
         </Col>
       </Row>
-
       <Divider />
     </Sider>
   )
