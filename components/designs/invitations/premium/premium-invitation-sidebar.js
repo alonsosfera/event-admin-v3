@@ -13,7 +13,8 @@ const InvitationPremiumSideBar = ({
   inactiveSectionOrder,
   setInactiveSectionOrder,
   onDataChange,
-  setIsPlaying
+  setIsPlaying,
+  saveInvitation
 }) => {
   const [isClient, setIsClient] = useState(false)
 
@@ -257,7 +258,7 @@ const InvitationPremiumSideBar = ({
           </Button>
         </Col>
         <Col sm={12}>
-          <Button type="primary" style={{ width: "100%" }}>
+          <Button type="primary" style={{ width: "100%" }} onClick={saveInvitation}>
             Guardar
           </Button>
         </Col>

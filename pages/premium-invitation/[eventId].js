@@ -1,6 +1,10 @@
-import { Layout, Typography, Row, Col, Card } from 'antd'
+import { useEffect, useState } from 'react'
+import { useRouter } from 'next/router'
+import { Layout, Typography, Row, Col, Card, Spin } from 'antd'
 import { ParallaxProvider, Parallax } from 'react-scroll-parallax'
-import { useState } from 'react'
+import axios from 'axios'
+import { parseCookies } from "nookies"
+import { fileToArrayBuffer, arrayBufferToBase64 } from '@/components/designs/helpers'
 
 import PremiumInvitationCover from '@/components/designs/invitations/premium/premium-invitation-cover'
 import PremiumInvitationPass from '@/components/designs/invitations/premium/premium-invitation-pass'
@@ -34,19 +38,155 @@ const defaultActiveSections = ['cover', 'pass', 'place', 'carousel', 'attendance
 const defaultInactiveSections = ['video', 'family', 'gift', 'contact']
 
 const PremiumInvitationPage = () => {
+
+  const router = useRouter();
+  const { eventId } = router.query
+  const { token } = parseCookies()
+
   const [activeSectionOrder, setActiveSectionOrder] = useState(defaultActiveSections)
   const [inactiveSectionOrder, setInactiveSectionOrder] = useState(defaultInactiveSections)
   const [isEditing, setIsEditing] = useState(true)
   const [sectionData, setSectionData] = useState({})
-  const [backgroundImage, setBackgroundImage] = useState("/assets/background1.jpg")
-  const [cardBackgroundImage, setCardBackgroundImage] = useState("/assets/background1.jpg")
-  const [musicUrl, setMusicUrl] = useState("/assets/thousand-years.mp3")
+  const [backgroundImage, setBackgroundImage] = useState(null)
+  const [cardBackgroundImage, setCardBackgroundImage] = useState(null)
+  const [musicUrl, setMusicUrl] = useState(null)
   const [isPlaying, setIsPlaying] = useState(false)
-  const [isPreviewShown, setIsPreviewShown] = useState(false);
+  const [isPreviewShown, setIsPreviewShown] = useState(false)
+  const [isLoading, setIsLoading] = useState(true)
 
-  console.log("sectionData : ", sectionData);
+
+  useEffect(() => {
+    if (!eventId) return
+  
+    const fetchPremiumInvitation = async () => {
+      try {
+        const { data } = await axios.get(`/api/premium-invitation/${eventId}`)
+  
+        if (data) {
+          setBackgroundImage(data.backgroundUrl || "/assets/background1.jpg")
+          setCardBackgroundImage(data.sectionBackgroundUrl || "/assets/background1.jpg")
+          setMusicUrl(data.songUrl || "/assets/thousand-years.mp3")
+
+          const newSectionData = {}
+  
+          if (Array.isArray(data.sections) && data.sections.length > 0) {
+            const sectionOrder = data.sections.map((section) => section.type);
+          
+            setActiveSectionOrder(sectionOrder);
+          
+            const newInactiveSectionOrder = defaultInactiveSections.filter(
+              (sectionId) => !sectionOrder.includes(sectionId)
+            );
+            setInactiveSectionOrder(newInactiveSectionOrder);
+          } else {
+            setActiveSectionOrder(defaultActiveSections);
+            setInactiveSectionOrder(defaultInactiveSections);
+          }
+          
+  
+          setSectionData(newSectionData)
+        }
+      } catch (error) {
+        console.error('Error fetching premium invitation data', error)
+      } finally {
+        setIsLoading(false)
+      }
+    }
+  
+    fetchPremiumInvitation()
+  }, [eventId])
+  
+  if (isLoading) {
+    return (
+      <div style={{ 
+        height: '100vh', 
+        display: 'flex', 
+        justifyContent: 'center', 
+        alignItems: 'center',
+        flexDirection: 'column',
+        backgroundColor: '#fff'
+      }}>
+        <Spin size="large" />
+        <Text style={{ marginTop: '20px', fontSize: '18px', color: '#555' }}>Cargando invitación...</Text>
+      </div>
+    )
+  }
+
+  const saveInvitation = async () => {
+    try {
+      let uploadedBackgroundUrl = backgroundImage;
+      let uploadedSectionBackgroundUrl = cardBackgroundImage;
+      let uploadedMusicUrl = musicUrl;
+  
+      if (sectionData.backgroundImageFile) {
+        const buffer = await fileToArrayBuffer(sectionData.backgroundImageFile);
+        const fileBuffer = arrayBufferToBase64(buffer);
+        const sanitizedFileName = sectionData.backgroundImageFile.name.replace(/\s+/g, '-');
+
+        const uploadRes = await axios.post("/api/storage/upload", {
+          fileName: sanitizedFileName,
+          folder: "premium-invitations",
+          fileBuffer,
+        }, {
+          headers: { Authorization: `Bearer ${token}` }
+        })
+  
+        uploadedBackgroundUrl = uploadRes.data.fileUrl;
+      }
+  
+      if (sectionData.cardBackgroundImageFile) {
+        const buffer = await fileToArrayBuffer(sectionData.cardBackgroundImageFile);
+        const fileBuffer = arrayBufferToBase64(buffer);
+        const sanitizedFileName = sectionData.cardBackgroundImageFile.name.replace(/\s+/g, '-');
+
+        const uploadRes = await axios.post("/api/storage/upload", {
+          fileName: sanitizedFileName,
+          folder: "premium-invitations",
+          fileBuffer,
+        }, {
+          headers: { Authorization: `Bearer ${token}` }
+        })
+  
+        uploadedSectionBackgroundUrl = uploadRes.data.fileUrl;
+      }
+  
+      // if (sectionData.musicFile) {
+      //   const buffer = await fileToArrayBuffer(sectionData.musicFile);
+      //   const fileBuffer = arrayBufferToBase64(buffer);
+  
+      //   // Usa otro endpoint (ej: /api/storage/upload-audio) que NO pase por sharp
+      //   const uploadRes = await axios.post("/api/storage/upload-audio", {
+      //     fileName: sectionData.musicFile.name,
+      //     folder: "premium-invitations",
+      //     fileBuffer,
+      //   });
+  
+      //   uploadedMusicUrl = uploadRes.data.fileUrl;
+      // }
+  
+      const metadata = {
+        activeSections: activeSectionOrder,
+        inactiveSections: inactiveSectionOrder,
+        otherData: {
+          ...sectionData,
+          backgroundUrl: uploadedBackgroundUrl,
+          sectionBackgroundUrl: uploadedSectionBackgroundUrl,
+          songUrl: uploadedMusicUrl,
+          eventId,
+        },
+      };
+  
+      await axios.post('/api/premium-invitation/update', metadata);
+  
+      console.log('Guardado correctamente');
+    } catch (error) {
+      console.error('Error guardando la invitación:', error);
+    }
+  };
+  
   
   return (
+    
     <Layout className='layout-sidebar' style={{ minHeight: '100vh' }}>
       {isEditing && (
         <InvitationPremiumSideBar
@@ -62,7 +202,7 @@ const PremiumInvitationPage = () => {
             if (data.musicUrl) setMusicUrl(data.musicUrl)
           }}
           setIsPlaying={setIsPlaying}
-          
+          saveInvitation={saveInvitation}
         />
         
         )}
