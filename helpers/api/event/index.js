@@ -12,12 +12,19 @@ const FILE_SELECT = {
   }
 }
 
-const createCanvaMapData = canvaMap => ({
-  ...canvaMap,
-  coordinates: canvaMap.coordinates ? {
-    create: canvaMap.coordinates
-  } : undefined
-})
+const createCanvaMapData = canvaMap => {
+  if (!canvaMap || !canvaMap.coordinates) {
+    return {};
+  }
+
+  return {
+    ...canvaMap,
+    coordinates: {
+      create: canvaMap.coordinates
+    }
+  };
+};
+
 
 export async function getEventById(req, res) {
   const eventId = req.query.id
@@ -31,7 +38,8 @@ export async function getEventById(req, res) {
           }
         },
         digitalPass: FILE_SELECT,
-        digitalInvitation: FILE_SELECT
+        digitalInvitation: FILE_SELECT,
+        premiumInvitation: true
       }
     })
     if (event) {
@@ -69,7 +77,8 @@ export async function getEventsByHost(req, res){
           }
         },
         digitalPass: FILE_SELECT,
-        digitalInvitation: FILE_SELECT
+        digitalInvitation: FILE_SELECT,
+        premiumInvitation: true
       }
     })
     res.json({ result: events.map(event => ({ ...event, room_name: event.room.name })) })
@@ -168,23 +177,46 @@ export async function postNewEvent(req, res) {
 export async function putEditEventId(req, res) {
   const { eventId } = req.query
   const eventProperties = req.body
+  console.log("type: ", eventProperties.invitationType);
   
   const createRoomMap = eventProperties.roomMap
     ? createCanvaMapData(eventProperties.roomMap.canvaMap)
     : undefined
 
-    const createDigitalPass = eventProperties.digitalPass
+  const createDigitalPass = eventProperties.digitalPass
     ? createCanvaMapData(eventProperties.digitalPass.canvaMap)
     : undefined
 
-    const createDigitalInvitation = eventProperties.digitalInvitation
+  const createDigitalInvitation = eventProperties.digitalInvitation
     ? createCanvaMapData(eventProperties.digitalInvitation.canvaMap)
+    : undefined
+
+  const createPremiumInvitation = eventProperties.premiumInvitation
+    ? eventProperties.premiumInvitation
     : undefined
 
   try {
     if (eventProperties.assistance) {
       await updateEventAssistance(eventProperties, eventId)
       delete eventProperties.tableDistribution
+    }
+
+    const currentEvent = await prisma.event.findUnique({
+      where: { id: eventId },
+      include: {
+        digitalInvitation: true,
+        premiumInvitation: true
+      }
+    })
+
+    if (eventProperties.invitationType === 'premium' && currentEvent.digitalInvitation) {
+      await prisma.digitalInvitation.delete({
+        where: { id: currentEvent.digitalInvitation.id }
+      })
+    } else if (eventProperties.invitationType === 'standard' && currentEvent.premiumInvitation) {
+      await prisma.premiumInvitation.delete({
+        where: { id: currentEvent.premiumInvitation.id }
+      })
     }
 
     const updateData = {
@@ -217,13 +249,14 @@ export async function putEditEventId(req, res) {
           update: {
             ...eventProperties.digitalPass,
             canvaMap: {
-             delete: true,
+              delete: true,
               create: createDigitalPass
             }
           }
         }
       } : undefined,
-      digitalInvitation: eventProperties.digitalInvitation ? {
+      
+      digitalInvitation: eventProperties.invitationType === 'standard' && eventProperties.digitalInvitation ? {
         upsert: {
           create: {
             ...eventProperties.digitalInvitation,
@@ -239,21 +272,36 @@ export async function putEditEventId(req, res) {
             }
           }
         }
+      } : undefined,
+
+      premiumInvitation: eventProperties.invitationType === 'premium' ? {
+        upsert: {
+          create: createPremiumInvitation || { 
+            backgroundUrl: '',
+            sectionBackgroundUrl: '',
+            songUrl: ''
+          },
+          update: {
+            backgroundUrl: '',
+            sectionBackgroundUrl: '',
+            songUrl: ''
+          }
+        }
       } : undefined
     }
+
+    delete updateData.invitationType;
 
     const updatedResult = await prisma.event.update({
       where: { id: eventId },
       data: updateData,
-      include: {
-        room: true
-      }
+      include: { room: true }
     })
 
     const { room: { name: room_name, id: roomId } = {}, ...event } = updatedResult
 
     res.status(200).json({
-      message: "Event successfully updated!",
+      message: "Evento actualizado exitosamente!",
       result: {
         ...event,
         room_name,
@@ -264,7 +312,7 @@ export async function putEditEventId(req, res) {
     console.error(error)
     res.status(400).json({
       error,
-      message: "An error occurred while updating the event."
+      message: "Ocurrió un error al actualizar el evento."
     })
   }
 }
