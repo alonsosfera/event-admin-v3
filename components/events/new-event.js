@@ -16,6 +16,7 @@ export const NewEvent = ({ createEvent, updateEvent, edit, hosts, invitationsDes
   const [selectedInvitation, setSelectedInvitation] = useState(null)
   const [selectedPass, setSelectedPass] = useState(null)
   const [selectedRoom, setSelectedRoom] = useState(null)
+  const [invitationType, setInvitationType] = useState("standard")
 
   const {
     data: eventData, refetch: eventRefetch, loading
@@ -32,7 +33,14 @@ export const NewEvent = ({ createEvent, updateEvent, edit, hosts, invitationsDes
 
   useEffect(() => {
     if (!eventData) return
-    setSelectedInvitation(eventData.digitalInvitation)
+
+    if (eventData.premiumInvitation) {
+      setInvitationType("premium")
+      setSelectedInvitation(null)
+    } else {
+      setInvitationType("standard")
+      setSelectedInvitation(eventData.digitalInvitation)
+    }
     setSelectedPass(eventData.digitalPass)
     setSelectedRoom(eventData.roomMap)
   }, [eventData])
@@ -51,7 +59,8 @@ export const NewEvent = ({ createEvent, updateEvent, edit, hosts, invitationsDes
         ...values,
         roomMap,
         digitalPass,
-        digitalInvitation
+        digitalInvitation,
+        invitationType
       }
       if (edit) {
         await updateEvent(event, edit.id)
@@ -101,98 +110,162 @@ export const NewEvent = ({ createEvent, updateEvent, edit, hosts, invitationsDes
           }} />
       ) : (
         <Row gutter={[20, 20]} justify="center">
-          <Col span={showDesign ? isShowingMap ? 8 : 12 : 24}>
-            <Form form={form} layout="horizontal">
-              <Row gutter={[10, 10]}>
+          <Col span={showDesign ? (isShowingMap ? 8 : 12) : 24}>
+            <Form
+              requiredMark={false}
+              form={form}
+              layout="vertical"
+              style={{ maxWidth: 600, margin: "0 auto" }}
+            >
+              <Row gutter={[16, 16]}>
                 <Col span={24}>
-                  <Form.Item name="name" rules={[{ required: true }]}>
+                  <Form.Item name="name" label="Nombre del evento" rules={[{ required: true }]}>
                     <Input autoComplete="off" placeholder="Nombre del evento" />
                   </Form.Item>
                 </Col>
+
                 <Col span={24}>
-                  <Form.Item name="eventDate" rules={[{ required: true }]}>
-                    <DatePicker
-                      disabledDate={date => date && date.isBefore(dayjs(), "day")}
-                      format="DD/MM/YYYY hh:mm A"
-                      placeholder="Fecha"
-                      showTime={{ format: "hh:mm A" }}
-                      style={{ width: "100%" }} />
-                  </Form.Item>
+                  <Row gutter={16}>
+                    <Col span={12}>
+                      <Form.Item name="eventDate" label="Fecha del evento" rules={[{ required: true }]}>
+                        <DatePicker
+                          disabledDate={date => date && date.isBefore(dayjs(), "day")}
+                          format="DD/MM/YYYY hh:mm A"
+                          placeholder="Fecha"
+                          showTime={{ format: "hh:mm A" }}
+                          style={{ width: "100%" }}
+                        />
+                      </Form.Item>
+                    </Col>
+                    <Col span={12}>
+                      <Form.Item
+                        name="assistance"
+                        label="Cantidad de invitados"
+                        rules={[{ required: true }]}
+                      >
+                        <InputNumber
+                          min={10}
+                          placeholder="Invitados"
+                          step={10}
+                          style={{ width: "100%" }}
+                        />
+                      </Form.Item>
+                    </Col>
+                  </Row>
                 </Col>
+
                 <Col span={24}>
-                  <Form.Item name="assistance" rules={[{ required: true }]}>
-                    <InputNumber
-                      min={10} placeholder="Invitados"
-                      step={10} style={{ width: "100%" }} />
-                  </Form.Item>
+                  <Row gutter={16}>
+                    <Col span={12}>
+                      <Form.Item
+                        name="mainTable"
+                        label="Tipo de evento"
+                        rules={[{ required: true }]}
+                      >
+                        <Select placeholder="Tipo de evento">
+                          <Select.Option value={true}>Evento normal</Select.Option>
+                          <Select.Option value={false}>Graduación</Select.Option>
+                        </Select>
+                      </Form.Item>
+                    </Col>
+                    <Col span={12}>
+                      <Form.Item name="hostId" label="Anfitrión" rules={[{ required: true }]}>
+                        <Select
+                          showSearch
+                          filterOption={(value, option) => option.children.includes(value)}
+                          placeholder="Anfitrión"
+                        >
+                          {hosts?.map(host => (
+                            <Select.Option key={host.id} value={host.id}>{host.name}</Select.Option>
+                          ))}
+                        </Select>
+                      </Form.Item>
+                    </Col>
+                  </Row>
                 </Col>
+
                 <Col span={24}>
-                  <Form.Item name="mainTable" rules={[{ required: true }]}>
-                    <Select placeholder="Mesa de honor">
-                      <Select.Option value={true}>Evento normal</Select.Option>
-                      <Select.Option value={false}>Graduación</Select.Option>
-                    </Select>
-                  </Form.Item>
+                  <Row gutter={16}>
+                    <Col span={12}>
+                      <Form.Item label="Tipo de invitación" required>
+                        <Select
+                          value={invitationType}
+                          onChange={(value) => {
+                            setInvitationType(value)
+                            setSelectedInvitation(value === "premium" ? { fileName: "premium" } : null)
+                          }}
+                          style={{ width: "100%" }}
+                        >
+                          <Select.Option value="standard">Invitación estándar</Select.Option>
+                          <Select.Option value="premium">Invitación premium</Select.Option>
+                        </Select>
+                      </Form.Item>
+                    </Col>
+                    {invitationType === "standard" && (
+                      <Col span={12}>
+                        <Form.Item label="Invitación Digital">
+                          <Select
+                            placeholder="Invitación Digital"
+                            value={selectedInvitation?.fileName}
+                            onSelect={(value) => onDesignSelect(value, "1")}
+                          >
+                            {invitationsDesigns
+                              ?.filter(inv => !inv.fileName.includes("premium"))
+                              .map(invitation => (
+                                <Select.Option key={invitation.fileName} value={invitation.fileName}>
+                                  {invitation.fileName}
+                                </Select.Option>
+                              ))}
+                          </Select>
+                        </Form.Item>
+                      </Col>
+                    )}
+                  </Row>
                 </Col>
+
                 <Col span={24}>
-                  <Form.Item name="hostId" rules={[{ required: true }]}>
-                    <Select
-                      filterOption={(value, option) => option.children.includes(value)}
-                      showSearch
-                      placeholder="Anfitrión">
-                      {hosts?.map(host => (
-                        <Select.Option key={host.id} value={host.id}>{host.name}</Select.Option>
-                      ))}
-                    </Select>
-                  </Form.Item>
-                </Col>
-                <Col span={24}>
-                  <Form.Item>
-                    <Select
-                      placeholder="Invitación Digital"
-                      value={selectedInvitation?.fileName}
-                      onSelect={value => onDesignSelect(value, "1")}>
-                      {invitationsDesigns?.map(invitation => (
-                        <Select.Option key={invitation.fileName} value={invitation.fileName}>{invitation.fileName}</Select.Option>
-                      ))}
-                    </Select>
-                  </Form.Item>
-                </Col>
-                <Col span={24}>
-                  <Form.Item>
-                    <Select
-                      style={{ width: "100%" }}
-                      placeholder="Boleto Digital"
-                      value={selectedPass?.fileName}
-                      onSelect={value => onDesignSelect(value, "2")}>
-                      {passDesigns?.map(pass => (
-                        <Select.Option key={pass.fileName} value={pass.fileName}>{pass.fileName}</Select.Option>
-                      ))}
-                    </Select>
-                  </Form.Item>
-                </Col>
-                <Col span={24}>
-                  <Form.Item>
-                    <Select
-                      style={{ width: "100%" }}
-                      placeholder="Acomodo de mesas"
-                      value={selectedRoom?.name}
-                      onSelect={value => onDesignSelect(value, "3")}>
-                      {roomMaps?.map(roomMap => (
-                        <Select.Option key={roomMap.name} value={roomMap.name}>{roomMap.name}</Select.Option>
-                      ))}
-                    </Select>
-                  </Form.Item>
+                  <Row gutter={16}>
+                    <Col span={12}>
+                      <Form.Item label="Boleto Digital">
+                        <Select
+                          style={{ width: "100%" }}
+                          placeholder="Boleto Digital"
+                          value={selectedPass?.fileName}
+                          onSelect={value => onDesignSelect(value, "2")}
+                        >
+                          {passDesigns?.map(pass => (
+                            <Select.Option key={pass.fileName} value={pass.fileName}>{pass.fileName}</Select.Option>
+                          ))}
+                        </Select>
+                      </Form.Item>
+                    </Col>
+                    <Col span={12}>
+                      <Form.Item label="Acomodo de Mesas">
+                        <Select
+                          style={{ width: "100%" }}
+                          placeholder="Acomodo de mesas"
+                          value={selectedRoom?.name}
+                          onSelect={value => onDesignSelect(value, "3")}
+                        >
+                          {roomMaps?.map(roomMap => (
+                            <Select.Option key={roomMap.name} value={roomMap.name}>{roomMap.name}</Select.Option>
+                          ))}
+                        </Select>
+                      </Form.Item>
+                    </Col>
+                  </Row>
                 </Col>
               </Row>
+
             </Form>
           </Col>
+
           {showDesign && (
             <Col span={isShowingMap ? 16 : 12}>
               <Tabs
                 activeKey={activeTab} onChange={handleTabChange}
                 tabPosition="top">
-                {!!selectedInvitation && (
+                {!!selectedInvitation && invitationType === "standard" && (
                   <Tabs.TabPane
                     key="1"
                     className="limited-width"
