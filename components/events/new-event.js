@@ -82,8 +82,9 @@ export const NewEvent = ({ createEvent, updateEvent, edit, hosts, invitationsDes
   }
 
   const onDesignSelect = (value, tab) => {
-    if (tab === "1") setSelectedInvitation(invitationsDesigns.find(invitation => invitation.fileName === value))
-    if (tab === "2") setSelectedPass(passDesigns.find(pass => pass.fileName === value))
+    
+    if (tab === "1") setSelectedPass(passDesigns.find(pass => pass.fileName === value))
+    if (tab === "2") setSelectedInvitation(invitationsDesigns.find(invitation => invitation.fileName === value))
     if (tab === "3") setSelectedRoom(roomMaps.find(roomMap => roomMap.name === value))
     setActiveTab(tab)
   }
@@ -193,51 +194,12 @@ export const NewEvent = ({ createEvent, updateEvent, edit, hosts, invitationsDes
                 <Col span={24}>
                   <Row gutter={16}>
                     <Col span={12}>
-                      <Form.Item label="Tipo de invitación" required>
-                        <Select
-                          value={invitationType}
-                          onChange={(value) => {
-                            setInvitationType(value)
-                            setSelectedInvitation(value === "premium" ? { fileName: "premium" } : null)
-                          }}
-                          style={{ width: "100%" }}
-                        >
-                          <Select.Option value="standard">Invitación estándar</Select.Option>
-                          <Select.Option value="premium">Invitación premium</Select.Option>
-                        </Select>
-                      </Form.Item>
-                    </Col>
-                    {invitationType === "standard" && (
-                      <Col span={12}>
-                        <Form.Item label="Invitación Digital">
-                          <Select
-                            placeholder="Invitación Digital"
-                            value={selectedInvitation?.fileName}
-                            onSelect={(value) => onDesignSelect(value, "1")}
-                          >
-                            {invitationsDesigns
-                              ?.filter(inv => !inv.fileName.includes("premium"))
-                              .map(invitation => (
-                                <Select.Option key={invitation.fileName} value={invitation.fileName}>
-                                  {invitation.fileName}
-                                </Select.Option>
-                              ))}
-                          </Select>
-                        </Form.Item>
-                      </Col>
-                    )}
-                  </Row>
-                </Col>
-
-                <Col span={24}>
-                  <Row gutter={16}>
-                    <Col span={12}>
                       <Form.Item label="Boleto Digital">
                         <Select
                           style={{ width: "100%" }}
                           placeholder="Boleto Digital"
                           value={selectedPass?.fileName}
-                          onSelect={value => onDesignSelect(value, "2")}
+                          onSelect={value => onDesignSelect(value, "1")}
                         >
                           {passDesigns?.map(pass => (
                             <Select.Option key={pass.fileName} value={pass.fileName}>{pass.fileName}</Select.Option>
@@ -259,6 +221,46 @@ export const NewEvent = ({ createEvent, updateEvent, edit, hosts, invitationsDes
                         </Select>
                       </Form.Item>
                     </Col>
+
+                    <Col span={24}>
+                      <Row gutter={16}>
+                        <Col span={12}>
+                          <Form.Item label="Tipo de invitación" required>
+                            <Select
+                              value={invitationType}
+                              onChange={(value) => {
+                                setInvitationType(value)
+                                setSelectedInvitation(value === "premium" ? { fileName: "premium" } : null)
+                              }}
+                              style={{ width: "100%" }}
+                            >
+                              <Select.Option value="standard">Invitación estándar</Select.Option>
+                              <Select.Option value="premium">Invitación premium</Select.Option>
+                            </Select>
+                          </Form.Item>
+                        </Col>
+                        {invitationType === "standard" && (
+                          <Col span={12}>
+                            <Form.Item label="Invitación Digital">
+                              <Select
+                                placeholder="Invitación Digital"
+                                value={selectedInvitation?.fileName}
+                                onSelect={(value) => onDesignSelect(value, "2")}
+                              >
+                                {invitationsDesigns
+                                  ?.filter(inv => !inv.fileName.includes("premium"))
+                                  .map(invitation => (
+                                    <Select.Option key={invitation.fileName} value={invitation.fileName}>
+                                      {invitation.fileName}
+                                    </Select.Option>
+                                  ))}
+                              </Select>
+                            </Form.Item>
+                          </Col>
+                        )}
+                      </Row>
+                    </Col>
+
                   </Row>
                 </Col>
               </Row>
@@ -271,21 +273,22 @@ export const NewEvent = ({ createEvent, updateEvent, edit, hosts, invitationsDes
               <Tabs
                 activeKey={activeTab} onChange={handleTabChange}
                 tabPosition="top">
-                {!!selectedInvitation && invitationType === "standard" && (
+                
+                {!!selectedPass && (
                   <Tabs.TabPane
                     key="1"
+                    tab="Boleto Digital"
+                    className="limited-width">
+                    <PassesListItem item={selectedPass} />
+                  </Tabs.TabPane>
+                )}
+                {!!selectedInvitation && invitationType === "standard" && (
+                  <Tabs.TabPane
+                    key="2"
                     className="limited-width"
                     tab="Invitación Digital">
                     <InvitationsListItem
                       item={selectedInvitation} />
-                  </Tabs.TabPane>
-                )}
-                {!!selectedPass && (
-                  <Tabs.TabPane
-                    key="2"
-                    tab="Boleto Digital"
-                    className="limited-width">
-                    <PassesListItem item={selectedPass} />
                   </Tabs.TabPane>
                 )}
                 {!!selectedRoom && (
