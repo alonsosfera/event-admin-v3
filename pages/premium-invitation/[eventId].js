@@ -22,6 +22,9 @@ import PremiumInvitationPreview from '@/components/designs/invitations/premium/p
 const { Text } = Typography
 const { Content } = Layout
 
+const IMAGE_FOLDER = "premium-invitations/images";
+const AUDIO_FOLDER = "premium-invitations/audio";
+
 const initialSections = [
   { id: 'cover', label: 'Portada', Component: PremiumInvitationCover },
   { id: 'pass', label: 'Pase', Component: PremiumInvitationPass },
@@ -38,8 +41,7 @@ const defaultActiveSections = ['cover', 'pass', 'place', 'carousel', 'attendance
 const defaultInactiveSections = ['video', 'family', 'gift', 'contact']
 
 const PremiumInvitationPage = () => {
-
-  const router = useRouter();
+  const router = useRouter()
   const { eventId } = router.query
   const { token } = parseCookies()
 
@@ -56,60 +58,56 @@ const PremiumInvitationPage = () => {
   const [uploadProgress, setUploadProgress] = useState(0)
   const [isUploading, setIsUploading] = useState(false)
   const [premiumInvitationSections, setPremiumInvitationSections] = useState(null)
-  
+
   useEffect(() => {
     if (!eventId) return
-  
+
     const fetchPremiumInvitation = async () => {
       try {
-        const { data } = await axios.get(`/api/premium-invitation/${eventId}`);
-    
+        const { data } = await axios.get(`/api/premium-invitation/${eventId}`)
+
         if (data) {
-          setBackgroundImage(data.backgroundUrl || "/assets/background1.jpg");
-          setCardBackgroundImage(data.sectionBackgroundUrl || "/assets/background1.jpg");
-          setMusicUrl(data.songUrl || "/assets/thousand-years.mp3");
-          setPremiumInvitationSections(data.sections);
-    
-          const newSectionData = {};
-    
+          setBackgroundImage(data.backgroundUrl || "/assets/background1.jpg")
+          setCardBackgroundImage(data.sectionBackgroundUrl || "/assets/background1.jpg")
+          setMusicUrl(data.songUrl || "/assets/thousand-years.mp3")
+          setPremiumInvitationSections(data.sections)
+
+          const newSectionData = {}
+
           if (Array.isArray(data.sections) && data.sections.length > 0) {
-    
-            const allIds = initialSections.map(s => s.id);
-            const sectionOrder = data.sections.map((section) => section.type);
-            setActiveSectionOrder(sectionOrder);
+            const allIds = initialSections.map(s => s.id)
+            const sectionOrder = data.sections.map(section => section.type)
+            setActiveSectionOrder(sectionOrder)
 
-            const newInactiveSectionOrder = allIds.filter(
-              (id) => !sectionOrder.includes(id)
-            );
-            setInactiveSectionOrder(newInactiveSectionOrder);
+            const newInactive = allIds.filter(id => !sectionOrder.includes(id))
+            setInactiveSectionOrder(newInactive)
 
-    
-            data.sections.forEach((section) => {
-              newSectionData[section.type] = section.data;
-            });
+            data.sections.forEach(section => {
+              newSectionData[section.type] = section.data
+            })
           } else {
-            setActiveSectionOrder(defaultActiveSections);
-            setInactiveSectionOrder(defaultInactiveSections);
+            setActiveSectionOrder(defaultActiveSections)
+            setInactiveSectionOrder(defaultInactiveSections)
           }
-    
-          setSectionData(newSectionData);
+
+          setSectionData(newSectionData)
         }
       } catch (error) {
-        console.error('Error fetching premium invitation data', error);
+        console.error('Error fetching premium invitation data', error)
       } finally {
-        setIsLoading(false);
+        setIsLoading(false)
       }
-    };    
-  
+    }
+
     fetchPremiumInvitation()
   }, [eventId])
 
   if (isLoading) {
     return (
-      <div style={{ 
-        height: '100vh', 
-        display: 'flex', 
-        justifyContent: 'center', 
+      <div style={{
+        height: '100vh',
+        display: 'flex',
+        justifyContent: 'center',
         alignItems: 'center',
         flexDirection: 'column',
         backgroundColor: '#fff'
@@ -121,125 +119,118 @@ const PremiumInvitationPage = () => {
   }
 
   const uploadStorage = async (file, folder, endpoint = '/api/storage/upload') => {
-    const buffer = await fileToArrayBuffer(file);
-    const fileBuffer = arrayBufferToBase64(buffer);
-    const sanitizedFileName = file.name.replace(/\s+/g, '-');
-  
+    const buffer = await fileToArrayBuffer(file)
+    const fileBuffer = arrayBufferToBase64(buffer)
+    const sanitizedFileName = file.name.replace(/\s+/g, '-')
+
     const response = await axios.post(endpoint, {
       fileName: sanitizedFileName,
       folder,
       fileBuffer,
     }, {
       headers: { Authorization: `Bearer ${token}` },
-      onUploadProgress: (progressEvent) => {
-        if (progressEvent.total) {
-          const percent = Math.round((progressEvent.loaded * 100) / progressEvent.total);
-          setUploadProgress(percent);
+      onUploadProgress: (e) => {
+        if (e.total) {
+          const percent = Math.round((e.loaded * 100) / e.total)
+          setUploadProgress(percent)
         }
       }
-    });
-  
-    return response.data.fileUrl;
-  };
-  
+    })
+
+    return response.data.fileUrl
+  }
 
   const saveInvitation = async () => {
     try {
-      setIsUploading(true);
-      setUploadProgress(0);
-  
-      let uploadedBackgroundUrl = backgroundImage;
-      let uploadedSectionBackgroundUrl = cardBackgroundImage;
-      let uploadedMusicUrl = musicUrl;
-  
+      setIsUploading(true)
+      setUploadProgress(0)
+
+      let uploadedBackgroundUrl = backgroundImage
+      let uploadedSectionBackgroundUrl = cardBackgroundImage
+      let uploadedMusicUrl = musicUrl
+
       if (sectionData.backgroundImageFile) {
-        uploadedBackgroundUrl = await uploadStorage(sectionData.backgroundImageFile, "premium-invitations");
+        uploadedBackgroundUrl = await uploadStorage(sectionData.backgroundImageFile, IMAGE_FOLDER)
       }
-  
+
       if (sectionData.cardBackgroundImageFile) {
-        uploadedSectionBackgroundUrl = await uploadStorage(sectionData.cardBackgroundImageFile, "premium-invitations");
+        uploadedSectionBackgroundUrl = await uploadStorage(sectionData.cardBackgroundImageFile, IMAGE_FOLDER)
       }
-  
+
       if (sectionData.musicFile) {
-        uploadedMusicUrl = await uploadStorage(sectionData.musicFile, "premium-invitations", "/api/storage/upload-song");
+        uploadedMusicUrl = await uploadStorage(sectionData.musicFile, AUDIO_FOLDER, "/api/storage/upload-song")
       }
-  
-      const processedSectionData = { ...sectionData };
-  
+
+      const processedSectionData = { ...sectionData }
+
       for (const sectionId of activeSectionOrder) {
-        const section = sectionData[sectionId];
-        if (!section) continue;
-  
-        const newSection = { ...section };
-  
-        // Subir archivos simples terminados en File
+        const section = sectionData[sectionId]
+        if (!section) continue
+
+        const newSection = { ...section }
+
         for (const key in newSection) {
           if (key.endsWith("File") && newSection[key] instanceof File) {
-            const fileKey = key;
-            const baseKey = key.replace("File", "");
-  
-            const uploadedUrl = await uploadStorage(newSection[fileKey], "premium-invitations");
-            newSection[baseKey] = uploadedUrl;
-            delete newSection[fileKey];
+            const fileKey = key
+            const baseKey = key.replace("File", "")
+
+            const uploadedUrl = await uploadStorage(newSection[fileKey], IMAGE_FOLDER)
+            newSection[baseKey] = uploadedUrl
+            delete newSection[fileKey]
           }
         }
-  
-        // Subir imágenes del arreglo 'images' (carousel)
+
         if (Array.isArray(newSection.images)) {
           newSection.images = await Promise.all(
             newSection.images.map(async (imgObj) => {
               if (imgObj?.file instanceof File) {
-                const uploadedUrl = await uploadStorage(imgObj.file, "premium-invitations");
-                return { ...imgObj, src: uploadedUrl, file: undefined };
+                const uploadedUrl = await uploadStorage(imgObj.file, IMAGE_FOLDER)
+                return { ...imgObj, src: uploadedUrl, file: undefined }
               }
-              return imgObj;
+              return imgObj
             })
-          );
+          )
         }
-  
-        // Subir avatares del arreglo 'familyMembers'
+
         if (Array.isArray(newSection.familyMembers)) {
           newSection.familyMembers = await Promise.all(
             newSection.familyMembers.map(async (member) => {
               if (member?.avatarFile instanceof File) {
-                const uploadedUrl = await uploadStorage(member.avatarFile, "premium-invitations");
-                return { ...member, avatar: uploadedUrl, avatarFile: undefined };
+                const uploadedUrl = await uploadStorage(member.avatarFile, IMAGE_FOLDER)
+                return { ...member, avatar: uploadedUrl, avatarFile: undefined }
               }
-              return member;
+              return member
             })
-          );
+          )
         }
-  
-        // Subir avatares del arreglo 'contacts'
+
         if (Array.isArray(newSection.contacts)) {
           newSection.contacts = await Promise.all(
             newSection.contacts.map(async (contact) => {
               if (contact?.avatarFile instanceof File) {
-                const uploadedUrl = await uploadStorage(contact.avatarFile, "premium-invitations");
-                return { ...contact, avatar: uploadedUrl, avatarFile: undefined };
+                const uploadedUrl = await uploadStorage(contact.avatarFile, IMAGE_FOLDER)
+                return { ...contact, avatar: uploadedUrl, avatarFile: undefined }
               }
-              return contact;
+              return contact
             })
-          );
+          )
         }
-  
-        processedSectionData[sectionId] = newSection;
+
+        processedSectionData[sectionId] = newSection
       }
-  
-      const allSectionIds = [...activeSectionOrder, ...inactiveSectionOrder];
 
+      const allSectionIds = [...activeSectionOrder, ...inactiveSectionOrder]
       const sectionsPayload = allSectionIds.map((id, index) => {
-      const updated = processedSectionData[id];
-      const backup = premiumInvitationSections?.find(sec => sec.type === id)?.data;
-      return {
-        type: id,
-        version: "1.0.0",
-        order: index,
-        data: updated || backup || {}
-      };
-    });
+        const updated = processedSectionData[id]
+        const backup = premiumInvitationSections?.find(sec => sec.type === id)?.data
+        return {
+          type: id,
+          version: "1.0.0",
+          order: index,
+          data: updated || backup || {}
+        }
+      })
 
-  
       const metadata = {
         activeSections: activeSectionOrder,
         inactiveSections: inactiveSectionOrder,
@@ -251,32 +242,31 @@ const PremiumInvitationPage = () => {
           songUrl: uploadedMusicUrl,
           eventId,
         },
-      };
-  
-      await axios.post('/api/premium-invitation/update', metadata);
-  
+      }
+
+      await axios.post('/api/premium-invitation/update', metadata)
+
       Modal.success({
         title: '¡Invitación guardada!',
         content: 'Tu invitación ha sido guardada correctamente.',
         centered: true,
         okText: 'Aceptar'
-      });
+      })
     } catch (error) {
-      console.error('Error guardando la invitación:', error);
+      console.error('Error guardando la invitación:', error)
       Modal.error({
         title: 'Error al guardar',
         content: 'Ocurrió un problema al guardar la invitación. Intenta de nuevo.',
         centered: true,
         okText: 'Aceptar'
-      });
+      })
     } finally {
-      setIsUploading(false);
-      setUploadProgress(0);
+      setIsUploading(false)
+      setUploadProgress(0)
     }
-  };  
-      
+  }
+
   return (
-    
     <Layout className='layout-sidebar' style={{ minHeight: '100vh' }}>
       {isEditing && (
         <InvitationPremiumSideBar
@@ -286,7 +276,7 @@ const PremiumInvitationPage = () => {
           inactiveSectionOrder={inactiveSectionOrder}
           setInactiveSectionOrder={setInactiveSectionOrder}
           onDataChange={(data) => {
-            setSectionData((prev) => ({ ...prev, ...data }))
+            setSectionData(prev => ({ ...prev, ...data }))
             if (data.backgroundImage) setBackgroundImage(data.backgroundImage)
             if (data.cardBackgroundImage) setCardBackgroundImage(data.cardBackgroundImage)
             if (data.musicUrl) setMusicUrl(data.musicUrl)
@@ -294,71 +284,57 @@ const PremiumInvitationPage = () => {
           setIsPlaying={setIsPlaying}
           saveInvitation={saveInvitation}
           isUploading={isUploading}
-          uploadProgress={uploadProgress} 
+          uploadProgress={uploadProgress}
         />
-        
-        )}
+      )}
 
-      <Content
-        style={{
-          marginLeft:  isEditing ? "260px" : "0px"
-        }}>
+      <Content style={{ marginLeft: isEditing ? "260px" : "0px" }}>
         <PremiumInvitationMusicPlayer isPlaying={isPlaying} setIsPlaying={setIsPlaying} musicUrl={musicUrl} />
         {(isEditing || isPreviewShown) && (
-        <PremiumInvitationPreview isEditing={isEditing} setIsEditing={setIsEditing} setIsPreviewShown={setIsPreviewShown} />
-      )}
-        <div 
-          className="invitation-container"
-          style={{ backgroundImage:  `url(${backgroundImage})` }}>
-        <ParallaxProvider>
-          <Row justify="center">
-            <Col xs={24} sm={22} md={20} lg={16}>
-              {activeSectionOrder.map((id, index) => {
-                const section = initialSections.find((s) => s.id === id)
-                if (!section) return null
+          <PremiumInvitationPreview isEditing={isEditing} setIsEditing={setIsEditing} setIsPreviewShown={setIsPreviewShown} />
+        )}
+        <div className="invitation-container" style={{ backgroundImage: `url(${backgroundImage})` }}>
+          <ParallaxProvider>
+            <Row justify="center">
+              <Col xs={24} sm={22} md={20} lg={16}>
+                {activeSectionOrder.map((id, index) => {
+                  const section = initialSections.find((s) => s.id === id)
+                  if (!section) return null
 
-                const { Component } = section
-                const customTranslateX = id === 'cover' ? [0, 0] : [(index % 2 === 0 ? -3 : 3), 0]
+                  const { Component } = section
+                  const customTranslateX = id === 'cover' ? [0, 0] : [(index % 2 === 0 ? -3 : 3), 0]
 
-                return (
-                  <Parallax
-                    key={id}
-                    speed={0}
-                    translateX={customTranslateX}
-                    opacity={[0, 5]}
-                    easing="ease"
-                  >
-                    <div className={`section-${id}`} id={`section-${id}`}>
-                      <Card className='card-invitation' style={{ textAlign: "center", backgroundImage: `url(${cardBackgroundImage})` }}>
-                        <Component
-                          isEditing={isEditing}
-                          sectionData={sectionData[id]} 
-                          cardBackgroundImage={cardBackgroundImage}
-                          onDataChange={(data) =>
-                          setSectionData(prev => ({ ...prev, [id]: data }))
-                          }
-                        />
-                      </Card>
-                    </div>
-                  </Parallax>
-                )
-              })}
-
-              <div
-                style={{
-                  textAlign: 'center',
-                  marginTop: '50px',
-                  paddingTop: '20px',
-                  borderTop: '1px solid #e1e1e1',
-                }}
-              >
-                <Text style={{ fontSize: '14px', color: '#7f8c8d' }}>
-                  Gracias por ser parte de nuestro día especial.
-                </Text>
-              </div>
-            </Col>
-          </Row>
-        </ParallaxProvider>
+                  return (
+                    <Parallax
+                      key={id}
+                      speed={0}
+                      translateX={customTranslateX}
+                      opacity={[0, 5]}
+                      easing="ease"
+                    >
+                      <div className={`section-${id}`} id={`section-${id}`}>
+                        <Card className='card-invitation' style={{ textAlign: "center", backgroundImage: `url(${cardBackgroundImage})` }}>
+                          <Component
+                            isEditing={isEditing}
+                            sectionData={sectionData[id]}
+                            cardBackgroundImage={cardBackgroundImage}
+                            onDataChange={(data) =>
+                              setSectionData(prev => ({ ...prev, [id]: data }))
+                            }
+                          />
+                        </Card>
+                      </div>
+                    </Parallax>
+                  )
+                })}
+                <div style={{ textAlign: 'center', marginTop: '50px', paddingTop: '20px', borderTop: '1px solid #e1e1e1' }}>
+                  <Text style={{ fontSize: '14px', color: '#7f8c8d' }}>
+                    Gracias por ser parte de nuestro día especial.
+                  </Text>
+                </div>
+              </Col>
+            </Row>
+          </ParallaxProvider>
         </div>
       </Content>
     </Layout>
