@@ -177,7 +177,6 @@ export async function postNewEvent(req, res) {
 export async function putEditEventId(req, res) {
   const { eventId } = req.query
   const eventProperties = req.body
-  console.log("type: ", eventProperties.invitationType);
   
   const createRoomMap = eventProperties.roomMap
     ? createCanvaMapData(eventProperties.roomMap.canvaMap)
