@@ -80,60 +80,90 @@ export async function getEventsByHost(req, res){
 }
 
 export async function postNewEvent(req, res) {
-  const { roomId, roomMap, digitalPass, digitalInvitation, ...eventProperties  } = req.body
+  const {
+    roomId,
+    roomMap,
+    digitalPass,
+    digitalInvitation,
+    invitationType,
+    ...eventProperties
+  } = req.body
+
   try {
     const tablesDistribution = roomMap.canvaMap?.coordinates.reduce((acc, curr) => {
       acc[curr.key] = { spaces: 12, occupiedSpaces: 0 }
       return acc
     }, {})
 
-    const result = await prisma.event.create({
-      data: {
-        ...eventProperties,
-        tablesDistribution,
-        room: { connect: { id: "9bf58a2b-e3bc-4152-92ea-71c056e1cdf1" } },
-        roomMap: {
-          create: {
-            ...roomMap,
-            canvaMap: {
-              create: {
-                ...roomMap.canvaMap,
-                coordinates: roomMap.canvaMap?.coordinates ? { create: roomMap.canvaMap.coordinates } : undefined
-              }
+    const data = {
+      ...eventProperties,
+      tablesDistribution,
+      room: { connect: { id: "9bf58a2b-e3bc-4152-92ea-71c056e1cdf1" } },
+      roomMap: {
+        create: {
+          ...roomMap,
+          canvaMap: {
+            create: {
+              ...roomMap.canvaMap,
+              coordinates: roomMap.canvaMap?.coordinates
+                ? { create: roomMap.canvaMap.coordinates }
+                : undefined
             }
           }
-        },
-        digitalPass: {
-          create: {
-            ...digitalPass,
-            canvaMap: {
-              create: {
-                ...digitalPass.canvaMap,
-                coordinates: digitalPass.canvaMap?.coordinates ? { create: digitalPass.canvaMap.coordinates } : undefined
-              }
-            }
-          }
-        },
-        digitalInvitation: {
-          create: {
-            ...digitalInvitation,
-            canvaMap: {
-              create: {
-                ...digitalInvitation.canvaMap,
-                coordinates: digitalInvitation.canvaMap?.coordinates ? { create: digitalInvitation.canvaMap.coordinates } : undefined
-              }
+        }
+      },
+      digitalPass: {
+        create: {
+          ...digitalPass,
+          canvaMap: {
+            create: {
+              ...digitalPass.canvaMap,
+              coordinates: digitalPass.canvaMap?.coordinates
+                ? { create: digitalPass.canvaMap.coordinates }
+                : undefined
             }
           }
         }
       }
-    })
+    }
+
+    if (invitationType === 'standard' && digitalInvitation) {
+      data.digitalInvitation = {
+        create: {
+          ...digitalInvitation,
+          canvaMap: {
+            create: {
+              ...digitalInvitation.canvaMap,
+              coordinates: digitalInvitation.canvaMap?.coordinates
+                ? { create: digitalInvitation.canvaMap.coordinates }
+                : undefined
+            }
+          }
+        }
+      }
+    }
+    if (invitationType === 'premium') {
+      data.premiumInvitation = {
+        create: {
+          backgroundUrl: '',
+          sectionBackgroundUrl: '',
+          songUrl: ''
+        }
+      }
+    }
+
+    const result = await prisma.event.create({ data })
 
     res.json({ result })
   } catch (error) {
-    console.error(error)
-    res.status(500).json({ error, message: "Error al crear el evento." })
+    console.error("Error al crear el evento:", error.message, error)
+    res.status(500).json({
+      error: error.message,
+      message: "Error al crear el evento."
+    })
   }
 }
+
 
 export async function putEditEventId(req, res) {
   const { eventId } = req.query
