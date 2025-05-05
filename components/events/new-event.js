@@ -54,7 +54,13 @@ export const NewEvent = ({ createEvent, updateEvent, edit, hosts, invitationsDes
 
       const { id, ...roomMap } = selectedRoom
       const { id: _1, ...digitalPass } = selectedPass
-      const { id: _2, ...digitalInvitation } = selectedInvitation
+      let digitalInvitation = null;
+    if (invitationType === "standard" && selectedInvitation) {
+      const { id: _2, ...selectedInv } = selectedInvitation;
+      digitalInvitation = {
+        ...selectedInv,
+      };
+    }
       const event = {
         ...values,
         roomMap,
