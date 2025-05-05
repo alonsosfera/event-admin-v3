@@ -282,9 +282,6 @@ export async function putEditEventId(req, res) {
             songUrl: ''
           },
           update: {
-            backgroundUrl: '',
-            sectionBackgroundUrl: '',
-            songUrl: ''
           }
         }
       } : undefined
