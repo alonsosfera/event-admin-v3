@@ -194,7 +194,7 @@ const EventDetails = ({ data, fullSize, fetchedEvent, setEvent, resetEvent }) =>
                       alt="invitation"
                       preview={false}
                       placeholder={true}
-                      src={data.digitalInvitation.fileUrl}/>
+                      src={data?.digitalInvitation?.fileUrl}/>
                     <Link
                       href="#"
                       passHref
