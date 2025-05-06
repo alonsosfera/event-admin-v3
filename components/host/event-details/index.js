@@ -11,7 +11,8 @@ import { useService } from "../../../hooks/use-service"
 import { useImageSize } from "react-image-size"
 import Link from "next/link"
 import { DigitalPassModal } from "../../digital-pass/modal"
-import { DigitalInvitationModal } from "@/components/digital-invitation/modal";
+import { DigitalInvitationModal } from "@/components/digital-invitation/modal"
+import { useRouter } from "next/router"
 
 const EventDetails = ({ data, fullSize, fetchedEvent, setEvent, resetEvent }) => {
   const [state, setState] = useState({ isModalOpen: false })
@@ -22,6 +23,8 @@ const EventDetails = ({ data, fullSize, fetchedEvent, setEvent, resetEvent }) =>
   const [showAlert, setShowAlert] = useState(false)
   const [originalEvent, setOriginalEvent] = useState(null)
 
+  const router = useRouter()
+  
   const isPassLoading = data.digitalPass && !dimensions
 
   const designH = 540, designW = 960
@@ -139,6 +142,10 @@ const EventDetails = ({ data, fullSize, fetchedEvent, setEvent, resetEvent }) =>
     setEvent(fetchedEvent)
   }
 
+  const handleRedirectToPremiumInvitation = () => {
+      router.push(`/premium-invitation/${fetchedEvent.id}`);
+  };
+
   const invitedGuests = invitations.reduce((prev, current) => prev + current.numberGuests, 0)
 
   const refetchInvitations = async () => {
@@ -188,13 +195,13 @@ const EventDetails = ({ data, fullSize, fetchedEvent, setEvent, resetEvent }) =>
                       >Editar pase</Link>
                   </Col>
                   <Col
-                    onClick={handleDigitalModalToggle} sm={12}
+                    onClick={fetchedEvent.digitalInvitation ? handleDigitalModalToggle : handleRedirectToPremiumInvitation } sm={12}
                     style={{ cursor: "pointer" }}>
                     <Image
                       alt="invitation"
                       preview={false}
                       placeholder={true}
-                      src={data?.digitalInvitation?.fileUrl}/>
+                      src={fetchedEvent.digitalInvitation ? data?.digitalInvitation?.fileUrl : "/assets/premium.jpg"}/>
                     <Link
                       href="#"
                       passHref
