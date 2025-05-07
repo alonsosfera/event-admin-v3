@@ -34,7 +34,9 @@ const defaultActiveSections = ['cover', 'pass', 'place', 'carousel', 'attendance
 
 const PremiumInvitationPage = () => {
   const router = useRouter()
-  const { premiumInvitationId } = router.query
+  const { invitationId } = router.query
+  console.log(invitationId);
+  
 
   const [activeSectionOrder, setActiveSectionOrder] = useState(defaultActiveSections)
   const [sectionData, setSectionData] = useState({})
@@ -43,26 +45,34 @@ const PremiumInvitationPage = () => {
   const [isPlaying, setIsPlaying] = useState(false)
   const [musicUrl, setMusicUrl] = useState(null)
   const [isLoading, setIsLoading] = useState(true)
+  const [invitated, setInvitated] = useState(null)
+
+  console.log("invitated ", invitated);
+  
 
   useEffect(() => {
-    if (!premiumInvitationId) return
+    if (!invitationId) return
 
     const fetchPremiumInvitation = async () => {
       try {
-        const { data } = await axios.get(`/api/premium-invitation/e/${premiumInvitationId}`)
-
+        const { data } = await axios.get(`/api/premium-invitation/i/${invitationId}`)
+        const premiumInvitation = data.event.premiumInvitation
+        const invitated = data
+        setInvitated(invitated)
+         
+        
         if (data) {
-          setBackgroundImage(data.backgroundUrl || "/assets/background1.jpg")
-          setCardBackgroundImage(data.sectionBackgroundUrl || "/assets/background1.jpg")
-          setMusicUrl(data.songUrl || "/assets/thousand-years.mp3")
+          setBackgroundImage(premiumInvitation.backgroundUrl || "/assets/background1.jpg")
+          setCardBackgroundImage(premiumInvitation.sectionBackgroundUrl || "/assets/background1.jpg")
+          setMusicUrl(premiumInvitation.songUrl || "/assets/thousand-years.mp3")
 
           const newSectionData = {}
 
-          if (Array.isArray(data.sections) && data.sections.length > 0) {
-            const sectionOrder = data.sections.map(section => section.type)
+          if (Array.isArray(premiumInvitation.sections) && premiumInvitation.sections.length > 0) {
+            const sectionOrder = premiumInvitation.sections.map(section => section.type)
             setActiveSectionOrder(sectionOrder)
 
-            data.sections.forEach(section => {
+            premiumInvitation.sections.forEach(section => {
               newSectionData[section.type] = section.data
             })
           } else {
@@ -79,7 +89,7 @@ const PremiumInvitationPage = () => {
     }
 
     fetchPremiumInvitation()
-  }, [premiumInvitationId])
+  }, [invitationId])
 
   if (isLoading) {
     return (
@@ -123,6 +133,8 @@ const PremiumInvitationPage = () => {
                       <div className={`section-${id}`} id={`section-${id}`}>
                         <Card className='card-invitation' style={{ textAlign: "center", backgroundImage: `url(${cardBackgroundImage})` }}>
                           <Component
+                            invitated={invitated}
+                            invitationId={invitationId}
                             isEditing={false}
                             sectionData={sectionData[id]}
                             cardBackgroundImage={cardBackgroundImage}
