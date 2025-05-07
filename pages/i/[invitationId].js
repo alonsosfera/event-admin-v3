@@ -35,8 +35,6 @@ const defaultActiveSections = ['cover', 'pass', 'place', 'carousel', 'attendance
 const PremiumInvitationPage = () => {
   const router = useRouter()
   const { invitationId } = router.query
-  console.log(invitationId);
-  
 
   const [activeSectionOrder, setActiveSectionOrder] = useState(defaultActiveSections)
   const [sectionData, setSectionData] = useState({})
@@ -46,10 +44,7 @@ const PremiumInvitationPage = () => {
   const [musicUrl, setMusicUrl] = useState(null)
   const [isLoading, setIsLoading] = useState(true)
   const [invitated, setInvitated] = useState(null)
-
-  console.log("invitated ", invitated);
   
-
   useEffect(() => {
     if (!invitationId) return
 

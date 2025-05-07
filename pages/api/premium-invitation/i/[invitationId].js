@@ -3,10 +3,8 @@ import short from "short-uuid";
 
 export default async function handler(req, res) {
   const { invitationId } = req.query;
-  console.log("invitationId", invitationId);
   
   const cleanedId = invitationId.substring(2);
-  console.log("cleanedId ", cleanedId);
   
   if (!cleanedId) {
     console.error("Missing invitationId");
@@ -16,7 +14,6 @@ export default async function handler(req, res) {
   try {
     const translator = short();
     const long = translator.toUUID(cleanedId)
-    console.log("long: ", long);
     
     const invitation = await prisma.invitation.findUnique({
       where: { id: translator.toUUID(cleanedId) },
