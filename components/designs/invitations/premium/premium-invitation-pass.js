@@ -3,7 +3,7 @@ import { useState } from "react"
 
 const { Title, Text } = Typography
 
-  const PremiumInvitationPass = ({ isEditing, onDataChange, sectionData }) => {
+  const PremiumInvitationPass = ({ isEditing, onDataChange, sectionData, invitated }) => {
     const [subtitleText, setSubtitleText] = useState(sectionData?.subtitleText || "Con alegría en el corazón, los esperamos para compartir nuestra unión y recibir juntos la bendición de Dios")
 
     const handleSubtitleChange = (value) => {
@@ -33,7 +33,7 @@ const { Title, Text } = Typography
             </Text>
             <br />
             <Text style={{ fontSize: '18px', color: '#7f8c8d' }}>
-              Fernando Rascon Perez
+              {invitated ? invitated.invitationName : "Nombre de cada invitado"}
             </Text>
               <Row gutter={[ 0 ]}> 
                 <Col xs={24} sm={12}>
@@ -42,7 +42,7 @@ const { Title, Text } = Typography
                   </Text>
                   <br />
                   <Text style={{ fontSize: '18px', color: '#7f8c8d' }}>
-                    4
+                  {invitated ? invitated.numberGuests : "##"}
                   </Text>
                 </Col>
                 <Col xs={24} sm={12}>
@@ -51,7 +51,15 @@ const { Title, Text } = Typography
                   </Text>
                   <br />
                   <Text style={{ fontSize: '18px', color: '#7f8c8d' }}>
-                    10
+                    {invitated ? 
+                      invitated.invitationTables.map((table, index) => (
+                        <span key={index}>
+                          {table.table.split('-')[1]}
+                          {index < invitated.invitationTables.length - 1 && ", "}
+                        </span>
+                      ))
+                      : "##"
+                    }
                   </Text>
                 </Col>
               </Row>
