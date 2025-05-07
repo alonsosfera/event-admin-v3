@@ -13,7 +13,6 @@ export default async function handler(req, res) {
 
   try {
     const translator = short();
-    const long = translator.toUUID(cleanedId)
     
     const invitation = await prisma.invitation.findUnique({
       where: { id: translator.toUUID(cleanedId) },
