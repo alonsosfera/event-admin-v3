@@ -70,7 +70,7 @@ const PremiumInvitationPass = ({ isEditing, onDataChange, sectionData, invitated
           <Row gutter={[0]}>
             <Col xs={24} sm={12}>
               <Text style={{ fontSize: '18px', color: '#7f8c8d', fontWeight: "bold" }}>
-                PERSONAS
+                INVITADOS
               </Text>
               <br />
               <Text style={{ fontSize: '18px', color: '#7f8c8d' }}>
