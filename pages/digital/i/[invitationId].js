@@ -9,9 +9,6 @@ const DigitalInvitationPage = () => {
   const [event, setEvent] = useState(null)
   const [invitation, setInvitation] = useState(null)
 
-console.log(DigitalInvitation);
-
-
   useEffect(() => {
     if (invitationId) {
       const [type, id] = invitationId.split("-")
