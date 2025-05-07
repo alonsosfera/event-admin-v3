@@ -1,6 +1,6 @@
-import { DigitalInvitation } from "../../components"
+import { DigitalInvitation } from "@/components"
 import { useEffect, useState } from "react"
-import { getEventByInvitationId, getEventById } from "../../components/digital-invitation/helpers"
+import { getEventByInvitationId, getEventById  } from "@/components/digital-invitation/helpers"
 import { useRouter } from "next/router"
 
 const DigitalInvitationPage = () => {
@@ -8,6 +8,9 @@ const DigitalInvitationPage = () => {
   const { invitationId } = router.query
   const [event, setEvent] = useState(null)
   const [invitation, setInvitation] = useState(null)
+
+console.log(DigitalInvitation);
+
 
   useEffect(() => {
     if (invitationId) {
