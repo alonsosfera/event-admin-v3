@@ -23,7 +23,7 @@ export default async (req, res) => {
         return
       }
 
-      const { invitationId: [invitationId], phone: [phone], invitationName: [invitationName] } = fields
+      const { invitationId: [invitationId], phone: [phone], invitationName: [invitationName], premium: [premium] } = fields
       const { file: [file] } = files
 
       const fileName = `Invitacion_${invitationName.replaceAll(" ", "_")}.pdf`
@@ -35,23 +35,6 @@ export default async (req, res) => {
         headers: { ...data.getHeaders() }
       })
       const translator = short()
-
-      const invitation = await prisma.invitation.findUnique({
-        where: { id: invitationId },
-        include: {
-          event: {
-            include: {
-              premiumInvitation: true
-            }
-          }
-        }
-      })
-
-      let invitationlink = `i/i-${translator.fromUUID(invitationId)}`
-
-      if (invitation?.event?.premiumInvitation) {
-        invitationlink = `p/i-${translator.fromUUID(invitationId)}`
-      }
 
       await axios.post(`${process.env.WHATSAPP_URL}/messages${accessToken}`, {
         messaging_product: "whatsapp",
@@ -83,7 +66,7 @@ export default async (req, res) => {
               parameters: [
                 {
                   type: "text",
-                  text: invitationlink
+                  text: premium === 'true' ? `p/i-${translator.fromUUID(invitationId)}` : `i-${translator.fromUUID(invitationId)}`
                 }
               ]
             }
