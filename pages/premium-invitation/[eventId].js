@@ -328,6 +328,7 @@ const PremiumInvitationPage = () => {
           saveInvitation={saveInvitation}
           isUploading={isUploading}
           uploadProgress={uploadProgress}
+          setHasUnsavedChanges={setHasUnsavedChanges}
         />
       )}
 
@@ -362,9 +363,10 @@ const PremiumInvitationPage = () => {
                             isEditing={isEditing}
                             sectionData={sectionData[id]}
                             cardBackgroundImage={cardBackgroundImage}
-                            onDataChange={(data) =>
-                              setSectionData(prev => ({ ...prev, [id]: data }))
-                            }
+                            onDataChange={(data) => {
+                              setHasUnsavedChanges(true)
+                              setSectionData(prev => ({ ...prev, [id]: data }))  
+                            }}
                           />
                         </Card>
                       </div>
