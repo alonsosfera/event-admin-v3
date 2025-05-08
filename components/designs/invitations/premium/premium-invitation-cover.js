@@ -4,7 +4,7 @@ import { UploadOutlined } from "@ant-design/icons"
 
 const { Title, Text } = Typography
 
-const PremiumInvitationCover = ({ isEditing, onDataChange, sectionData, invitated }) => {
+const PremiumInvitationCover = ({ isEditing, onDataChange, sectionData, eventDate }) => {
   
   const [titleText, setTitleText] = useState(sectionData?.titleText || "Carla & Luis")
   const [subtitleText, setSubtitleText] = useState(sectionData?.subtitleText || "¡Estás invitado a compartir este día tan especial con nosotros!")
@@ -14,10 +14,8 @@ const PremiumInvitationCover = ({ isEditing, onDataChange, sectionData, invitate
   const [hours, setHours] = useState(0)
   const [minutes, setMinutes] = useState(0)
   const [seconds, setSeconds] = useState(0)
-
-  const eventDate = invitated?.event?.eventDate
   
-  const targetDate = new Date(eventDate ? eventDate : "2025-08-09T11:39:00").getTime()
+  const targetDate = new Date(eventDate).getTime()
 
   const handleTitleChange = (value) => {
     setTitleText(value)
@@ -54,9 +52,8 @@ const PremiumInvitationCover = ({ isEditing, onDataChange, sectionData, invitate
         setMinutes(m)
         setSeconds(s)
       }
-    }, 1000) // Actualizar cada segundo
+    }, 1000)
 
-    // Limpiar el intervalo al desmontar el componente
     return () => clearInterval(intervalId)
   }, [targetDate])
 

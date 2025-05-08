@@ -58,6 +58,7 @@ const PremiumInvitationPage = () => {
   const [uploadProgress, setUploadProgress] = useState(0)
   const [isUploading, setIsUploading] = useState(false)
   const [premiumInvitationSections, setPremiumInvitationSections] = useState(null)
+  const [eventDate, setEventDate] = useState(null)
 
   useEffect(() => {
     if (!eventId) return
@@ -71,6 +72,8 @@ const PremiumInvitationPage = () => {
           setCardBackgroundImage(data.sectionBackgroundUrl || "/assets/background1.jpg")
           setMusicUrl(data.songUrl || "/assets/thousand-years.mp3")
           setPremiumInvitationSections(data.sections)
+          setEventDate(data.event.eventDate)
+          
 
           const newSectionData = {}
 
@@ -315,6 +318,7 @@ const PremiumInvitationPage = () => {
                       <div className={`section-${id}`} id={`section-${id}`}>
                         <Card className='card-invitation' style={{ textAlign: "center", backgroundImage: `url(${cardBackgroundImage})` }}>
                           <Component
+                            eventDate={eventDate}
                             isEditing={isEditing}
                             sectionData={sectionData[id]}
                             cardBackgroundImage={cardBackgroundImage}
