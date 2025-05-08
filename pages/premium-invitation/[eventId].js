@@ -190,14 +190,20 @@ const PremiumInvitationPage = () => {
 
       if (sectionData.backgroundImageFile) {
         uploadedBackgroundUrl = await uploadStorage(sectionData.backgroundImageFile, IMAGE_FOLDER)
+      } else if (backgroundImage === "/assets/background1.jpg") {
+        uploadedBackgroundUrl = undefined
       }
-
+  
       if (sectionData.cardBackgroundImageFile) {
         uploadedSectionBackgroundUrl = await uploadStorage(sectionData.cardBackgroundImageFile, IMAGE_FOLDER)
+      } else if (cardBackgroundImage === "/assets/background1.jpg") {
+        uploadedSectionBackgroundUrl = undefined
       }
-
+  
       if (sectionData.musicFile) {
         uploadedMusicUrl = await uploadStorage(sectionData.musicFile, AUDIO_FOLDER, "/api/storage/upload-song")
+      } else if (musicUrl === "/assets/thousand-years.mp3") {
+        uploadedMusicUrl = undefined
       }
 
       const processedSectionData = { ...sectionData }
