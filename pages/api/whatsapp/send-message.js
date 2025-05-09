@@ -7,7 +7,7 @@ import { prisma } from "../../../lib/prisma"
 
 export const config = {
   api: {
-    bodyParser: false // Disables Next.js built-in bodyParser
+    bodyParser: false
   }
 }
 
@@ -35,6 +35,23 @@ export default async (req, res) => {
         headers: { ...data.getHeaders() }
       })
       const translator = short()
+
+      const invitation = await prisma.invitation.findUnique({
+        where: { id: invitationId },
+        include: {
+          event: {
+            include: {
+              premiumInvitation: true
+            }
+          }
+        }
+      })
+
+      let invitationlink = `i/i-${translator.fromUUID(invitationId)}`
+
+      if (invitation?.event?.premiumInvitation) {
+        invitationlink = `p/i-${translator.fromUUID(invitationId)}`
+      }
 
       await axios.post(`${process.env.WHATSAPP_URL}/messages${accessToken}`, {
         messaging_product: "whatsapp",
@@ -66,7 +83,7 @@ export default async (req, res) => {
               parameters: [
                 {
                   type: "text",
-                  text: `i-${translator.fromUUID(invitationId)}`
+                  text: invitationlink
                 }
               ]
             }

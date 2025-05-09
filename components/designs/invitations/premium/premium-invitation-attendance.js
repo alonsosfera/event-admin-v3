@@ -1,20 +1,83 @@
 import { useState } from 'react'
-import { Button, Row, Typography, Col } from 'antd'
+import { Button, Row, Typography, Col, InputNumber, Modal, message } from 'antd'
+import axios from 'axios'
 
 const { Title, Text } = Typography
 
-const PremiumInvitationAttendance = ({ isEditing, onDataChange, sectionData }) => {
+const PremiumInvitationAttendance = ({ isEditing, onDataChange, sectionData, invitated, invitationId }) => {
   const [subtitle, setSubtitle] = useState( sectionData?.subtitle ||
     "Para nosotros es muy importante que nos acompañes, por favor confirma tu asistencia para poder considerarte."
   )
+  const [confirmedGuests, setConfirmedGuests] = useState(invitated?.numberGuests)
+  const [confirmedGuestsEdit, setConfirmedGuestsEdit] = useState(1)
 
   const handleTextChange = (val) => {
     setSubtitle(val)
     onDataChange?.({ subtitle: val })
   }
 
-  const handleConfirmAttendance = () => {
-    console.log("click confirmar")
+  const { confirm } = Modal
+
+  const showConfirm = () => {
+    let currentConfirmed = confirmedGuests
+
+    confirm({
+      title: "Confirmación",
+      content: (
+        <div>
+          <p>¿Confirmar invitados para {invitated?.invitationName}?</p>
+          <InputNumber
+            value={currentConfirmed}
+            min={1}
+            max={invitated?.numberGuests}
+            type="number"
+            onChange={value => { currentConfirmed = value; setConfirmedGuests(value) }} />
+        </div>
+      ),
+      onOk() {
+        handleConfirmation(currentConfirmed)
+      },
+      onCancel() {}
+    })
+  }
+
+  const handleConfirmation = async confirmed => {
+    if (!confirmed) return
+    try {
+      await axios.post("/api/invitations/confirm", {
+        invitationId,
+        confirmed
+      })
+      message.success("Confirmación enviada")
+    } catch (error) {
+      console.error("Error al confirmar la invitación:", error)
+    }
+  }
+
+  const showConfirmEdit = () => {
+
+    confirm({
+      title: "Confirmación",
+      content: (
+        <div>
+          <p>¿Confirmar invitados para &quot;solo de ejemplo&quot;?</p>
+          <InputNumber
+            defaultValue={confirmedGuestsEdit}
+            min={0}
+            max={100}
+            type="number"
+            onChange={value => { setConfirmedGuestsEdit(value) }} />
+        </div>
+      ),
+      onOk() {
+        handleConfirmationEdit()
+      },
+      onCancel() {}
+    })
+  }
+
+  const handleConfirmationEdit = () => {
+    message.success("Confirmación enviada")
   }
 
   return (
@@ -50,7 +113,7 @@ const PremiumInvitationAttendance = ({ isEditing, onDataChange, sectionData }) =
             width: '100%',
             maxWidth: '300px',
           }}
-          onClick={handleConfirmAttendance}
+          onClick={invitationId ? showConfirm : showConfirmEdit}
         >
           Confirmar Asistencia
         </Button>
