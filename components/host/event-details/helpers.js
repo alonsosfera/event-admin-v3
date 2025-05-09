@@ -172,13 +172,14 @@ export const invitationPDF = async (event, invitation, pdf, dimensions) => {
   return pdf
 }
 
-export const sendInvitation = async (invitation, file) => {
+export const sendInvitation = async (invitation, file, premium) => {
   try {
     const formData = new FormData()
     formData.append("file", file)
     formData.append("phone", invitation.phone)
     formData.append("invitationId", invitation.id)
     formData.append("invitationName", invitation.invitationName)
+    formData.append("premium", premium)
 
     await axios.post("/api/whatsapp/send-message", formData, {
       headers: { "Content-Type": "multipart/form-data" }
@@ -202,7 +203,9 @@ export const generatePDF = async (event, invitation, dimensions) => {
     pdf = await invitationPDF(event, invitation, pdf, dimensions)
 
     const file = pdf.output("blob")
-    await sendInvitation(invitation, file)
+    const premium = event.premiumInvitation ? true : false;
+
+    await sendInvitation(invitation, file, premium)
   }
 }
 

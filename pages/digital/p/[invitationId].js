@@ -44,6 +44,7 @@ const PremiumInvitationPage = () => {
   const [musicUrl, setMusicUrl] = useState(null)
   const [isLoading, setIsLoading] = useState(true)
   const [invitated, setInvitated] = useState(null)
+  const [invitationNotFound, setInvitationNotFound] = useState(false)
 
   const eventDate = invitated?.event?.eventDate
   
@@ -53,33 +54,40 @@ const PremiumInvitationPage = () => {
     const fetchPremiumInvitation = async () => {
       try {
         const { data } = await axios.get(`/api/premium-invitation/i/${invitationId}`)
+        
+        if (!data || !data.event || !data.event.premiumInvitation) {
+          setInvitationNotFound(true)
+          return
+        }
+
         const premiumInvitation = data.event.premiumInvitation
         const invitated = data
         setInvitated(invitated)
-         
         
-        if (data) {
-          setBackgroundImage(premiumInvitation.backgroundUrl || "/assets/background1.jpg")
-          setCardBackgroundImage(premiumInvitation.sectionBackgroundUrl || "/assets/background1.jpg")
-          setMusicUrl(premiumInvitation.songUrl || "/assets/thousand-years.mp3")
+        setBackgroundImage(premiumInvitation.backgroundUrl || "/assets/background1.jpg")
+        setCardBackgroundImage(premiumInvitation.sectionBackgroundUrl || "/assets/background1.jpg")
+        setMusicUrl(premiumInvitation.songUrl || "/assets/thousand-years.mp3")
 
-          const newSectionData = {}
+        const newSectionData = {}
 
-          if (Array.isArray(premiumInvitation.sections) && premiumInvitation.sections.length > 0) {
-            const sectionOrder = premiumInvitation.sections.map(section => section.type)
-            setActiveSectionOrder(sectionOrder)
+        if (Array.isArray(premiumInvitation.sections) && premiumInvitation.sections.length > 0) {
+          const sectionOrder = premiumInvitation.sections.map(section => section.type)
+          setActiveSectionOrder(sectionOrder)
 
-            premiumInvitation.sections.forEach(section => {
-              newSectionData[section.type] = section.data
-            })
-          } else {
-            setActiveSectionOrder(defaultActiveSections)
-          }
-
-          setSectionData(newSectionData)
+          premiumInvitation.sections.forEach(section => {
+            newSectionData[section.type] = section.data
+          })
+        } else {
+          setActiveSectionOrder(defaultActiveSections)
         }
+
+        setSectionData(newSectionData)
       } catch (error) {
-        console.error('Error fetching premium invitation data', error)
+        if (error.response && error.response.status === 404) {
+          setInvitationNotFound(true)
+        } else {
+          console.error('Error fetching premium invitation data', error)
+        }
       } finally {
         setIsLoading(false)
       }
@@ -100,6 +108,22 @@ const PremiumInvitationPage = () => {
       }}>
         <Spin size="large" />
         <Text style={{ marginTop: '20px', fontSize: '18px', color: '#555' }}>Cargando invitación...</Text>
+      </div>
+    )
+  }
+
+  if (invitationNotFound) {
+    return (
+      <div style={{
+        height: '100vh',
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
+        flexDirection: 'column',
+        backgroundColor: '#fff'
+      }}>
+        <Text style={{ fontSize: '20px', color: '#ff0000' }}>Invitación no encontrada</Text>
+        <Text style={{ fontSize: '16px', color: '#555' }}>No se ha encontrado la invitación con el link proporcionado.</Text>
       </div>
     )
   }
