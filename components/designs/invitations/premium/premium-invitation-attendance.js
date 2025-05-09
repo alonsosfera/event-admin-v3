@@ -1,10 +1,10 @@
 import { useState } from 'react'
-import { Button, Card, Row, Typography, Col } from 'antd'
+import { Button, Row, Typography, Col } from 'antd'
 
 const { Title, Text } = Typography
 
-const PremiumInvitationAttendance = ({ isEditing, onDataChange }) => {
-  const [subtitle, setSubtitle] = useState(
+const PremiumInvitationAttendance = ({ isEditing, onDataChange, sectionData }) => {
+  const [subtitle, setSubtitle] = useState( sectionData?.subtitle ||
     "Para nosotros es muy importante que nos acompañes, por favor confirma tu asistencia para poder considerarte."
   )
 

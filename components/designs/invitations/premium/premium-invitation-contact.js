@@ -1,15 +1,25 @@
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { Card, Row, Typography, Col, Avatar, Upload, Button } from 'antd'
 import { PhoneOutlined, UserOutlined, UploadOutlined, CloseOutlined, PlusOutlined } from '@ant-design/icons'
 
 const { Title, Text } = Typography
 
-const PremiumInvitationContact = ({ isEditing, onDataChange, cardBackgroundImage }) => {
-  const [subtitle, setSubtitle] = useState("Si tienes alguna duda, no dudes en contactarnos")
-  const [contacts, setContacts] = useState([
-    { name: "Carla", phone: "555-901-3030", avatar: "/assets/mujer.jpg" },
-    { name: "Luis", phone: "555-901-3030", avatar: "/assets/hombre.jpg" }
-  ])
+const PremiumInvitationContact = ({ isEditing, onDataChange, sectionData }) => {
+  const [subtitle, setSubtitle] = useState("")
+  const [contacts, setContacts] = useState([])
+
+  useEffect(() => {
+    setSubtitle(
+      sectionData?.subtitle ||
+      "Si tienes alguna duda, no dudes en contactarnos"
+    )
+    setContacts(
+      sectionData?.contacts || [
+        { name: "Carla", phone: "555-901-3030", avatar: "/assets/mujer.jpg" },
+        { name: "Luis", phone: "555-901-3030", avatar: "/assets/hombre.jpg" }
+      ]
+    )
+  }, [sectionData])
 
   const updateContacts = (updated) => {
     setContacts(updated)
@@ -26,11 +36,10 @@ const PremiumInvitationContact = ({ isEditing, onDataChange, cardBackgroundImage
     const newUrl = URL.createObjectURL(file)
     const updated = [...contacts]
     updated[index].avatar = newUrl
-    updated[index].file = file
+    updated[index].avatarFile = file
     updateContacts(updated)
     return false
   }
-  
 
   const handleDelete = (index) => {
     const updated = [...contacts]

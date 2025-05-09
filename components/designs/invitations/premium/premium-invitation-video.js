@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react"
-import { Card, Input, Typography, Row, Col, Alert } from "antd"
+import { Input, Typography, Row, Col, Alert } from "antd"
 import { CheckCircleTwoTone } from "@ant-design/icons"
 
 const { Text } = Typography
@@ -18,7 +18,7 @@ const extractYouTubeId = (url) => {
   return url
 }
 
-const PremiumInvitationVideo = ({ isEditing, onDataChange }) => {
+const PremiumInvitationVideo = ({ isEditing, onDataChange, sectionData }) => {
   const [videoInput, setVideoInput] = useState("https://www.youtube.com/watch?v=7TWzV05kQ4w")
   const [showSaved, setShowSaved] = useState(false)
 
@@ -35,6 +35,16 @@ const PremiumInvitationVideo = ({ isEditing, onDataChange }) => {
   const videoId = extractYouTubeId(videoInput)
   const embedUrl = `https://www.youtube.com/embed/${videoId}?rel=0&modestbranding=1`
 
+  useEffect(() => {
+    if (sectionData?.videoId) {
+      const fullUrl = `https://www.youtube.com/watch?v=${sectionData.videoId}`
+      setVideoInput(fullUrl)
+    } else {
+      setVideoInput("https://www.youtube.com/watch?v=7TWzV05kQ4w")
+    }
+  }, [sectionData])
+  
+
   return (
     <>
       {isEditing && (
@@ -49,11 +59,11 @@ const PremiumInvitationVideo = ({ isEditing, onDataChange }) => {
               />
             </Col>
             <Col md={24}>
-              <Input
-                placeholder="Ingresa el link del video de YouTube"
-                value={videoInput}
-                onChange={handleChange}
-                style={{ maxWidth: 500 }}
+            <Input
+              placeholder="Ingresa el link del video de YouTube"
+              value={`https://www.youtube.com/watch?v=${videoId}`}
+              onChange={handleChange}
+              style={{ maxWidth: 500 }}
               />
             </Col>
             {showSaved && (

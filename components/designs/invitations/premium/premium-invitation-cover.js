@@ -4,11 +4,11 @@ import { UploadOutlined } from "@ant-design/icons"
 
 const { Title, Text } = Typography
 
-const PremiumInvitationCover = ({ isEditing, onDataChange }) => {
-
-  const [titleText, setTitleText] = useState("Carla & Luis")
-  const [subtitleText, setSubtitleText] = useState("¡Estás invitado a compartir este día tan especial con nosotros!")
-  const [imageUrl, setImageUrl] = useState("/assets/boda2.webp")
+const PremiumInvitationCover = ({ isEditing, onDataChange, sectionData }) => {
+  
+  const [titleText, setTitleText] = useState(sectionData?.titleText || "Carla & Luis")
+  const [subtitleText, setSubtitleText] = useState(sectionData?.subtitleText || "¡Estás invitado a compartir este día tan especial con nosotros!")
+  const [imageUrl, setImageUrl] = useState(sectionData?.image || "/assets/boda2.webp")
 
   const handleTitleChange = (value) => {
     setTitleText(value)

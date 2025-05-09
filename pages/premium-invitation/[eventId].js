@@ -55,49 +55,55 @@ const PremiumInvitationPage = () => {
   const [isLoading, setIsLoading] = useState(true)
   const [uploadProgress, setUploadProgress] = useState(0)
   const [isUploading, setIsUploading] = useState(false)
-
-
+  const [premiumInvitationSections, setPremiumInvitationSections] = useState(null)
+  
   useEffect(() => {
     if (!eventId) return
   
     const fetchPremiumInvitation = async () => {
       try {
-        const { data } = await axios.get(`/api/premium-invitation/${eventId}`)
-  
+        const { data } = await axios.get(`/api/premium-invitation/${eventId}`);
+    
         if (data) {
-          setBackgroundImage(data.backgroundUrl || "/assets/background1.jpg")
-          setCardBackgroundImage(data.sectionBackgroundUrl || "/assets/background1.jpg")
-          setMusicUrl(data.songUrl || "/assets/thousand-years.mp3")
-
-          const newSectionData = {}
-  
+          setBackgroundImage(data.backgroundUrl || "/assets/background1.jpg");
+          setCardBackgroundImage(data.sectionBackgroundUrl || "/assets/background1.jpg");
+          setMusicUrl(data.songUrl || "/assets/thousand-years.mp3");
+          setPremiumInvitationSections(data.sections);
+    
+          const newSectionData = {};
+    
           if (Array.isArray(data.sections) && data.sections.length > 0) {
+    
+            const allIds = initialSections.map(s => s.id);
             const sectionOrder = data.sections.map((section) => section.type);
-          
             setActiveSectionOrder(sectionOrder);
-          
-            const newInactiveSectionOrder = defaultInactiveSections.filter(
-              (sectionId) => !sectionOrder.includes(sectionId)
+
+            const newInactiveSectionOrder = allIds.filter(
+              (id) => !sectionOrder.includes(id)
             );
             setInactiveSectionOrder(newInactiveSectionOrder);
+
+    
+            data.sections.forEach((section) => {
+              newSectionData[section.type] = section.data;
+            });
           } else {
             setActiveSectionOrder(defaultActiveSections);
             setInactiveSectionOrder(defaultInactiveSections);
           }
-          
-  
-          setSectionData(newSectionData)
+    
+          setSectionData(newSectionData);
         }
       } catch (error) {
-        console.error('Error fetching premium invitation data', error)
+        console.error('Error fetching premium invitation data', error);
       } finally {
-        setIsLoading(false)
+        setIsLoading(false);
       }
-    }
+    };    
   
     fetchPremiumInvitation()
   }, [eventId])
-  
+
   if (isLoading) {
     return (
       <div style={{ 
@@ -114,116 +120,160 @@ const PremiumInvitationPage = () => {
     )
   }
 
+  const uploadStorage = async (file, folder, endpoint = '/api/storage/upload') => {
+    const buffer = await fileToArrayBuffer(file);
+    const fileBuffer = arrayBufferToBase64(buffer);
+    const sanitizedFileName = file.name.replace(/\s+/g, '-');
+  
+    const response = await axios.post(endpoint, {
+      fileName: sanitizedFileName,
+      folder,
+      fileBuffer,
+    }, {
+      headers: { Authorization: `Bearer ${token}` },
+      onUploadProgress: (progressEvent) => {
+        if (progressEvent.total) {
+          const percent = Math.round((progressEvent.loaded * 100) / progressEvent.total);
+          setUploadProgress(percent);
+        }
+      }
+    });
+  
+    return response.data.fileUrl;
+  };
+  
+
   const saveInvitation = async () => {
     try {
       setIsUploading(true);
       setUploadProgress(0);
-
+  
       let uploadedBackgroundUrl = backgroundImage;
       let uploadedSectionBackgroundUrl = cardBackgroundImage;
       let uploadedMusicUrl = musicUrl;
-
+  
       if (sectionData.backgroundImageFile) {
-        const buffer = await fileToArrayBuffer(sectionData.backgroundImageFile);
-        const fileBuffer = arrayBufferToBase64(buffer);
-        const sanitizedFileName = sectionData.backgroundImageFile.name.replace(/\s+/g, '-');
-
-        await axios.post("/api/storage/upload", {
-          fileName: sanitizedFileName,
-          folder: "premium-invitations",
-          fileBuffer,
-        }, {
-          headers: { Authorization: `Bearer ${token}` },
-          onUploadProgress: (progressEvent) => {
-            if (progressEvent.total) {
-              const percent = Math.round((progressEvent.loaded * 100) / progressEvent.total);
-              setUploadProgress(percent);
-            }
-          }
-        }).then(res => {
-          uploadedBackgroundUrl = res.data.fileUrl;
-        });
+        uploadedBackgroundUrl = await uploadStorage(sectionData.backgroundImageFile, "premium-invitations");
       }
-
+  
       if (sectionData.cardBackgroundImageFile) {
-        const buffer = await fileToArrayBuffer(sectionData.cardBackgroundImageFile);
-        const fileBuffer = arrayBufferToBase64(buffer);
-        const sanitizedFileName = sectionData.cardBackgroundImageFile.name.replace(/\s+/g, '-');
-
-        await axios.post("/api/storage/upload", {
-          fileName: sanitizedFileName,
-          folder: "premium-invitations",
-          fileBuffer,
-        }, {
-          headers: { Authorization: `Bearer ${token}` },
-          onUploadProgress: (progressEvent) => {
-            if (progressEvent.total) {
-              const percent = Math.round((progressEvent.loaded * 100) / progressEvent.total);
-              setUploadProgress(percent);
-            }
-          }
-        }).then(res => {
-          uploadedSectionBackgroundUrl = res.data.fileUrl;
-        });
+        uploadedSectionBackgroundUrl = await uploadStorage(sectionData.cardBackgroundImageFile, "premium-invitations");
       }
-
+  
       if (sectionData.musicFile) {
-        const buffer = await fileToArrayBuffer(sectionData.musicFile);
-        const fileBuffer = arrayBufferToBase64(buffer);
-        const sanitizedFileName = sectionData.musicFile.name.replace(/\s+/g, '-');
-
-        await axios.post("/api/storage/upload-song", {
-          fileName: sanitizedFileName,
-          folder: "premium-invitations",
-          fileBuffer,
-        }, {
-          headers: { Authorization: `Bearer ${token}` },
-          onUploadProgress: (progressEvent) => {
-            if (progressEvent.total) {
-              const percent = Math.round((progressEvent.loaded * 100) / progressEvent.total);
-              setUploadProgress(percent);
-            }
-          }
-        }).then(res => {
-          uploadedMusicUrl = res.data.fileUrl;
-        });
+        uploadedMusicUrl = await uploadStorage(sectionData.musicFile, "premium-invitations", "/api/storage/upload-song");
       }
+  
+      const processedSectionData = { ...sectionData };
+  
+      for (const sectionId of activeSectionOrder) {
+        const section = sectionData[sectionId];
+        if (!section) continue;
+  
+        const newSection = { ...section };
+  
+        // Subir archivos simples terminados en File
+        for (const key in newSection) {
+          if (key.endsWith("File") && newSection[key] instanceof File) {
+            const fileKey = key;
+            const baseKey = key.replace("File", "");
+  
+            const uploadedUrl = await uploadStorage(newSection[fileKey], "premium-invitations");
+            newSection[baseKey] = uploadedUrl;
+            delete newSection[fileKey];
+          }
+        }
+  
+        // Subir imágenes del arreglo 'images' (carousel)
+        if (Array.isArray(newSection.images)) {
+          newSection.images = await Promise.all(
+            newSection.images.map(async (imgObj) => {
+              if (imgObj?.file instanceof File) {
+                const uploadedUrl = await uploadStorage(imgObj.file, "premium-invitations");
+                return { ...imgObj, src: uploadedUrl, file: undefined };
+              }
+              return imgObj;
+            })
+          );
+        }
+  
+        // Subir avatares del arreglo 'familyMembers'
+        if (Array.isArray(newSection.familyMembers)) {
+          newSection.familyMembers = await Promise.all(
+            newSection.familyMembers.map(async (member) => {
+              if (member?.avatarFile instanceof File) {
+                const uploadedUrl = await uploadStorage(member.avatarFile, "premium-invitations");
+                return { ...member, avatar: uploadedUrl, avatarFile: undefined };
+              }
+              return member;
+            })
+          );
+        }
+  
+        // Subir avatares del arreglo 'contacts'
+        if (Array.isArray(newSection.contacts)) {
+          newSection.contacts = await Promise.all(
+            newSection.contacts.map(async (contact) => {
+              if (contact?.avatarFile instanceof File) {
+                const uploadedUrl = await uploadStorage(contact.avatarFile, "premium-invitations");
+                return { ...contact, avatar: uploadedUrl, avatarFile: undefined };
+              }
+              return contact;
+            })
+          );
+        }
+  
+        processedSectionData[sectionId] = newSection;
+      }
+  
+      const allSectionIds = [...activeSectionOrder, ...inactiveSectionOrder];
 
+      const sectionsPayload = allSectionIds.map((id, index) => {
+      const updated = processedSectionData[id];
+      const backup = premiumInvitationSections?.find(sec => sec.type === id)?.data;
+      return {
+        type: id,
+        version: "1.0.0",
+        order: index,
+        data: updated || backup || {}
+      };
+    });
+
+  
       const metadata = {
         activeSections: activeSectionOrder,
         inactiveSections: inactiveSectionOrder,
+        sections: sectionsPayload,
         otherData: {
-          ...sectionData,
+          ...processedSectionData,
           backgroundUrl: uploadedBackgroundUrl,
           sectionBackgroundUrl: uploadedSectionBackgroundUrl,
           songUrl: uploadedMusicUrl,
           eventId,
         },
       };
-
-    await axios.post('/api/premium-invitation/update', metadata);
-
-    Modal.success({
-      title: '¡Invitación guardada!',
-      content: 'Tu invitación ha sido guardada correctamente.',
-      centered: true,
-      okText: 'Aceptar'
-    });
-
-    console.log('Guardado correctamente');
-  } catch (error) {
-    console.error('Error guardando la invitación:', error);
-    Modal.error({
-      title: 'Error al guardar',
-      content: 'Ocurrió un problema al guardar la invitación. Intenta de nuevo.',
-      centered: true,
-      okText: 'Aceptar'
-    });
-  } finally {
-    setIsUploading(false);
-    setUploadProgress(0);
-  }
-};
+  
+      await axios.post('/api/premium-invitation/update', metadata);
+  
+      Modal.success({
+        title: '¡Invitación guardada!',
+        content: 'Tu invitación ha sido guardada correctamente.',
+        centered: true,
+        okText: 'Aceptar'
+      });
+    } catch (error) {
+      console.error('Error guardando la invitación:', error);
+      Modal.error({
+        title: 'Error al guardar',
+        content: 'Ocurrió un problema al guardar la invitación. Intenta de nuevo.',
+        centered: true,
+        okText: 'Aceptar'
+      });
+    } finally {
+      setIsUploading(false);
+      setUploadProgress(0);
+    }
+  };  
       
   return (
     
@@ -282,6 +332,7 @@ const PremiumInvitationPage = () => {
                       <Card className='card-invitation' style={{ textAlign: "center", backgroundImage: `url(${cardBackgroundImage})` }}>
                         <Component
                           isEditing={isEditing}
+                          sectionData={sectionData[id]} 
                           cardBackgroundImage={cardBackgroundImage}
                           onDataChange={(data) =>
                           setSectionData(prev => ({ ...prev, [id]: data }))
