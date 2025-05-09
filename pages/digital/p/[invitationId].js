@@ -44,6 +44,8 @@ const PremiumInvitationPage = () => {
   const [musicUrl, setMusicUrl] = useState(null)
   const [isLoading, setIsLoading] = useState(true)
   const [invitated, setInvitated] = useState(null)
+
+  const eventDate = invitated?.event?.eventDate
   
   useEffect(() => {
     if (!invitationId) return
@@ -128,6 +130,7 @@ const PremiumInvitationPage = () => {
                       <div className={`section-${id}`} id={`section-${id}`}>
                         <Card className='card-invitation' style={{ textAlign: "center", backgroundImage: `url(${cardBackgroundImage})` }}>
                           <Component
+                            eventDate={eventDate}
                             invitated={invitated}
                             invitationId={invitationId}
                             isEditing={false}

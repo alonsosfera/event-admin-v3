@@ -1,14 +1,21 @@
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { Image, Typography, Button, Upload } from "antd"
 import { UploadOutlined } from "@ant-design/icons"
 
 const { Title, Text } = Typography
 
-const PremiumInvitationCover = ({ isEditing, onDataChange, sectionData }) => {
+const PremiumInvitationCover = ({ isEditing, onDataChange, sectionData, eventDate }) => {
   
   const [titleText, setTitleText] = useState(sectionData?.titleText || "Carla & Luis")
   const [subtitleText, setSubtitleText] = useState(sectionData?.subtitleText || "¡Estás invitado a compartir este día tan especial con nosotros!")
   const [imageUrl, setImageUrl] = useState(sectionData?.image || "/assets/boda2.webp")
+  
+  const [days, setDays] = useState(0)
+  const [hours, setHours] = useState(0)
+  const [minutes, setMinutes] = useState(0)
+  const [seconds, setSeconds] = useState(0)
+  
+  const targetDate = new Date(eventDate).getTime()
 
   const handleTitleChange = (value) => {
     setTitleText(value)
@@ -26,6 +33,29 @@ const PremiumInvitationCover = ({ isEditing, onDataChange, sectionData }) => {
     onDataChange?.({ titleText, subtitleText, imageUrl: url, imageFile: file })
     return false 
   }
+
+  useEffect(() => {
+    const intervalId = setInterval(() => {
+      const now = new Date().getTime()
+      const timeRemaining = targetDate - now
+
+      if (timeRemaining <= 0) {
+        clearInterval(intervalId)
+      } else {
+        const d = Math.floor(timeRemaining / (1000 * 60 * 60 * 24))
+        const h = Math.floor((timeRemaining % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60))
+        const m = Math.floor((timeRemaining % (1000 * 60 * 60)) / (1000 * 60))
+        const s = Math.floor((timeRemaining % (1000 * 60)) / 1000)
+
+        setDays(d)
+        setHours(h)
+        setMinutes(m)
+        setSeconds(s)
+      }
+    }, 1000)
+
+    return () => clearInterval(intervalId)
+  }, [targetDate])
 
   return (
     <>
@@ -97,19 +127,19 @@ const PremiumInvitationCover = ({ isEditing, onDataChange, sectionData }) => {
           <div className="wp-block-uagb-countdown">
             <div className="countdown-container">
               <div className="countdown-item">
-                <span className="countdown-number" id="days">10</span>
+                <span className="countdown-number" id="days">{days}</span>
                 <span className="countdown-label">Días</span>
               </div>
               <div className="countdown-item">
-                <span className="countdown-number" id="hours">20</span>
+                <span className="countdown-number" id="hours">{hours}</span>
                 <span className="countdown-label">Horas</span>
               </div>
               <div className="countdown-item">
-                <span className="countdown-number" id="minutes">30</span>
+                <span className="countdown-number" id="minutes">{minutes}</span>
                 <span className="countdown-label">Minutos</span>
               </div>
               <div className="countdown-item">
-                <span className="countdown-number" id="seconds">40</span>
+                <span className="countdown-number" id="seconds">{seconds}</span>
                 <span className="countdown-label">Segundos</span>
               </div>
             </div>
