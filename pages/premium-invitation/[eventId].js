@@ -59,6 +59,41 @@ const PremiumInvitationPage = () => {
   const [isUploading, setIsUploading] = useState(false)
   const [premiumInvitationSections, setPremiumInvitationSections] = useState(null)
   const [eventDate, setEventDate] = useState(null)
+  const [hasUnsavedChanges, setHasUnsavedChanges] = useState(null)
+
+  useEffect(() => {
+    const handleBeforeUnload = (e) => {
+      if (hasUnsavedChanges) {
+        const message = "Tienes cambios sin guardar. ¿Estás seguro de que quieres salir?";
+        e.returnValue = message;
+        return message;
+      }
+    };
+
+    window.addEventListener("beforeunload", handleBeforeUnload);
+
+    return () => {
+      window.removeEventListener("beforeunload", handleBeforeUnload);
+    };
+  }, [hasUnsavedChanges]);
+
+  useEffect(() => {
+    const handleRouteChange = () => {
+      if (hasUnsavedChanges) {
+        const confirmLeave = window.confirm("Tienes cambios sin guardar. ¿Estás seguro de que quieres salir?");
+        if (!confirmLeave) {
+          router.events.emit("routeChangeError");
+          throw "routeChangeError";
+        }
+      }
+    };
+
+    router.events.on("beforeHistoryChange", handleRouteChange);
+
+    return () => {
+      router.events.off("beforeHistoryChange", handleRouteChange);
+    };
+  }, [hasUnsavedChanges]);
 
   useEffect(() => {
     if (!eventId) return
@@ -147,6 +182,7 @@ const PremiumInvitationPage = () => {
     try {
       setIsUploading(true)
       setUploadProgress(0)
+      setHasUnsavedChanges(false);
 
       let uploadedBackgroundUrl = backgroundImage
       let uploadedSectionBackgroundUrl = cardBackgroundImage
@@ -154,14 +190,20 @@ const PremiumInvitationPage = () => {
 
       if (sectionData.backgroundImageFile) {
         uploadedBackgroundUrl = await uploadStorage(sectionData.backgroundImageFile, IMAGE_FOLDER)
+      } else if (backgroundImage === "/assets/background1.jpg") {
+        uploadedBackgroundUrl = undefined
       }
-
+  
       if (sectionData.cardBackgroundImageFile) {
         uploadedSectionBackgroundUrl = await uploadStorage(sectionData.cardBackgroundImageFile, IMAGE_FOLDER)
+      } else if (cardBackgroundImage === "/assets/background1.jpg") {
+        uploadedSectionBackgroundUrl = undefined
       }
-
+  
       if (sectionData.musicFile) {
         uploadedMusicUrl = await uploadStorage(sectionData.musicFile, AUDIO_FOLDER, "/api/storage/upload-song")
+      } else if (musicUrl === "/assets/thousand-years.mp3") {
+        uploadedMusicUrl = undefined
       }
 
       const processedSectionData = { ...sectionData }
@@ -269,6 +311,9 @@ const PremiumInvitationPage = () => {
     }
   }
 
+  console.log(hasUnsavedChanges);
+  
+
   return (
     <Layout className='layout-sidebar' style={{ minHeight: '100vh' }}>
       {isEditing && (
@@ -279,6 +324,7 @@ const PremiumInvitationPage = () => {
           inactiveSectionOrder={inactiveSectionOrder}
           setInactiveSectionOrder={setInactiveSectionOrder}
           onDataChange={(data) => {
+            setHasUnsavedChanges(true);
             setSectionData(prev => ({ ...prev, ...data }))
             if (data.backgroundImage) setBackgroundImage(data.backgroundImage)
             if (data.cardBackgroundImage) setCardBackgroundImage(data.cardBackgroundImage)
@@ -288,6 +334,7 @@ const PremiumInvitationPage = () => {
           saveInvitation={saveInvitation}
           isUploading={isUploading}
           uploadProgress={uploadProgress}
+          setHasUnsavedChanges={setHasUnsavedChanges}
         />
       )}
 
@@ -322,9 +369,10 @@ const PremiumInvitationPage = () => {
                             isEditing={isEditing}
                             sectionData={sectionData[id]}
                             cardBackgroundImage={cardBackgroundImage}
-                            onDataChange={(data) =>
-                              setSectionData(prev => ({ ...prev, [id]: data }))
-                            }
+                            onDataChange={(data) => {
+                              setHasUnsavedChanges(true)
+                              setSectionData(prev => ({ ...prev, [id]: data }))  
+                            }}
                           />
                         </Card>
                       </div>
