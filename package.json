@@ -14,6 +14,7 @@
     "@aws-sdk/client-s3": "^3.577.0",
     "@aws-sdk/s3-request-presigner": "^3.583.0",
     "@ffmpeg/ffmpeg": "^0.12.15",
+    "@ffmpeg/util": "^0.12.2",
     "@prisma/client": "^5.10.2",
     "@vercel/og": "^0.6.5",
     "antd": "^5.12.5",

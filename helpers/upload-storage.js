@@ -1,13 +1,13 @@
 import axios from 'axios'
 import imageCompression from 'browser-image-compression'
+import { FFmpeg } from '@ffmpeg/ffmpeg'
+import { fetchFile } from '@ffmpeg/util'
 
 let ffmpegInstance = null
 
 async function getFFmpeg() {
   if (!ffmpegInstance) {
-    const { createFFmpeg, fetchFile } = await import('@ffmpeg/ffmpeg')
-    ffmpegInstance = createFFmpeg({ log: false })
-    ffmpegInstance.fetchFile = fetchFile
+    ffmpegInstance = new FFmpeg()
     await ffmpegInstance.load()
   }
   return ffmpegInstance
@@ -26,18 +26,32 @@ async function compressImage(file) {
 }
 
 async function compressAudio(file) {
-  const ffmpeg = await getFFmpeg()
-
-  const inputFile = 'input.mp3'
-  const outputFile = 'output.mp3'
-
-  ffmpeg.FS('writeFile', inputFile, await ffmpeg.fetchFile(file))
-  await ffmpeg.run('-i', inputFile, '-b:a', '64k', outputFile)
-
-  const data = ffmpeg.FS('readFile', outputFile)
-  const blob = new Blob([data.buffer], { type: 'audio/mpeg' })
-
-  return new File([blob], file.name, { type: 'audio/mpeg' })
+  try {
+    const ffmpeg = await getFFmpeg()
+    
+    await ffmpeg.writeFile('input.mp3', await fetchFile(file))
+    
+    await ffmpeg.exec([
+      '-i', 'input.mp3',
+      '-codec:a', 'libmp3lame',
+      '-b:a', '64k',
+      '-ac', '1',
+      'output.mp3'
+    ])
+    
+    const data = await ffmpeg.readFile('output.mp3')
+    
+    const compressedFile = new File(
+      [data],
+      file.name.replace(/\.[^/.]+$/, '.mp3'),
+      { type: 'audio/mpeg' }
+    )
+    
+    return compressedFile
+  } catch (error) {
+    console.error('Error comprimiendo audio:', error)
+    throw error
+  }
 }
 
 function fileToArrayBuffer(file) {
@@ -56,7 +70,7 @@ function arrayBufferToBase64(buffer) {
   return window.btoa(binary)
 }
 
-export async function uploadStorage(file, folder, endpoint = '/api/storage/premium-image', setUploadProgress, token) {
+export async function uploadStorage(file, folder, endpoint = '/api/storage/premium-image-song', setUploadProgress, token) {
   try {
     if (file.type.startsWith('image/')) {
       file = await compressImage(file)
@@ -73,6 +87,12 @@ export async function uploadStorage(file, folder, endpoint = '/api/storage/premi
 
     const buffer = await fileToArrayBuffer(file)
     const fileBuffer = arrayBufferToBase64(buffer)
+
+
+    if (file.size === 0) {
+      throw new Error('El archivo está vacío. Posiblemente ocurrió un error al comprimir el audio.');
+    }
+
 
     const response = await axios.post(
       endpoint,
