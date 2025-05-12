@@ -134,7 +134,7 @@ const PremiumInvitationPage = () => {
       uploadedBackgroundUrl = await uploadStorage(
         sectionData.backgroundImageFile,
         IMAGE_FOLDER,
-        '/api/storage/upload',
+        '/api/storage/premium-image',
         setUploadProgress,
         token
       )
@@ -144,7 +144,7 @@ const PremiumInvitationPage = () => {
       uploadedSectionBackgroundUrl = await uploadStorage(
         sectionData.cardBackgroundImageFile,
         IMAGE_FOLDER,
-        '/api/storage/upload',
+        '/api/storage/premium-image',
         setUploadProgress,
         token
       )
@@ -154,7 +154,7 @@ const PremiumInvitationPage = () => {
       uploadedMusicUrl = await uploadStorage(
         sectionData.musicFile,
         AUDIO_FOLDER,
-        '/api/storage/upload-song',
+        '/api/storage/premium-image-song',
         setUploadProgress,
         token
       )
@@ -173,7 +173,7 @@ const PremiumInvitationPage = () => {
           const uploadedUrl = await uploadStorage(
             newSection[key],
             IMAGE_FOLDER,
-            '/api/storage/upload',
+            '/api/storage/premium-image',
             setUploadProgress,
             token
           )
@@ -189,7 +189,7 @@ const PremiumInvitationPage = () => {
               const uploadedUrl = await uploadStorage(
                 imgObj.file,
                 IMAGE_FOLDER,
-                '/api/storage/upload',
+                '/api/storage/premium-image',
                 setUploadProgress,
                 token
               )
@@ -207,7 +207,7 @@ const PremiumInvitationPage = () => {
               const uploadedUrl = await uploadStorage(
                 member.avatarFile,
                 IMAGE_FOLDER,
-                '/api/storage/upload',
+                '/api/storage/premium-image',
                 setUploadProgress,
                 token
               )
@@ -225,7 +225,7 @@ const PremiumInvitationPage = () => {
               const uploadedUrl = await uploadStorage(
                 contact.avatarFile,
                 IMAGE_FOLDER,
-                '/api/storage/upload',
+                '/api/storage/premium-image',
                 setUploadProgress,
                 token
               )

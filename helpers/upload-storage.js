@@ -1,7 +1,6 @@
 import axios from 'axios'
 import imageCompression from 'browser-image-compression'
 
-// Lazy load del ffmpeg
 let ffmpegInstance = null
 
 async function getFFmpeg() {
@@ -14,7 +13,6 @@ async function getFFmpeg() {
   return ffmpegInstance
 }
 
-// Comprimir imagen como .webp
 async function compressImage(file) {
   const options = {
     maxSizeMB: 1,
@@ -27,7 +25,6 @@ async function compressImage(file) {
   return await imageCompression(file, options)
 }
 
-// Comprimir MP3 con ffmpeg.wasm
 async function compressAudio(file) {
   const ffmpeg = await getFFmpeg()
 
@@ -59,7 +56,6 @@ function arrayBufferToBase64(buffer) {
   return window.btoa(binary)
 }
 
-// Función principal
 export async function uploadStorage(file, folder, endpoint = '/api/storage/premium-image', setUploadProgress, token) {
   try {
     if (file.type.startsWith('image/')) {
@@ -68,7 +64,6 @@ export async function uploadStorage(file, folder, endpoint = '/api/storage/premi
       file = await compressAudio(file)
     }
 
-    // Reemplazar extensión por la correcta según el tipo MIME
     let originalName = file.name.replace(/\s+/g, '-')
     if (file.type === 'image/webp') {
       originalName = originalName.replace(/\.[^/.]+$/, '.webp')
