@@ -45,6 +45,9 @@ const PremiumInvitationPage = () => {
   const [isLoading, setIsLoading] = useState(true)
   const [invitated, setInvitated] = useState(null)
   const [invitationNotFound, setInvitationNotFound] = useState(false)
+  const [globalTitleColor, setGlobalTitleColor] = useState('#4c4c4c')
+  const [globalSubtitleColor, setGlobalSubtitleColor] = useState('#7f8c8d')
+  const [globalTypography, setGlobalTypography] = useState('')
 
   const eventDate = invitated?.event?.eventDate
   
@@ -67,6 +70,12 @@ const PremiumInvitationPage = () => {
         setBackgroundImage(premiumInvitation.backgroundUrl || "/assets/background1.jpg")
         setCardBackgroundImage(premiumInvitation.sectionBackgroundUrl || "/assets/background1.jpg")
         setMusicUrl(premiumInvitation.songUrl || "/assets/thousand-years.mp3")
+        
+        if (premiumInvitation.styles) {
+          setGlobalTitleColor(premiumInvitation.styles.globalTitleColor || '#4c4c4c')
+          setGlobalSubtitleColor(premiumInvitation.styles.globalSubtitleColor || '#7f8c8d')
+          setGlobalTypography(premiumInvitation.styles.globalTypography || '')
+        }
 
         const newSectionData = {}
 
@@ -160,6 +169,9 @@ const PremiumInvitationPage = () => {
                             isEditing={false}
                             sectionData={sectionData[id]}
                             cardBackgroundImage={cardBackgroundImage}
+                            globalTitleColor={globalTitleColor}
+                            globalSubtitleColor={globalSubtitleColor}
+                            globalTypography={globalTypography}
                           />
                         </Card>
                       </div>
