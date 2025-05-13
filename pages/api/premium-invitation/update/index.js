@@ -24,6 +24,7 @@ export default async function handler(req, res) {
     const songUrl = otherData.songUrl || '';
     const globalTitleColor = otherData.globalTitleColor || '';
     const globalSubtitleColor = otherData.globalSubtitleColor || '';
+    const globalTypography = otherData.globalTypography || '';
 
 
     const premiumInvitation = await prisma.premiumInvitation.update({
@@ -34,7 +35,8 @@ export default async function handler(req, res) {
         songUrl,
         styles: {
           globalTitleColor,
-          globalSubtitleColor,  
+          globalSubtitleColor,
+          globalTypography,  
         },
       },
     });
