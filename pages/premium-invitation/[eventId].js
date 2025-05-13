@@ -76,6 +76,10 @@ const PremiumInvitationPage = () => {
     });
   }, [globalTypography]);
 
+
+  console.log(globalTitleColor, globalSubtitleColor);
+
+
   useEffect(() => {
     const handleBeforeUnload = (e) => {
       if (hasUnsavedChanges) {
@@ -325,6 +329,9 @@ const PremiumInvitationPage = () => {
           eventId,
         },
       }
+
+      console.log(metadata);
+
 
       await axios.post('/api/premium-invitation/update', metadata)
 

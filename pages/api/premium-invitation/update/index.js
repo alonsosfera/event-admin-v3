@@ -13,7 +13,7 @@ export default async function handler(req, res) {
 
   try {
     const { activeSections, otherData } = req.body;
-    
+
     const eventId = otherData?.eventId;
     if (!eventId) {
       return res.status(400).json({ message: 'Missing eventId' });
@@ -36,7 +36,7 @@ export default async function handler(req, res) {
         styles: {
           globalTitleColor,
           globalSubtitleColor,
-          globalTypography,  
+          globalTypography,
         },
       },
     });
