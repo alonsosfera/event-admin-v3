@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react"
-import { Image, Typography, Button, Upload } from "antd"
+import { Image, Typography, Button, Upload, ColorPicker } from "antd"
 import { UploadOutlined } from "@ant-design/icons"
 
 const { Title, Text } = Typography
@@ -9,6 +9,8 @@ const PremiumInvitationCover = ({ isEditing, onDataChange, sectionData, eventDat
   const [titleText, setTitleText] = useState(sectionData?.titleText || "Carla & Luis")
   const [subtitleText, setSubtitleText] = useState(sectionData?.subtitleText || "¡Estás invitado a compartir este día tan especial con nosotros!")
   const [imageUrl, setImageUrl] = useState(sectionData?.image || "/assets/boda2.webp")
+  const [titleColor, setTitleColor] = useState(sectionData?.titleColor || "#1677ff")
+  const [subtitleColor, setSubtitleColor] = useState(sectionData?.subtitleColor || "#8f8f8f")
   
   const [days, setDays] = useState(0)
   const [hours, setHours] = useState(0)
@@ -19,19 +21,31 @@ const PremiumInvitationCover = ({ isEditing, onDataChange, sectionData, eventDat
 
   const handleTitleChange = (value) => {
     setTitleText(value)
-    onDataChange?.({ titleText: value, subtitleText })
+    onDataChange?.({ titleText: value, subtitleText, titleColor, subtitleColor })
   }
 
   const handleSubtitleChange = (value) => {
     setSubtitleText(value)
-    onDataChange?.({ titleText, subtitleText: value })
+    onDataChange?.({ titleText, subtitleText: value, titleColor, subtitleColor })
   }
 
   const handleImageChange = (file) => {
     const url = URL.createObjectURL(file)
     setImageUrl(url)
-    onDataChange?.({ titleText, subtitleText, imageUrl: url, imageFile: file })
+    onDataChange?.({ titleText, subtitleText, imageUrl: url, imageFile: file, titleColor, subtitleColor })
     return false 
+  }
+
+  const handleTitleColorChange = (color) => {
+    const newColor = color.toHexString()
+    setTitleColor(newColor)
+    onDataChange?.({ titleText, subtitleText, titleColor: newColor, subtitleColor })
+  }
+
+  const handleSubtitleColorChange = (color) => {
+    const newColor = color.toHexString()
+    setSubtitleColor(newColor)
+    onDataChange?.({ titleText, subtitleText, titleColor, subtitleColor: newColor })
   }
 
   useEffect(() => {
@@ -84,7 +98,7 @@ const PremiumInvitationCover = ({ isEditing, onDataChange, sectionData, eventDat
             style={{
               fontSize: '50px',
               fontWeight: 'bold',
-              color: 'green',
+              color: titleColor,
               margin: 0,
               '@media (maxWidth: 768px)': {
                 fontSize: '30px',
@@ -93,6 +107,13 @@ const PremiumInvitationCover = ({ isEditing, onDataChange, sectionData, eventDat
           >
             {titleText}
           </Title>
+          {isEditing && (
+            <ColorPicker
+              value={titleColor}
+              onChange={handleTitleColorChange}
+              size="small"
+            />
+          )}
         </div>
 
         <div style={{
@@ -112,7 +133,7 @@ const PremiumInvitationCover = ({ isEditing, onDataChange, sectionData, eventDat
             }
             style={{
               fontSize: '20px',
-              color: '#8f8f8f',
+              color: subtitleColor,
               display: 'block',
               '@media (maxWidth: 768px)': {
                 fontSize: '16px',
@@ -121,6 +142,13 @@ const PremiumInvitationCover = ({ isEditing, onDataChange, sectionData, eventDat
           >
             {subtitleText}
           </Text>
+          {isEditing && (
+            <ColorPicker
+              value={subtitleColor}
+              onChange={handleSubtitleColorChange}
+              size="small"
+            />
+          )}
         </div>
 
         <div className="text">
