@@ -62,11 +62,8 @@ const PremiumInvitationPage = () => {
   const [hasUnsavedChanges, setHasUnsavedChanges] = useState(null)
   const [globalTitleColor, setGlobalTitleColor] = useState('#4c4c4c')
   const [globalSubtitleColor, setGlobalSubtitleColor] = useState('#7f8c8d')
-
-
-  console.log(globalTitleColor, globalSubtitleColor);
+  const [globalTypography, setGlobalTypography] = useState('')
   
-
   useEffect(() => {
     const handleBeforeUnload = (e) => {
       if (hasUnsavedChanges) {
@@ -118,6 +115,7 @@ const PremiumInvitationPage = () => {
           if (data.styles) {
             setGlobalTitleColor(data.styles.globalTitleColor || '#4c4c4c')
             setGlobalSubtitleColor(data.styles.globalSubtitleColor || '#7f8c8d')
+            setGlobalTypography(data.styles.globalTypography || '')
           }
 
           const newSectionData = {}
@@ -297,15 +295,13 @@ const PremiumInvitationPage = () => {
           songUrl: uploadedMusicUrl,
           styles: {
           globalTitleColor,
-          globalSubtitleColor
+          globalSubtitleColor,
+          globalTypography,
         },
           eventId,
         },
       }
-
-      console.log(metadata);
       
-
       await axios.post('/api/premium-invitation/update', metadata)
 
       Modal.success({
@@ -345,6 +341,7 @@ const PremiumInvitationPage = () => {
             if (data.musicUrl) setMusicUrl(data.musicUrl)
             if (data.globalTitleColor) setGlobalTitleColor(data.globalTitleColor)
             if (data.globalSubtitleColor) setGlobalSubtitleColor(data.globalSubtitleColor)
+            if (data.globalTypography) setGlobalTypography(data.globalTypography)
           }}
           setIsPlaying={setIsPlaying}
           saveInvitation={saveInvitation}
@@ -387,6 +384,7 @@ const PremiumInvitationPage = () => {
                             cardBackgroundImage={cardBackgroundImage}
                             globalTitleColor={globalTitleColor}
                             globalSubtitleColor={globalSubtitleColor}
+                            globalTypography={globalTypography}
                             onDataChange={(data) => {
                               setHasUnsavedChanges(true)
                               setSectionData(prev => ({ ...prev, [id]: data }))  
