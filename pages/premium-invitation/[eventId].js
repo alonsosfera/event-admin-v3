@@ -63,6 +63,10 @@ const PremiumInvitationPage = () => {
   const [globalTitleColor, setGlobalTitleColor] = useState('#4c4c4c')
   const [globalSubtitleColor, setGlobalSubtitleColor] = useState('#7f8c8d')
 
+
+  console.log(globalTitleColor, globalSubtitleColor);
+  
+
   useEffect(() => {
     const handleBeforeUnload = (e) => {
       if (hasUnsavedChanges) {
@@ -111,6 +115,10 @@ const PremiumInvitationPage = () => {
           setPremiumInvitationSections(data.sections)
           setEventDate(data.event.eventDate)
           
+          if (data.styles) {
+            setGlobalTitleColor(data.styles.globalTitleColor || '#4c4c4c')
+            setGlobalSubtitleColor(data.styles.globalSubtitleColor || '#7f8c8d')
+          }
 
           const newSectionData = {}
 
@@ -287,9 +295,16 @@ const PremiumInvitationPage = () => {
           backgroundUrl: uploadedBackgroundUrl,
           sectionBackgroundUrl: uploadedSectionBackgroundUrl,
           songUrl: uploadedMusicUrl,
+          styles: {
+          globalTitleColor,
+          globalSubtitleColor
+        },
           eventId,
         },
       }
+
+      console.log(metadata);
+      
 
       await axios.post('/api/premium-invitation/update', metadata)
 
@@ -312,10 +327,7 @@ const PremiumInvitationPage = () => {
       setUploadProgress(0)
     }
   }
-
-  console.log(hasUnsavedChanges);
   
-
   return (
     <Layout className='layout-sidebar' style={{ minHeight: '100vh' }}>
       {isEditing && (

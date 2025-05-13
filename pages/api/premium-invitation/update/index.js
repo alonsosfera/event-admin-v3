@@ -22,6 +22,9 @@ export default async function handler(req, res) {
     const backgroundUrl = otherData.backgroundUrl || '';
     const sectionBackgroundUrl = otherData.sectionBackgroundUrl || '';
     const songUrl = otherData.songUrl || '';
+    const globalTitleColor = otherData.globalTitleColor || '';
+    const globalSubtitleColor = otherData.globalSubtitleColor || '';
+
 
     const premiumInvitation = await prisma.premiumInvitation.update({
       where: { eventId },
@@ -29,6 +32,10 @@ export default async function handler(req, res) {
         backgroundUrl,
         sectionBackgroundUrl,
         songUrl,
+        styles: {
+          globalTitleColor,
+          globalSubtitleColor,  
+        },
       },
     });
 
