@@ -4,7 +4,7 @@ import { UploadOutlined } from "@ant-design/icons"
 
 const { Title, Text } = Typography
 
-const PremiumInvitationPlace = ({ isEditing, onDataChange, sectionData }) => {
+const PremiumInvitationPlace = ({ isEditing, onDataChange, sectionData, globalTitleColor, globalSubtitleColor }) => {
   const [data, setData] = useState({
     section1Title: sectionData?.section1Title || "Ceremonia",
     section1Title2: sectionData?.section1Title2 || "Basílica de Guadalupe Monterrey",
@@ -46,13 +46,13 @@ const PremiumInvitationPlace = ({ isEditing, onDataChange, sectionData }) => {
       <div style={{ textAlign: 'center' }}>
         <Row gutter={[24, 24]}>
           <Col xs={24}>
-            <Title level={1} style={{ color: '#4c4c4c', marginBottom: '10px', fontWeight: 'bold' }}>
+            <Title level={1} style={{ color: globalTitleColor, marginBottom: '10px', fontWeight: 'bold' }}>
               ¿Dónde & Cuándo?
             </Title>
           </Col>
 
           <Col xs={24} sm={12}>
-            <Title level={3} style={{ color: '#4c4c4c', marginBottom: '10px', fontWeight: 'bold' }}
+            <Title level={3} style={{ color: globalTitleColor, marginBottom: '10px', fontWeight: 'bold' }}
               editable={isEditing ? {
               triggerType: ['icon', 'text'],
               onChange: (val) => updateData("section1Title", val),
@@ -84,35 +84,35 @@ const PremiumInvitationPlace = ({ isEditing, onDataChange, sectionData }) => {
                 triggerType: ['icon', 'text'],
                 onChange: (val) => updateData("section1Title2", val),
               } : false}
-              style={{ color: '#4c4c4c', marginBottom: '10px', fontWeight: 'bold' }}
+              style={{ color: globalTitleColor, marginBottom: '10px', fontWeight: 'bold' }}
             >
               {data.section1Title2}
             </Title>
-            <Text style={{ fontSize: '18px', color: '#7f8c8d', fontWeight: "bold" }}>Fecha: </Text>
+            <Text style={{ fontSize: '18px', color: globalSubtitleColor, fontWeight: "bold" }}>Fecha: </Text>
             <Text
               editable={isEditing ? {
                 triggerType: ['icon', 'text'],
                 onChange: (val) => updateData("section1Subtitle1", val),
               } : false}
-              style={{ fontSize: '18px', color: '#7f8c8d' }}
+              style={{ fontSize: '18px', color: globalSubtitleColor }}
             >
               {data.section1Subtitle1}
             </Text>
             <br />
-            <Text style={{ fontSize: '18px', color: '#7f8c8d', fontWeight: "bold" }}>Dirección: </Text>
+            <Text style={{ fontSize: '18px', color: globalSubtitleColor, fontWeight: "bold" }}>Dirección: </Text>
             <Text
               editable={isEditing ? {
                 triggerType: ['icon', 'text'],
                 onChange: (val) => updateData("section1Subtitle2", val),
               } : false}
-              style={{ fontSize: '18px', color: '#7f8c8d' }}
+              style={{ fontSize: '18px', color: globalSubtitleColor }}
             >
               {data.section1Subtitle2}
             </Text>
           </Col>
 
           <Col xs={24} sm={12}>
-            <Title level={3} style={{ color: '#4c4c4c', marginBottom: '10px', fontWeight: 'bold' }}
+            <Title level={3} style={{ color: globalTitleColor, marginBottom: '10px', fontWeight: 'bold' }}
                 editable={isEditing ? {
                 triggerType: ['icon', 'text'],
                 onChange: (val) => updateData("section2Title", val),
@@ -144,28 +144,28 @@ const PremiumInvitationPlace = ({ isEditing, onDataChange, sectionData }) => {
                 triggerType: ['icon', 'text'],
                 onChange: (val) => updateData("section2Title2", val),
               } : false}
-              style={{ color: '#4c4c4c', marginBottom: '10px', fontWeight: 'bold' }}
+              style={{ color: globalTitleColor, marginBottom: '10px', fontWeight: 'bold' }}
             >
               {data.section2Title2}
             </Title>
-            <Text style={{ fontSize: '18px', color: '#7f8c8d', fontWeight: "bold" }}>Fecha: </Text>
+            <Text style={{ fontSize: '18px', color: globalSubtitleColor, fontWeight: "bold" }}>Fecha: </Text>
             <Text
               editable={isEditing ? {
                 triggerType: ['icon', 'text'],
                 onChange: (val) => updateData("section2Subtitle1", val),
               } : false}
-              style={{ fontSize: '18px', color: '#7f8c8d' }}
+              style={{ fontSize: '18px', color: globalSubtitleColor }}
             >
               {data.section2Subtitle1}
             </Text>
             <br />
-            <Text style={{ fontSize: '18px', color: '#7f8c8d', fontWeight: "bold" }}>Dirección: </Text>
+            <Text style={{ fontSize: '18px', color: globalSubtitleColor, fontWeight: "bold" }}>Dirección: </Text>
             <Text
               editable={isEditing ? {
                 triggerType: ['icon', 'text'],
                 onChange: (val) => updateData("section2Subtitle2", val),
               } : false}
-              style={{ fontSize: '18px', color: '#7f8c8d' }}
+              style={{ fontSize: '18px', color: globalSubtitleColor }}
             >
               {data.section2Subtitle2}
             </Text>

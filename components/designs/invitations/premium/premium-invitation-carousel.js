@@ -4,7 +4,7 @@ import { PlusOutlined, DeleteOutlined, EditOutlined } from "@ant-design/icons";
 
 const { Title, Text } = Typography;
 
-const PremiumInvitationCarousel = ({ isEditing, onDataChange, sectionData }) => {
+const PremiumInvitationCarousel = ({ isEditing, onDataChange, sectionData, globalTitleColor, globalSubtitleColor }) => {
   const [carouselImages, setCarouselImages] = useState([]);
   const [title, setTitle] = useState("Recuerdos Especiales");
   const [subtitle, setSubtitle] = useState("Un vistazo a los momentos que nos han traído hasta aquí");
@@ -69,13 +69,13 @@ const PremiumInvitationCarousel = ({ isEditing, onDataChange, sectionData }) => 
       <div style={{ textAlign: 'center', marginBottom: '20px' }}>
         <Title
           level={2}
-          style={{ color: '#4c4c4c', fontWeight: 'bold' }}
+          style={{ color: globalTitleColor, fontWeight: 'bold' }}
           editable={isEditing ? { triggerType: ['icon', 'text'], onChange: handleTitleChange } : false}
         >
           {title}
         </Title>
         <Text
-          style={{ fontSize: '18px', color: '#7f8c8d' }}
+          style={{ fontSize: '18px', color: globalSubtitleColor }}
           editable={isEditing ? { triggerType: ['icon', 'text'], onChange: handleSubtitleChange } : false}
         >
           {subtitle}

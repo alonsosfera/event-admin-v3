@@ -1,5 +1,5 @@
-import { Layout, Typography, Card, Collapse, Button, Divider, Row, Col, Upload, Progress, Modal, Spin } from 'antd'
-import { AudioOutlined, PictureOutlined, AppstoreAddOutlined } from '@ant-design/icons'
+import { Layout, Typography, Card, Collapse, Button, Divider, Row, Col, Upload, Progress, Modal, Spin, ColorPicker } from 'antd'
+import { AudioOutlined, PictureOutlined, AppstoreAddOutlined, FontColorsOutlined } from '@ant-design/icons'
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd'
 import { useEffect, useState } from 'react'
 
@@ -20,6 +20,8 @@ const InvitationPremiumSideBar = ({
   setHasUnsavedChanges
 }) => {
   const [isClient, setIsClient] = useState(false)
+  const [titleColor, setTitleColor] = useState('#4c4c4c')
+  const [subtitleColor, setSubtitleColor] = useState('#7f8c8d')
 
   useEffect(() => setIsClient(true), [])
 
@@ -90,6 +92,20 @@ const InvitationPremiumSideBar = ({
     }
 
     setHasUnsavedChanges(true);
+  }
+
+  const handleTitleColorChange = (color) => {
+    const newColor = color.toHexString()
+    setTitleColor(newColor)
+    onDataChange?.({ globalTitleColor: newColor })
+    setHasUnsavedChanges(true)
+  }
+
+  const handleSubtitleColorChange = (color) => {
+    const newColor = color.toHexString()
+    setSubtitleColor(newColor)
+    onDataChange?.({ globalSubtitleColor: newColor })
+    setHasUnsavedChanges(true)
   }
 
   const renderDroppableList = (droppableId, title, list) => (
@@ -212,6 +228,30 @@ const InvitationPremiumSideBar = ({
               Fondo de las Cards
             </Button>
           </Upload>
+        </div>
+      )
+    },
+    {
+      key: "2",
+      label: "🎨 Colores de texto",
+      children: (
+        <div className='collapse-buttons' style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
+          <div>
+            <Text strong style={{ display: 'block', marginBottom: 8 }}>Color de títulos</Text>
+            <ColorPicker
+              value={titleColor}
+              onChange={handleTitleColorChange}
+              style={{ width: '100%' }}
+            />
+          </div>
+          <div>
+            <Text strong style={{ display: 'block', marginBottom: 8 }}>Color de subtítulos</Text>
+            <ColorPicker
+              value={subtitleColor}
+              onChange={handleSubtitleColorChange}
+              style={{ width: '100%' }}
+            />
+          </div>
         </div>
       )
     }

@@ -60,6 +60,8 @@ const PremiumInvitationPage = () => {
   const [premiumInvitationSections, setPremiumInvitationSections] = useState(null)
   const [eventDate, setEventDate] = useState(null)
   const [hasUnsavedChanges, setHasUnsavedChanges] = useState(null)
+  const [globalTitleColor, setGlobalTitleColor] = useState('#4c4c4c')
+  const [globalSubtitleColor, setGlobalSubtitleColor] = useState('#7f8c8d')
 
   useEffect(() => {
     const handleBeforeUnload = (e) => {
@@ -341,6 +343,8 @@ const PremiumInvitationPage = () => {
             if (data.backgroundImage) setBackgroundImage(data.backgroundImage)
             if (data.cardBackgroundImage) setCardBackgroundImage(data.cardBackgroundImage)
             if (data.musicUrl) setMusicUrl(data.musicUrl)
+            if (data.globalTitleColor) setGlobalTitleColor(data.globalTitleColor)
+            if (data.globalSubtitleColor) setGlobalSubtitleColor(data.globalSubtitleColor)
           }}
           setIsPlaying={setIsPlaying}
           saveInvitation={saveInvitation}
@@ -381,6 +385,8 @@ const PremiumInvitationPage = () => {
                             isEditing={isEditing}
                             sectionData={sectionData[id]}
                             cardBackgroundImage={cardBackgroundImage}
+                            globalTitleColor={globalTitleColor}
+                            globalSubtitleColor={globalSubtitleColor}
                             onDataChange={(data) => {
                               setHasUnsavedChanges(true)
                               setSectionData(prev => ({ ...prev, [id]: data }))  
