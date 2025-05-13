@@ -330,9 +330,6 @@ const PremiumInvitationPage = () => {
         },
       }
 
-      console.log(metadata);
-
-
       await axios.post('/api/premium-invitation/update', metadata)
 
       Modal.success({
