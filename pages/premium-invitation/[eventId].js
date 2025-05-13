@@ -62,7 +62,7 @@ const PremiumInvitationPage = () => {
   const [hasUnsavedChanges, setHasUnsavedChanges] = useState(null)
   const [globalTitleColor, setGlobalTitleColor] = useState('#4c4c4c')
   const [globalSubtitleColor, setGlobalSubtitleColor] = useState('#7f8c8d')
-  const [globalTypography, setGlobalTypography] = useState('')
+  const [globalTypography, setGlobalTypography] = useState('Lora, serif')
   
   useEffect(() => {
     const handleBeforeUnload = (e) => {
@@ -115,7 +115,7 @@ const PremiumInvitationPage = () => {
           if (data.styles) {
             setGlobalTitleColor(data.styles.globalTitleColor || '#4c4c4c')
             setGlobalSubtitleColor(data.styles.globalSubtitleColor || '#7f8c8d')
-            setGlobalTypography(data.styles.globalTypography || '')
+            setGlobalTypography(data.styles.globalTypography || 'Lora, serif')
           }
 
           const newSectionData = {}
