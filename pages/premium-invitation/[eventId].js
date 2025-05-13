@@ -63,6 +63,10 @@ const PremiumInvitationPage = () => {
   const [globalTitleColor, setGlobalTitleColor] = useState('#4c4c4c')
   const [globalSubtitleColor, setGlobalSubtitleColor] = useState('#7f8c8d')
 
+
+  console.log(globalTitleColor, globalSubtitleColor);
+
+
   useEffect(() => {
     const handleBeforeUnload = (e) => {
       if (hasUnsavedChanges) {
@@ -110,7 +114,11 @@ const PremiumInvitationPage = () => {
           setMusicUrl(data.songUrl || "/assets/thousand-years.mp3")
           setPremiumInvitationSections(data.sections)
           setEventDate(data.event.eventDate)
-          
+
+          if (data.styles) {
+            setGlobalTitleColor(data.styles.globalTitleColor || '#4c4c4c')
+            setGlobalSubtitleColor(data.styles.globalSubtitleColor || '#7f8c8d')
+          }
 
           const newSectionData = {}
 
@@ -290,43 +298,47 @@ const PremiumInvitationPage = () => {
       }
     })
 
-    const metadata = {
-      activeSections: activeSectionOrder,
-      inactiveSections: inactiveSectionOrder,
-      sections: sectionsPayload,
-      otherData: {
-        ...processedSectionData,
-        backgroundUrl: uploadedBackgroundUrl,
-        sectionBackgroundUrl: uploadedSectionBackgroundUrl,
-        songUrl: uploadedMusicUrl,
-        eventId,
-      },
+      const metadata = {
+        activeSections: activeSectionOrder,
+        inactiveSections: inactiveSectionOrder,
+        sections: sectionsPayload,
+        otherData: {
+          ...processedSectionData,
+          backgroundUrl: uploadedBackgroundUrl,
+          sectionBackgroundUrl: uploadedSectionBackgroundUrl,
+          songUrl: uploadedMusicUrl,
+          styles: {
+          globalTitleColor,
+          globalSubtitleColor
+        },
+          eventId,
+        },
+      }
+
+      console.log(metadata);
+
+
+      await axios.post('/api/premium-invitation/update', metadata)
+
+      Modal.success({
+        title: '¡Invitación guardada!',
+        content: 'Tu invitación ha sido guardada correctamente.',
+        centered: true,
+        okText: 'Aceptar'
+      })
+    } catch (error) {
+      console.error('Error guardando la invitación:', error)
+      Modal.error({
+        title: 'Error al guardar',
+        content: 'Ocurrió un problema al guardar la invitación. Intenta de nuevo.',
+        centered: true,
+        okText: 'Aceptar'
+      })
+    } finally {
+      setIsUploading(false)
+      setUploadProgress(0)
     }
-
-    await axios.post('/api/premium-invitation/update', metadata)
-
-    Modal.success({
-      title: '¡Invitación guardada!',
-      content: 'Tu invitación ha sido guardada correctamente.',
-      centered: true,
-      okText: 'Aceptar'
-    })
-  } catch (error) {
-    console.error('Error guardando la invitación:', error)
-    Modal.error({
-      title: 'Error al guardar',
-      content: 'Ocurrió un problema al guardar la invitación. Intenta de nuevo.',
-      centered: true,
-      okText: 'Aceptar'
-    })
-  } finally {
-    setIsUploading(false)
-    setUploadProgress(0)
   }
-}
-
-  console.log(hasUnsavedChanges);
-  
 
   return (
     <Layout className='layout-sidebar' style={{ minHeight: '100vh' }}>
@@ -389,7 +401,7 @@ const PremiumInvitationPage = () => {
                             globalSubtitleColor={globalSubtitleColor}
                             onDataChange={(data) => {
                               setHasUnsavedChanges(true)
-                              setSectionData(prev => ({ ...prev, [id]: data }))  
+                              setSectionData(prev => ({ ...prev, [id]: data }))
                             }}
                           />
                         </Card>
