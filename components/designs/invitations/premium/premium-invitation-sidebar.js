@@ -16,7 +16,8 @@ const InvitationPremiumSideBar = ({
   setIsPlaying,
   saveInvitation,
   isUploading,
-  uploadProgress 
+  uploadProgress,
+  setHasUnsavedChanges
 }) => {
   const [isClient, setIsClient] = useState(false)
 
@@ -87,6 +88,8 @@ const InvitationPremiumSideBar = ({
     if (destination.droppableId === 'active') {
       setTimeout(() => scrollToSection(draggableId), 300)
     }
+
+    setHasUnsavedChanges(true);
   }
 
   const renderDroppableList = (droppableId, title, list) => (
