@@ -65,6 +65,18 @@ const PremiumInvitationPage = () => {
   const [globalTypography, setGlobalTypography] = useState('Lora, serif')
 
   useEffect(() => {
+    import('webfontloader').then(WebFont => {
+      if (globalTypography) {
+        WebFont.load({
+          google: {
+            families: [globalTypography],
+          },
+        });
+      }
+    });
+  }, [globalTypography]);
+
+  useEffect(() => {
     const handleBeforeUnload = (e) => {
       if (hasUnsavedChanges) {
         const message = "Tienes cambios sin guardar. ¿Estás seguro de que quieres salir?";
