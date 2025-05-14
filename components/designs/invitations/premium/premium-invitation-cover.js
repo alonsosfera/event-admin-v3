@@ -4,7 +4,7 @@ import { UploadOutlined } from "@ant-design/icons"
 
 const { Title, Text } = Typography
 
-const PremiumInvitationCover = ({ isEditing, onDataChange, sectionData, eventDate }) => {
+const PremiumInvitationCover = ({ isEditing, onDataChange, sectionData, eventDate, globalTypography }) => {
   
   const [titleText, setTitleText] = useState(sectionData?.titleText || "Carla & Luis")
   const [subtitleText, setSubtitleText] = useState(sectionData?.subtitleText || "¡Estás invitado a compartir este día tan especial con nosotros!")
@@ -99,6 +99,7 @@ const PremiumInvitationCover = ({ isEditing, onDataChange, sectionData, eventDat
               fontSize: '50px',
               fontWeight: 'bold',
               color: titleColor,
+              fontFamily: globalTypography,
               margin: 0,
               '@media (maxWidth: 768px)': {
                 fontSize: '30px',
@@ -135,6 +136,7 @@ const PremiumInvitationCover = ({ isEditing, onDataChange, sectionData, eventDat
               fontSize: '20px',
               color: subtitleColor,
               display: 'block',
+              fontFamily: globalTypography,
               '@media (maxWidth: 768px)': {
                 fontSize: '16px',
               }

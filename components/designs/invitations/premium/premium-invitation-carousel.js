@@ -4,7 +4,7 @@ import { PlusOutlined, DeleteOutlined, EditOutlined } from "@ant-design/icons";
 
 const { Title, Text } = Typography;
 
-const PremiumInvitationCarousel = ({ isEditing, onDataChange, sectionData, globalTitleColor, globalSubtitleColor }) => {
+const PremiumInvitationCarousel = ({ isEditing, onDataChange, sectionData, globalTitleColor, globalSubtitleColor, globalTypography }) => {
   const [carouselImages, setCarouselImages] = useState([]);
   const [title, setTitle] = useState("Recuerdos Especiales");
   const [subtitle, setSubtitle] = useState("Un vistazo a los momentos que nos han traído hasta aquí");
@@ -69,13 +69,13 @@ const PremiumInvitationCarousel = ({ isEditing, onDataChange, sectionData, globa
       <div style={{ textAlign: 'center', marginBottom: '20px' }}>
         <Title
           level={2}
-          style={{ color: globalTitleColor, fontWeight: 'bold' }}
+          style={{ color: globalTitleColor, fontWeight: 'bold', fontFamily: globalTypography }}
           editable={isEditing ? { triggerType: ['icon', 'text'], onChange: handleTitleChange } : false}
         >
           {title}
         </Title>
         <Text
-          style={{ fontSize: '18px', color: globalSubtitleColor }}
+          style={{ fontSize: '18px', color: globalSubtitleColor, fontFamily: globalTypography }}
           editable={isEditing ? { triggerType: ['icon', 'text'], onChange: handleSubtitleChange } : false}
         >
           {subtitle}
@@ -130,7 +130,7 @@ const PremiumInvitationCarousel = ({ isEditing, onDataChange, sectionData, globa
               beforeUpload={handleEditImage(carouselImages.length)}
               showUploadList={false}
             >
-              <Button type="primary">
+              <Button type="primary" style={{ fontFamily: globalTypography }}>
                 <PlusOutlined />
                 Agregar Fotos
               </Button>

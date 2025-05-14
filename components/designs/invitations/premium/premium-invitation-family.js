@@ -4,7 +4,7 @@ import { UploadOutlined, CloseOutlined, PlusOutlined } from "@ant-design/icons"
 
 const { Title, Text } = Typography
 
-const PremiumInvitationFamily = ({ isEditing, onDataChange, sectionData, globalTitleColor, globalSubtitleColor }) => {
+const PremiumInvitationFamily = ({ isEditing, onDataChange, sectionData, globalTitleColor, globalSubtitleColor, globalTypography }) => {
   const [title, setTitle] = useState("Nuestra Familia y Amigos")
   const [familyMembers, setFamilyMembers] = useState([])
 
@@ -63,7 +63,7 @@ const PremiumInvitationFamily = ({ isEditing, onDataChange, sectionData, globalT
     <div style={{ textAlign: 'center' }}>
       <Title
         level={1}
-        style={{ color: globalTitleColor, marginBottom: '30px', fontWeight: 'bold' }}
+        style={{ color: globalTitleColor, marginBottom: '30px', fontWeight: 'bold', fontFamily: globalTypography }}
         editable={isEditing ? {
           triggerType: ['icon', 'text'],
           onChange: handleTitleChange
@@ -102,7 +102,7 @@ const PremiumInvitationFamily = ({ isEditing, onDataChange, sectionData, globalT
                 }}
               />
               <Text
-                style={{ fontSize: '20px', color: globalTitleColor, fontWeight: 'bold', marginBottom: '5px' }}
+                style={{ fontSize: '20px', color: globalTitleColor, fontWeight: 'bold', marginBottom: '5px', fontFamily: globalTypography }}
                 editable={isEditing ? {
                   triggerType: ['icon', 'text'],
                   onChange: (val) => updateMember(index, "name", val)
@@ -111,7 +111,7 @@ const PremiumInvitationFamily = ({ isEditing, onDataChange, sectionData, globalT
                 {member.name}
               </Text>
               <Text
-                style={{ fontSize: '16px', color: globalSubtitleColor }}
+                style={{ fontSize: '16px', color: globalSubtitleColor, fontFamily: globalTypography }}
                 editable={isEditing ? {
                   triggerType: ['icon', 'text'],
                   onChange: (val) => updateMember(index, "role", val)
@@ -126,7 +126,7 @@ const PremiumInvitationFamily = ({ isEditing, onDataChange, sectionData, globalT
                   showUploadList={false}
                   beforeUpload={handleImageChange(index)}
                 >
-                  <Button icon={<UploadOutlined />} size="small" type="primary" style={{ marginTop: 10 }}>
+                  <Button icon={<UploadOutlined />} size="small" type="primary" style={{ marginTop: 10, fontFamily: globalTypography }}>
                     Cambiar imagen
                   </Button>
                 </Upload>
@@ -138,7 +138,7 @@ const PremiumInvitationFamily = ({ isEditing, onDataChange, sectionData, globalT
 
       {isEditing && (
         <div style={{ marginTop: '40px' }}>
-          <Button icon={<PlusOutlined />} type="dashed" onClick={handleAddMember}>
+          <Button icon={<PlusOutlined />} type="dashed" onClick={handleAddMember} style={{ fontFamily: globalTypography }}>
             Agregar miembro
           </Button>
         </div>
