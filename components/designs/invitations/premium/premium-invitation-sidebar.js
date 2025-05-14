@@ -29,6 +29,8 @@ const InvitationPremiumSideBar = ({
   const [titleColor, setTitleColor] = useState(globalTitleColor || '#2c3e50')
   const [subtitleColor, setSubtitleColor] = useState(globalSubtitleColor || '#7f8c8d')
   const [fontFamily, setFontFamily] = useState(globalTypography || 'Poppins')
+  const [backgroundColor, setBackgroundColor] = useState('#ffffff')
+  const [cardBackgroundColor, setCardBackgroundColor] = useState('#ffffff')
 
   useEffect(() => setIsClient(true), [])
 
@@ -118,6 +120,20 @@ const InvitationPremiumSideBar = ({
   const handleFontFamilyChange = (newFontFamily) => {
     setFontFamily(newFontFamily)
     onDataChange?.({ globalTypography: newFontFamily })
+    setHasUnsavedChanges(true)
+  }
+
+  const handleBackgroundColorChange = (color) => {
+    const newColor = color.toHexString()
+    setBackgroundColor(newColor)
+    onDataChange?.({ backgroundImage: newColor })
+    setHasUnsavedChanges(true)
+  }
+
+  const handleCardBackgroundColorChange = (color) => {
+    const newColor = color.toHexString()
+    setCardBackgroundColor(newColor)
+    onDataChange?.({ cardBackgroundImage: newColor })
     setHasUnsavedChanges(true)
   }
 
@@ -221,26 +237,47 @@ const InvitationPremiumSideBar = ({
               Elegir Canción
             </Button>
           </Upload>
-          <Upload
-            accept="image/*"
-            showUploadList={false}
-            beforeUpload={handleUpload('background')}
-            className="upload-full-width"
-          >
-            <Button icon={<PictureOutlined />} block>
-              Fondo General
-            </Button>
-          </Upload>
-          <Upload
-            accept="image/*"
-            showUploadList={false}
-            beforeUpload={handleUpload('card')}
-            className="upload-full-width"
-          >
-            <Button icon={<AppstoreAddOutlined />} block>
-              Fondo de las Cards
-            </Button>
-          </Upload>
+          <div>
+            <Text strong style={{ display: 'block', marginBottom: 8 }}>fondo general</Text>
+            <div style={{ display: 'flex', justifyContent: "center", gap: 8 }}>
+              <Upload
+                accept="image/*"
+                showUploadList={false}
+                beforeUpload={handleUpload('background')}
+                className="upload-full-width"
+            >
+              <Button icon={<PictureOutlined />} block>
+                Fondo General
+              </Button>
+            </Upload>
+              <ColorPicker
+                value={backgroundColor}
+                onChange={handleBackgroundColorChange}
+                style={{ width: '100%' }}
+              />
+            </div>
+          </div>
+          
+          <div>
+            <Text strong style={{ display: 'block', marginBottom: 8 }}>Color de fondo de cards</Text>
+            <div style={{ display: 'flex', justifyContent: "center", gap: 8 }}>
+              <Upload
+                accept="image/*"
+                showUploadList={false}
+                beforeUpload={handleUpload('card')}
+                className="upload-full-width"
+            >
+              <Button icon={<AppstoreAddOutlined />} block>
+                Fondo de las Cards
+              </Button>
+            </Upload>
+              <ColorPicker
+                value={cardBackgroundColor}
+                onChange={handleCardBackgroundColorChange}
+                style={{ width: '100%' }}
+              />
+            </div>
+          </div>
         </div>
       )
     },

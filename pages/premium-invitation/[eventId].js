@@ -187,35 +187,45 @@ const PremiumInvitationPage = () => {
     let uploadedSectionBackgroundUrl = cardBackgroundImage
     let uploadedMusicUrl = musicUrl
 
-    if (sectionData.backgroundImageFile) {
-      uploadedBackgroundUrl = await uploadStorage(
-        sectionData.backgroundImageFile,
-        IMAGE_FOLDER,
-        '/api/storage/premium-image-song',
-        setUploadProgress,
-        token
-      )
-    }
+      if (sectionData.backgroundImageFile instanceof File) {
+        uploadedBackgroundUrl = await uploadStorage(
+          sectionData.backgroundImageFile,
+          IMAGE_FOLDER,
+          '/api/storage/premium-image-song',
+          setUploadProgress,
+          token
+        )
+      } else if (typeof backgroundImage === 'string' && !backgroundImage.startsWith('http')) {
+        uploadedBackgroundUrl = backgroundImage
+      } else if (backgroundImage === "/assets/background1.jpg") {
+        uploadedBackgroundUrl = undefined
+      }
 
-    if (sectionData.cardBackgroundImageFile) {
-      uploadedSectionBackgroundUrl = await uploadStorage(
-        sectionData.cardBackgroundImageFile,
-        IMAGE_FOLDER,
-        '/api/storage/premium-image-song',
-        setUploadProgress,
-        token
-      )
-    }
+      if (sectionData.cardBackgroundImageFile instanceof File) {
+        uploadedSectionBackgroundUrl = await uploadStorage(
+          sectionData.cardBackgroundImageFile,
+          IMAGE_FOLDER,
+          '/api/storage/premium-image-song',
+          setUploadProgress,
+          token
+        )
+      } else if (typeof cardBackgroundImage === 'string' && !cardBackgroundImage.startsWith('http')) {
+        uploadedSectionBackgroundUrl = cardBackgroundImage
+      } else if (cardBackgroundImage === "/assets/background1.jpg") {
+        uploadedSectionBackgroundUrl = undefined
+      }
 
-    if (sectionData.musicFile) {
-      uploadedMusicUrl = await uploadStorage(
-        sectionData.musicFile,
-        AUDIO_FOLDER,
-        '/api/storage/premium-image-song',
-        setUploadProgress,
-        token
-      )
-    }
+      if (sectionData.musicFile) {
+        uploadedMusicUrl = await uploadStorage(
+          sectionData.musicFile,
+          AUDIO_FOLDER,
+          '/api/storage/premium-image-song',
+          setUploadProgress,
+          token
+        )
+      } else if (musicUrl === "/assets/thousand-years.mp3") {
+        uploadedMusicUrl = undefined
+      }
 
     const processedSectionData = { ...sectionData }
 
@@ -383,7 +393,13 @@ const PremiumInvitationPage = () => {
         {(isEditing || isPreviewShown) && (
           <PremiumInvitationPreview isEditing={isEditing} setIsEditing={setIsEditing} setIsPreviewShown={setIsPreviewShown} />
         )}
-        <div className="invitation-container" style={{ backgroundImage: `url(${backgroundImage})` }}>
+        <div
+          className="invitation-container"
+          style={ backgroundImage.startsWith('http') || backgroundImage.startsWith('blob:')
+          ? { backgroundImage: `url(${backgroundImage})` }
+          : { backgroundColor: backgroundImage }
+        }
+        >
           <ParallaxProvider>
             <Row justify="center">
               <Col xs={24} sm={22} md={20} lg={16}>
@@ -403,7 +419,17 @@ const PremiumInvitationPage = () => {
                       easing="ease"
                     >
                       <div className={`section-${id}`} id={`section-${id}`}>
-                        <Card className='card-invitation' style={{ textAlign: "center", backgroundImage: `url(${cardBackgroundImage})` }}>
+                        <Card
+                          className='card-invitation'
+                          style={{
+                            textAlign: "center",
+                            ...(cardBackgroundImage
+                              ? (cardBackgroundImage.startsWith('http') || cardBackgroundImage.startsWith('blob:')
+                                ? { backgroundImage: `url(${cardBackgroundImage})` }
+                                : { backgroundColor: cardBackgroundImage })
+                              : {})
+                          }}
+                        >
                           <Component
                             eventDate={eventDate}
                             isEditing={isEditing}

@@ -153,7 +153,12 @@ const PremiumInvitationPage = () => {
     <Layout className='layout-sidebar' style={{ minHeight: '100vh' }}>
       <Content>
         <PremiumInvitationMusicPlayer musicUrl={musicUrl} isPlaying={isPlaying} setIsPlaying={setIsPlaying} />
-        <div className="invitation-container" style={{ backgroundImage: `url(${backgroundImage})` }}>
+        <div 
+          className="invitation-container" 
+          style={ backgroundImage.startsWith('http') || backgroundImage.startsWith('blob:')
+          ? { backgroundImage: `url(${backgroundImage})` } 
+          : { backgroundColor: backgroundImage } 
+        }>
           <ParallaxProvider>
             <Row justify="center">
               <Col xs={24} sm={22} md={20} lg={16}>
@@ -173,7 +178,15 @@ const PremiumInvitationPage = () => {
                       easing="ease"
                     >
                       <div className={`section-${id}`} id={`section-${id}`}>
-                        <Card className='card-invitation' style={{ textAlign: "center", backgroundImage: `url(${cardBackgroundImage})` }}>
+                        <Card 
+                          style={{
+                            textAlign: "center",
+                            ...(cardBackgroundImage
+                              ? (cardBackgroundImage.startsWith('http') || cardBackgroundImage.startsWith('blob:')
+                                ? { backgroundImage: `url(${cardBackgroundImage})` }
+                                : { backgroundColor: cardBackgroundImage })
+                              : {})
+                          }}>
                           <Component
                             eventDate={eventDate}
                             invitated={invitated}
