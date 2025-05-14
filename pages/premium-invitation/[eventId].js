@@ -62,7 +62,7 @@ const PremiumInvitationPage = () => {
   const [hasUnsavedChanges, setHasUnsavedChanges] = useState(null)
   const [globalTitleColor, setGlobalTitleColor] = useState('#4c4c4c')
   const [globalSubtitleColor, setGlobalSubtitleColor] = useState('#7f8c8d')
-  const [globalTypography, setGlobalTypography] = useState('Lora, serif')
+  const [globalTypography, setGlobalTypography] = useState('Roboto')
 
   useEffect(() => {
     import('webfontloader').then(WebFont => {
@@ -397,7 +397,7 @@ const PremiumInvitationPage = () => {
         )}
         <div
           className="invitation-container"
-          style={ backgroundImage.startsWith('http') || backgroundImage.startsWith('blob:')
+          style={ backgroundImage.startsWith('http') || backgroundImage.startsWith('blob:') || backgroundImage.startsWith('/assets')
           ? { backgroundImage: `url(${backgroundImage})` }
           : { backgroundColor: backgroundImage }
         }
@@ -426,7 +426,7 @@ const PremiumInvitationPage = () => {
                           style={{
                             textAlign: "center",
                             ...(cardBackgroundImage
-                              ? (cardBackgroundImage.startsWith('http') || cardBackgroundImage.startsWith('blob:')
+                              ? (cardBackgroundImage.startsWith('http') || cardBackgroundImage.startsWith('blob:') || cardBackgroundImage.startsWith('/assets')
                                 ? { backgroundImage: `url(${cardBackgroundImage})` }
                                 : { backgroundColor: cardBackgroundImage })
                               : {})

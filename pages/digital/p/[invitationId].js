@@ -47,7 +47,7 @@ const PremiumInvitationPage = () => {
   const [invitationNotFound, setInvitationNotFound] = useState(false)
   const [globalTitleColor, setGlobalTitleColor] = useState('#4c4c4c')
   const [globalSubtitleColor, setGlobalSubtitleColor] = useState('#7f8c8d')
-  const [globalTypography, setGlobalTypography] = useState('')
+  const [globalTypography, setGlobalTypography] = useState('Roboto')
 
   const eventDate = invitated?.event?.eventDate
   
@@ -155,7 +155,7 @@ const PremiumInvitationPage = () => {
         <PremiumInvitationMusicPlayer musicUrl={musicUrl} isPlaying={isPlaying} setIsPlaying={setIsPlaying} />
         <div 
           className="invitation-container" 
-          style={ backgroundImage.startsWith('http') || backgroundImage.startsWith('blob:')
+          style={ backgroundImage.startsWith('http') || backgroundImage.startsWith('blob:') || backgroundImage.startsWith('/assets')
           ? { backgroundImage: `url(${backgroundImage})` } 
           : { backgroundColor: backgroundImage } 
         }>
@@ -182,7 +182,7 @@ const PremiumInvitationPage = () => {
                           style={{
                             textAlign: "center",
                             ...(cardBackgroundImage
-                              ? (cardBackgroundImage.startsWith('http') || cardBackgroundImage.startsWith('blob:')
+                              ? (cardBackgroundImage.startsWith('http') || cardBackgroundImage.startsWith('blob:') || cardBackgroundImage.startsWith('/assets')
                                 ? { backgroundImage: `url(${cardBackgroundImage})` }
                                 : { backgroundColor: cardBackgroundImage })
                               : {})
