@@ -20,12 +20,15 @@ const InvitationPremiumSideBar = ({
   saveInvitation,
   isUploading,
   uploadProgress,
-  setHasUnsavedChanges
+  setHasUnsavedChanges,
+  globalTypography,
+  globalTitleColor,
+  globalSubtitleColor
 }) => {
   const [isClient, setIsClient] = useState(false)
-  const [titleColor, setTitleColor] = useState('#4c4c4c')
-  const [subtitleColor, setSubtitleColor] = useState('#7f8c8d')
-  const [fontFamily, setFontFamily] = useState('Merienda, cursive')
+  const [titleColor, setTitleColor] = useState(globalTitleColor || '#2c3e50')
+  const [subtitleColor, setSubtitleColor] = useState(globalSubtitleColor || '#7f8c8d')
+  const [fontFamily, setFontFamily] = useState(globalTypography || 'Poppins')
 
   useEffect(() => setIsClient(true), [])
 

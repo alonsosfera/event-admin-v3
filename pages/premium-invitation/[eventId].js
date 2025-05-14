@@ -360,6 +360,9 @@ const PremiumInvitationPage = () => {
           isUploading={isUploading}
           uploadProgress={uploadProgress}
           setHasUnsavedChanges={setHasUnsavedChanges}
+          globalTypography={globalTypography}
+          globalTitleColor={globalTitleColor}
+          globalSubtitleColor={globalSubtitleColor}
         />
       )}
 
