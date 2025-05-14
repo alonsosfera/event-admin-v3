@@ -76,10 +76,6 @@ const PremiumInvitationPage = () => {
     });
   }, [globalTypography]);
 
-
-  console.log(globalTitleColor, globalSubtitleColor);
-
-
   useEffect(() => {
     const handleBeforeUnload = (e) => {
       if (hasUnsavedChanges) {
