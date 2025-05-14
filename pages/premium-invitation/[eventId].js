@@ -367,6 +367,8 @@ const PremiumInvitationPage = () => {
           globalTypography={globalTypography}
           globalTitleColor={globalTitleColor}
           globalSubtitleColor={globalSubtitleColor}
+          backgroundImage={backgroundImage}
+          cardBackgroundImage={cardBackgroundImage}
         />
       )}
 
