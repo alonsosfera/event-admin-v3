@@ -63,7 +63,7 @@ const PremiumInvitationPage = () => {
   const [globalTitleColor, setGlobalTitleColor] = useState('#4c4c4c')
   const [globalSubtitleColor, setGlobalSubtitleColor] = useState('#7f8c8d')
   const [globalTypography, setGlobalTypography] = useState('Lora, serif')
-  
+
   useEffect(() => {
     const handleBeforeUnload = (e) => {
       if (hasUnsavedChanges) {
@@ -301,7 +301,7 @@ const PremiumInvitationPage = () => {
           eventId,
         },
       }
-      
+
       await axios.post('/api/premium-invitation/update', metadata)
 
       Modal.success({
