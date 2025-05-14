@@ -339,10 +339,7 @@ const PremiumInvitationPage = () => {
       setUploadProgress(0)
     }
   }
-
-  console.log(backgroundImage);
-  
-  
+    
   return (
     <Layout className='layout-sidebar' style={{ minHeight: '100vh' }}>
       {isEditing && (
