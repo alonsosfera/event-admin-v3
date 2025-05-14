@@ -23,14 +23,14 @@ const InvitationPremiumSideBar = ({
   setHasUnsavedChanges,
   globalTypography,
   globalTitleColor,
-  globalSubtitleColor
+  globalSubtitleColor,
+  backgroundImage,
+  cardBackgroundImage
 }) => {
   const [isClient, setIsClient] = useState(false)
   const [titleColor, setTitleColor] = useState(globalTitleColor || '#2c3e50')
   const [subtitleColor, setSubtitleColor] = useState(globalSubtitleColor || '#7f8c8d')
   const [fontFamily, setFontFamily] = useState(globalTypography || 'Poppins')
-  const [backgroundColor, setBackgroundColor] = useState('#ffffff')
-  const [cardBackgroundColor, setCardBackgroundColor] = useState('#ffffff')
 
   useEffect(() => setIsClient(true), [])
 
@@ -125,14 +125,12 @@ const InvitationPremiumSideBar = ({
 
   const handleBackgroundColorChange = (color) => {
     const newColor = color.toHexString()
-    setBackgroundColor(newColor)
     onDataChange?.({ backgroundImage: newColor })
     setHasUnsavedChanges(true)
   }
 
   const handleCardBackgroundColorChange = (color) => {
     const newColor = color.toHexString()
-    setCardBackgroundColor(newColor)
     onDataChange?.({ cardBackgroundImage: newColor })
     setHasUnsavedChanges(true)
   }
@@ -247,11 +245,11 @@ const InvitationPremiumSideBar = ({
                 className="upload-full-width"
             >
               <Button icon={<PictureOutlined />} block>
-                Fondo General
+                Imagen
               </Button>
             </Upload>
               <ColorPicker
-                value={backgroundColor}
+                value={backgroundImage}
                 onChange={handleBackgroundColorChange}
                 style={{ width: '100%' }}
               />
@@ -268,11 +266,11 @@ const InvitationPremiumSideBar = ({
                 className="upload-full-width"
             >
               <Button icon={<AppstoreAddOutlined />} block>
-                Fondo de las Cards
+                Imagen
               </Button>
             </Upload>
               <ColorPicker
-                value={cardBackgroundColor}
+                value={cardBackgroundImage}
                 onChange={handleCardBackgroundColorChange}
                 style={{ width: '100%' }}
               />
