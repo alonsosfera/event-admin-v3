@@ -126,7 +126,7 @@ const PremiumInvitationFamily = ({ isEditing, onDataChange, sectionData, globalT
                   showUploadList={false}
                   beforeUpload={handleImageChange(index)}
                 >
-                  <Button icon={<UploadOutlined />} size="small" type="primary" style={{ marginTop: 10, fontFamily: globalTypography }}>
+                  <Button icon={<UploadOutlined />} size="small" type="primary" style={{ marginTop: 10 }}>
                     Cambiar imagen
                   </Button>
                 </Upload>
@@ -138,7 +138,7 @@ const PremiumInvitationFamily = ({ isEditing, onDataChange, sectionData, globalT
 
       {isEditing && (
         <div style={{ marginTop: '40px' }}>
-          <Button icon={<PlusOutlined />} type="dashed" onClick={handleAddMember} style={{ fontFamily: globalTypography }}>
+          <Button icon={<PlusOutlined />} type="dashed" onClick={handleAddMember}>
             Agregar miembro
           </Button>
         </div>

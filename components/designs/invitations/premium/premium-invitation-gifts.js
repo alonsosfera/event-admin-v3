@@ -192,7 +192,7 @@ const PremiumInvitationGift = ({ isEditing, onDataChange, sectionData, globalTit
           icon={<PlusOutlined />}
           type="dashed"
           onClick={handleAddButton}
-          style={{ marginTop: '20px', width: '100%', maxWidth: 200, fontFamily: globalTypography }}
+          style={{ marginTop: '20px', width: '100%', maxWidth: 200 }}
         >
           Agregar otro botón
         </Button>
