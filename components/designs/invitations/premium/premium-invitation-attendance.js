@@ -112,7 +112,6 @@ const PremiumInvitationAttendance = ({ isEditing, onDataChange, sectionData, inv
             fontSize: '18px',
             width: '100%',
             maxWidth: '300px',
-            fontFamily: globalTypography
           }}
           onClick={invitationId ? showConfirm : showConfirmEdit}
         >

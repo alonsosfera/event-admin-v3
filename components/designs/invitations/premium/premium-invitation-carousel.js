@@ -130,7 +130,7 @@ const PremiumInvitationCarousel = ({ isEditing, onDataChange, sectionData, globa
               beforeUpload={handleEditImage(carouselImages.length)}
               showUploadList={false}
             >
-              <Button type="primary" style={{ fontFamily: globalTypography }}>
+              <Button type="primary">
                 <PlusOutlined />
                 Agregar Fotos
               </Button>
