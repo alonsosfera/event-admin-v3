@@ -52,6 +52,18 @@ const PremiumInvitationPage = () => {
   const eventDate = invitated?.event?.eventDate
   
   useEffect(() => {
+    import('webfontloader').then(WebFont => {
+      if (globalTypography) {
+        WebFont.load({
+          google: {
+            families: [globalTypography],
+          },
+        });
+      }
+    });
+  }, [globalTypography]);
+
+  useEffect(() => {
     if (!invitationId) return
 
     const fetchPremiumInvitation = async () => {
