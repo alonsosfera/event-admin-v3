@@ -13,7 +13,7 @@ export default async function handler(req, res) {
 
   try {
     const { activeSections, otherData } = req.body;
-
+    
     const eventId = otherData?.eventId;
     if (!eventId) {
       return res.status(400).json({ message: 'Missing eventId' });
@@ -22,9 +22,9 @@ export default async function handler(req, res) {
     const backgroundUrl = otherData.backgroundUrl || '';
     const sectionBackgroundUrl = otherData.sectionBackgroundUrl || '';
     const songUrl = otherData.songUrl || '';
-    const globalTitleColor = otherData.globalTitleColor || '';
-    const globalSubtitleColor = otherData.globalSubtitleColor || '';
-    const globalTypography = otherData.globalTypography || '';
+    const globalTitleColor = otherData.styles.globalTitleColor || '';
+    const globalSubtitleColor = otherData.styles.globalSubtitleColor || '';
+    const globalTypography = otherData.styles.globalTypography || '';
 
 
     const premiumInvitation = await prisma.premiumInvitation.update({
