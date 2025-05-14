@@ -17,7 +17,7 @@ const defaultButtons = [
   }
 ]
 
-const PremiumInvitationGift = ({ isEditing, onDataChange, sectionData, globalTitleColor, globalSubtitleColor }) => {
+const PremiumInvitationGift = ({ isEditing, onDataChange, sectionData, globalTitleColor, globalSubtitleColor, globalTypography }) => {
   const [title, setTitle] = useState("Regalos")
   const [subtitle, setSubtitle] = useState(
     "Tu presencia es nuestro mayor regalo, pero si deseas contribuir con algo especial, aquí tienes algunas opciones"
@@ -99,7 +99,7 @@ const PremiumInvitationGift = ({ isEditing, onDataChange, sectionData, globalTit
     <>
       <Title
         level={1}
-        style={{ color: globalTitleColor, marginBottom: '10px', fontWeight: 'bold' }}
+        style={{ color: globalTitleColor, marginBottom: '10px', fontWeight: 'bold', fontFamily: globalTypography }}
         editable={isEditing ? {
           triggerType: ['icon', 'text'],
           onChange: handleTitleChange
@@ -118,7 +118,8 @@ const PremiumInvitationGift = ({ isEditing, onDataChange, sectionData, globalTit
           fontSize: '16px',
           color: globalSubtitleColor,
           fontWeight: "bold",
-          marginTop: "40px"
+          marginTop: "40px",
+          fontFamily: globalTypography
         }}
       >
         {subtitle}
@@ -160,6 +161,7 @@ const PremiumInvitationGift = ({ isEditing, onDataChange, sectionData, globalTit
                 minHeight: '64px',
                 gap: '16px',
                 width: '100%',
+                fontFamily: globalTypography
               }}
             >
               {button.label}
@@ -171,13 +173,13 @@ const PremiumInvitationGift = ({ isEditing, onDataChange, sectionData, globalTit
                   placeholder="Texto del botón"
                   value={button.label}
                   onChange={(e) => handleButtonLabelChange(index, e.target.value)}
-                  style={{ marginBottom: 5 }}
+                  style={{ marginBottom: 5, fontFamily: globalTypography }}
                 />
                 <Input
                   placeholder="Link del botón"
                   value={button.link}
                   onChange={(e) => handleButtonLinkChange(index, e.target.value)}
-                  style={{ marginBottom: 5 }}
+                  style={{ marginBottom: 5, fontFamily: globalTypography }}
                 />
               </div>
             )}
@@ -190,7 +192,7 @@ const PremiumInvitationGift = ({ isEditing, onDataChange, sectionData, globalTit
           icon={<PlusOutlined />}
           type="dashed"
           onClick={handleAddButton}
-          style={{ marginTop: '20px', width: '100%', maxWidth: 200 }}
+          style={{ marginTop: '20px', width: '100%', maxWidth: 200, fontFamily: globalTypography }}
         >
           Agregar otro botón
         </Button>

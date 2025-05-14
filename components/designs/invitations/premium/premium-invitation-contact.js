@@ -4,7 +4,7 @@ import { PhoneOutlined, UserOutlined, UploadOutlined, CloseOutlined, PlusOutline
 
 const { Title, Text } = Typography
 
-const PremiumInvitationContact = ({ isEditing, onDataChange, sectionData, globalTitleColor, globalSubtitleColor }) => {
+const PremiumInvitationContact = ({ isEditing, onDataChange, sectionData, globalTitleColor, globalSubtitleColor, globalTypography }) => {
   const [subtitle, setSubtitle] = useState("")
   const [contacts, setContacts] = useState([])
 
@@ -62,7 +62,7 @@ const PremiumInvitationContact = ({ isEditing, onDataChange, sectionData, global
 
   return (
     <>
-      <Title level={1} style={{ color: globalTitleColor, marginBottom: '30px', fontWeight: 'bold' }}>
+      <Title level={1} style={{ color: globalTitleColor, marginBottom: '30px', fontWeight: 'bold', fontFamily: globalTypography }}>
         Contacto
       </Title>
 
@@ -75,7 +75,8 @@ const PremiumInvitationContact = ({ isEditing, onDataChange, sectionData, global
           fontSize: '18px',
           color: globalSubtitleColor,
           display: 'block',
-          marginBottom: '40px'
+          marginBottom: '40px',
+          fontFamily: globalTypography
         }}
       >
         {subtitle}
@@ -134,7 +135,8 @@ const PremiumInvitationContact = ({ isEditing, onDataChange, sectionData, global
                 style={{
                   color: globalTitleColor,
                   fontWeight: 'bold',
-                  marginBottom: '10px'
+                  marginBottom: '10px',
+                  fontFamily: globalTypography
                 }}
                 editable={isEditing ? {
                   triggerType: ['icon', 'text'],
@@ -156,7 +158,7 @@ const PremiumInvitationContact = ({ isEditing, onDataChange, sectionData, global
                   color: '#8e44ad'
                 }} />
                 <Text
-                  style={{ fontSize: '18px', color: globalSubtitleColor }}
+                  style={{ fontSize: '18px', color: globalSubtitleColor, fontFamily: globalTypography }}
                   editable={isEditing ? {
                     triggerType: ['icon', 'text'],
                     onChange: (val) => updateContact(index, "phone", val)

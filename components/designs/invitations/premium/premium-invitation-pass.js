@@ -5,7 +5,7 @@ import short from "short-uuid"
 
 const { Title, Text } = Typography
 
-const PremiumInvitationPass = ({ isEditing, onDataChange, sectionData, invitated, invitationId, globalTitleColor, globalSubtitleColor }) => {
+const PremiumInvitationPass = ({ isEditing, onDataChange, sectionData, invitated, invitationId, globalTitleColor, globalSubtitleColor, globalTypography }) => {
   const [subtitleText, setSubtitleText] = useState(sectionData?.subtitleText || "Con alegría en el corazón, los esperamos para compartir nuestra unión y recibir juntos la bendición de Dios")
   const [qrCode, setQrCode] = useState("")
 
@@ -57,32 +57,32 @@ const PremiumInvitationPass = ({ isEditing, onDataChange, sectionData, invitated
           </div>
         </Col>
         <Col xs={{ span: 24, order: 1 }} sm={{ span: 16, order: 2 }} style={{ textAlign: "center" }} >
-          <Title level={2} style={{ color: globalTitleColor, marginBottom: '10px', fontWeight: 'bold' }}>
+          <Title level={2} style={{ color: globalTitleColor, marginBottom: '10px', fontWeight: 'bold', fontFamily: globalTypography }}>
             Invitación válida para:
           </Title>
-          <Text style={{ fontSize: '18px', color: globalSubtitleColor, fontWeight: "bold" }}>
+          <Text style={{ fontSize: '18px', color: globalSubtitleColor, fontWeight: "bold", fontFamily: globalTypography }}>
             NOMBRE
           </Text>
           <br />
-          <Text style={{ fontSize: '18px', color: globalSubtitleColor }}>
+          <Text style={{ fontSize: '18px', color: globalSubtitleColor, fontFamily: globalTypography }}>
             {invitated ? invitated.invitationName : "Nombre de cada invitado"}
           </Text>
           <Row gutter={[0]}>
             <Col xs={24} sm={12}>
-              <Text style={{ fontSize: '18px', color: globalSubtitleColor, fontWeight: "bold" }}>
+              <Text style={{ fontSize: '18px', color: globalSubtitleColor, fontWeight: "bold", fontFamily: globalTypography }}>
                 INVITADOS
               </Text>
               <br />
-              <Text style={{ fontSize: '18px', color: globalSubtitleColor }}>
+              <Text style={{ fontSize: '18px', color: globalSubtitleColor, fontFamily: globalTypography }}>
                 {invitated ? invitated.numberGuests : "##"}
               </Text>
             </Col>
             <Col xs={24} sm={12}>
-              <Text style={{ fontSize: '18px', color: globalSubtitleColor, fontWeight: "bold" }}>
+              <Text style={{ fontSize: '18px', color: globalSubtitleColor, fontWeight: "bold", fontFamily: globalTypography }}>
                 MESA
               </Text>
               <br />
-              <Text style={{ fontSize: '18px', color: globalSubtitleColor }}>
+              <Text style={{ fontSize: '18px', color: globalSubtitleColor, fontFamily: globalTypography }}>
                 {invitated ? 
                   invitated.invitationTables.map((table, index) => (
                     <span key={index}>
@@ -95,12 +95,12 @@ const PremiumInvitationPass = ({ isEditing, onDataChange, sectionData, invitated
               </Text>
             </Col>
           </Row>
-          <Text style={{ fontSize: '18px', color: globalSubtitleColor, fontWeight: "bold" }}>
+          <Text style={{ fontSize: '18px', color: globalSubtitleColor, fontWeight: "bold", fontFamily: globalTypography }}>
             MENSAJE
           </Text>
           <br />
           <Text
-            style={{ fontSize: '18px', color: globalSubtitleColor }}
+            style={{ fontSize: '18px', color: globalSubtitleColor, fontFamily: globalTypography }}
             editable={isEditing ? {
               triggerType: ['icon', 'text'],
               onChange: handleSubtitleChange

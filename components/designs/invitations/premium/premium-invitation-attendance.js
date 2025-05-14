@@ -4,7 +4,7 @@ import axios from 'axios'
 
 const { Title, Text } = Typography
 
-const PremiumInvitationAttendance = ({ isEditing, onDataChange, sectionData, invitated, invitationId, globalTitleColor, globalSubtitleColor }) => {
+const PremiumInvitationAttendance = ({ isEditing, onDataChange, sectionData, invitated, invitationId, globalTitleColor, globalSubtitleColor, globalTypography }) => {
   const [subtitle, setSubtitle] = useState( sectionData?.subtitle ||
     "Para nosotros es muy importante que nos acompañes, por favor confirma tu asistencia para poder considerarte."
   )
@@ -86,12 +86,12 @@ const PremiumInvitationAttendance = ({ isEditing, onDataChange, sectionData, inv
         <Col xs={24} sm={16}>
           <Title
             level={2}
-            style={{ color: globalTitleColor, marginBottom: '10px', fontWeight: 'bold' }}
+            style={{ color: globalTitleColor, marginBottom: '10px', fontWeight: 'bold', fontFamily: globalTypography }}
           >
             Confirmar Asistencia
           </Title>
           <Text
-            style={{ fontSize: '18px', color: globalSubtitleColor }}
+            style={{ fontSize: '18px', color: globalSubtitleColor, fontFamily: globalTypography }}
             editable={isEditing ? {
               triggerType: ['icon', 'text'],
               onChange: handleTextChange
@@ -112,6 +112,7 @@ const PremiumInvitationAttendance = ({ isEditing, onDataChange, sectionData, inv
             fontSize: '18px',
             width: '100%',
             maxWidth: '300px',
+            fontFamily: globalTypography
           }}
           onClick={invitationId ? showConfirm : showConfirmEdit}
         >
