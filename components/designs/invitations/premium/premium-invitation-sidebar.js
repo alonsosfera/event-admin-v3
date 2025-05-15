@@ -62,6 +62,16 @@ const InvitationPremiumSideBar = ({
     }
   }
    
+  const getNextAvailableNumber = (baseId, list) => {
+    const existingNumbers = list
+      .filter(id => id.startsWith(baseId))
+      .map(id => {
+        const match = id.match(/-(\d+)$/)
+        return match ? parseInt(match[1]) : 0
+      })
+    return Math.max(0, ...existingNumbers) + 1
+  }
+
   const handleDragEnd = ({ source, destination, draggableId }) => {
     if (!destination || draggableId === 'cover') return
 
@@ -72,14 +82,20 @@ const InvitationPremiumSideBar = ({
     const sourceList = [...getList(source.droppableId)]
     const destinationList = isSameList ? sourceList : [...getList(destination.droppableId)]
 
-    const isRepeatableSection = ['carousel', 'video', 'family'].includes(draggableId)
+    const baseId = draggableId.split('-')[0]
+    const isRepeatableSection = ['carousel', 'video', 'family'].includes(baseId)
+
     if (!isRepeatableSection) {
       const [moved] = sourceList.splice(source.index, 1)
       destinationList.splice(destination.index, 0, moved)
     } else {
-      const existingSections = destinationList.filter(id => id.startsWith(draggableId))
-      const newSectionId = `${draggableId}-${existingSections.length + 1}`
-      destinationList.splice(destination.index, 0, newSectionId)
+      if (source.droppableId === 'active') {
+        sourceList.splice(source.index, 1)
+      } else {
+        const nextNumber = getNextAvailableNumber(baseId, destinationList)
+        const newSectionId = `${baseId}-${nextNumber}`
+        destinationList.splice(destination.index, 0, newSectionId)
+      }
     }
 
     if (destination.droppableId === 'active') {
