@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react"
-import { Image, Typography, Button, Upload, ColorPicker } from "antd"
+import { Image, Typography, Button, Upload, ColorPicker, message } from "antd"
 import { UploadOutlined } from "@ant-design/icons"
 
 const { Title, Text } = Typography
@@ -29,11 +29,48 @@ const PremiumInvitationCover = ({ isEditing, onDataChange, sectionData, eventDat
     onDataChange?.({ titleText, subtitleText: value, titleColor, subtitleColor })
   }
 
-  const handleImageChange = (file) => {
-    const url = URL.createObjectURL(file)
-    setImageUrl(url)
-    onDataChange?.({ titleText, subtitleText, imageUrl: url, imageFile: file, titleColor, subtitleColor })
-    return false 
+  const validateImageDimensions = (file) => {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader()
+      reader.readAsDataURL(file)
+      
+      reader.onload = (e) => {
+        const img = new window.Image()
+        img.src = e.target.result
+        
+        img.onload = () => {
+          const isVertical = img.height > img.width
+          if (!isVertical) {
+            message.error('Por favor, sube una imagen vertical')
+            reject()
+          } else {
+            resolve(file)
+          }
+        }
+        
+        img.onerror = () => {
+          message.error('Error al cargar la imagen')
+          reject()
+        }
+      }
+      
+      reader.onerror = () => {
+        message.error('Error al leer el archivo')
+        reject()
+      }
+    })
+  }
+
+  const handleImageChange = async (file) => {
+    try {
+      const validatedFile = await validateImageDimensions(file)
+      const url = URL.createObjectURL(validatedFile)
+      setImageUrl(url)
+      onDataChange?.({ titleText, subtitleText, imageUrl: url, imageFile: validatedFile, titleColor, subtitleColor })
+    } catch (error) {
+      console.error('Error al procesar la imagen:', error)
+    }
+    return false
   }
 
   const handleTitleColorChange = (color) => {
@@ -182,12 +219,12 @@ const PremiumInvitationCover = ({ isEditing, onDataChange, sectionData, eventDat
           <Upload
             accept="image/*"
             showUploadList={false}
-            beforeUpload={(file) => handleImageChange(file)}
+            beforeUpload={handleImageChange}
           >
             <Button  
               icon={<UploadOutlined />} size="small"
               type="primary">
-              Cargar imagen
+              Cargar imagen vertical
             </Button>
           </Upload>
         </div>
