@@ -177,6 +177,7 @@ const PremiumInvitationPage = () => {
                     >
                       <div className={`section-${id}`} id={`section-${id}`}>
                         <Card 
+                          className='card-invitation'
                           style={{
                             textAlign: "center",
                             ...(cardBackgroundImage
