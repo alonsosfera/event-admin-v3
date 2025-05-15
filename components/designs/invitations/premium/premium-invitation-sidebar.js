@@ -72,14 +72,15 @@ const InvitationPremiumSideBar = ({
     const sourceList = [...getList(source.droppableId)]
     const destinationList = isSameList ? sourceList : [...getList(destination.droppableId)]
 
-    const [moved] = sourceList.splice(source.index, 1)
-    let targetIndex = destination.index
-
-    if (destination.droppableId === 'active' && targetIndex === 0) {
-      targetIndex = 1
+    const isRepeatableSection = ['carousel', 'video', 'family'].includes(draggableId)
+    if (!isRepeatableSection) {
+      const [moved] = sourceList.splice(source.index, 1)
+      destinationList.splice(destination.index, 0, moved)
+    } else {
+      const existingSections = destinationList.filter(id => id.startsWith(draggableId))
+      const newSectionId = `${draggableId}-${existingSections.length + 1}`
+      destinationList.splice(destination.index, 0, newSectionId)
     }
-
-    destinationList.splice(targetIndex, 0, moved)
 
     if (destination.droppableId === 'active') {
       const coverIndex = destinationList.indexOf('cover')
@@ -151,7 +152,8 @@ const InvitationPremiumSideBar = ({
             }}
           >
             {list.map((id, index) => {
-              const section = sections.find(s => s.id === id)
+              const baseId = id.split('-')[0]
+              const section = sections.find(s => s.id === baseId)
               if (!section) return null
 
               const cardStyle = {
@@ -170,7 +172,7 @@ const InvitationPremiumSideBar = ({
                 fontSize: 11
               }
 
-              if (id === 'cover') {
+              if (baseId === 'cover') {
                 return (
                   <Card
                     key={id}
@@ -186,6 +188,10 @@ const InvitationPremiumSideBar = ({
                   </Card>
                 )
               }
+
+              const label = id.includes('-') 
+                ? `${section.label} ${id.split('-')[1]}`
+                : section.label
 
               return (
                 <Draggable draggableId={id} index={index} key={id}>
@@ -206,7 +212,7 @@ const InvitationPremiumSideBar = ({
                         ...provided.draggableProps.style
                       }}
                     >
-                      <Text strong>{section.label}</Text>
+                      <Text strong>{label}</Text>
                     </Card>
                   )}
                 </Draggable>
