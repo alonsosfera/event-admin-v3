@@ -167,13 +167,11 @@ const PremiumInvitationPage = () => {
                   if (!section) return null
 
                   const { Component } = section
-                  const customTranslateX = id === 'cover' ? [0, 0] : [(index % 2 === 0 ? -3 : 3), 0]
 
                   return (
                     <Parallax
                       key={id}
                       speed={0}
-                      translateX={customTranslateX}
                       opacity={[0, 5]}
                       easing="ease"
                     >
