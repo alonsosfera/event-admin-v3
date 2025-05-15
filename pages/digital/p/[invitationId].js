@@ -163,7 +163,8 @@ const PremiumInvitationPage = () => {
             <Row justify="center">
               <Col xs={24} sm={22} md={20} lg={16}>
                 {activeSectionOrder.map((id, index) => {
-                  const section = initialSections.find((s) => s.id === id)
+                  const baseId = id.split('-')[0]
+                  const section = initialSections.find((s) => s.id === baseId)
                   if (!section) return null
 
                   const { Component } = section
