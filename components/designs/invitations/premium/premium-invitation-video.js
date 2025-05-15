@@ -1,6 +1,5 @@
 import { useState, useEffect } from "react"
 import { Input, Typography, Row, Col, Alert } from "antd"
-import { CheckCircleTwoTone } from "@ant-design/icons"
 
 const { Text } = Typography
 
@@ -66,14 +65,15 @@ const PremiumInvitationVideo = ({ isEditing, onDataChange, sectionData }) => {
               style={{ maxWidth: 500 }}
               />
             </Col>
-            {showSaved && (
-              <CheckCircleTwoTone twoToneColor="#52c41a" style={{ fontSize: 24 }} />
-            )}
           </Row>
           {showSaved && (
-            <Text type="success" style={{ marginTop: 5, display: 'block' }}>
-              ¡Link guardado!
-            </Text>
+            <Row style={{ marginTop: 10, display: 'flex', justifyContent: 'center' }}>
+              <Text type="success" style={{ marginTop: 5, display: 'block' }}>
+                ¡Link guardado!
+              </Text>
+              
+            </Row>
+            
           )}
         </div>
       )}
