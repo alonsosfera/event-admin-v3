@@ -73,52 +73,60 @@ const InvitationPremiumSideBar = ({
   }
 
   const handleDragEnd = ({ source, destination, draggableId }) => {
-    if (!destination || draggableId === 'cover') return
+  if (!destination || draggableId === 'cover') return
 
-    const isSameList = source.droppableId === destination.droppableId
-    const getList = (id) => id === 'active' ? activeSectionOrder : inactiveSectionOrder
-    const setList = (id) => id === 'active' ? setActiveSectionOrder : setInactiveSectionOrder
+  const isSameList = source.droppableId === destination.droppableId
+  const getList = (id) => id === 'active' ? activeSectionOrder : inactiveSectionOrder
+  const setList = (id) => id === 'active' ? setActiveSectionOrder : setInactiveSectionOrder
 
-    const sourceList = [...getList(source.droppableId)]
-    const destinationList = isSameList ? sourceList : [...getList(destination.droppableId)]
+  const sourceList = [...getList(source.droppableId)]
+  const destinationList = isSameList ? sourceList : [...getList(destination.droppableId)]
 
-    const baseId = draggableId.split('-')[0]
-    const isRepeatableSection = ['carousel', 'video', 'family'].includes(baseId)
+  const baseId = draggableId.split('-')[0]
+  const isRepeatableSection = ['carousel', 'video', 'family'].includes(baseId)
 
-    if (!isRepeatableSection) {
+  if (!isRepeatableSection) {
+    // No repetibles: sólo mover sin duplicar
+    const [moved] = sourceList.splice(source.index, 1)
+    destinationList.splice(destination.index, 0, moved)
+  } else {
+    if (source.droppableId === 'active' && destination.droppableId === 'inactive') {
+      // Solo BORRAR si va de activas a disponibles (drop en inactive)
+      sourceList.splice(source.index, 1)
+    } else if (source.droppableId === 'inactive' && destination.droppableId === 'active') {
+      // Solo AGREGAR si va de disponibles a activas
+      const nextNumber = getNextAvailableNumber(baseId, destinationList)
+      const newSectionId = `${baseId}-${nextNumber}`
+      destinationList.splice(destination.index, 0, newSectionId)
+    } else if (isSameList) {
+      // Si se mueve dentro del mismo listado, solo reordenar
       const [moved] = sourceList.splice(source.index, 1)
       destinationList.splice(destination.index, 0, moved)
-    } else {
-      if (source.droppableId === 'active') {
-        sourceList.splice(source.index, 1)
-      } else {
-        const nextNumber = getNextAvailableNumber(baseId, destinationList)
-        const newSectionId = `${baseId}-${nextNumber}`
-        destinationList.splice(destination.index, 0, newSectionId)
-      }
     }
-
-    if (destination.droppableId === 'active') {
-      const coverIndex = destinationList.indexOf('cover')
-      if (coverIndex > 0) {
-        destinationList.splice(coverIndex, 1)
-        destinationList.unshift('cover')
-      }
-    }
-
-    if (isSameList) {
-      setList(destination.droppableId)(destinationList)
-    } else {
-      setList(source.droppableId)(sourceList)
-      setList(destination.droppableId)(destinationList)
-    }
-
-    if (destination.droppableId === 'active') {
-      setTimeout(() => scrollToSection(draggableId), 300)
-    }
-
-    setHasUnsavedChanges(true);
   }
+
+  if (destination.droppableId === 'active') {
+    const coverIndex = destinationList.indexOf('cover')
+    if (coverIndex > 0) {
+      destinationList.splice(coverIndex, 1)
+      destinationList.unshift('cover')
+    }
+  }
+
+  if (isSameList) {
+    setList(destination.droppableId)(destinationList)
+  } else {
+    setList(source.droppableId)(sourceList)
+    setList(destination.droppableId)(destinationList)
+  }
+
+  if (destination.droppableId === 'active') {
+    setTimeout(() => scrollToSection(draggableId), 300)
+  }
+
+  setHasUnsavedChanges(true);
+}
+
 
   const handleTitleColorChange = (color) => {
     const newColor = color.toHexString()
