@@ -37,8 +37,8 @@ const initialSections = [
   { id: 'attendance', label: 'Asistencia', Component: PremiumInvitationAttendance },
 ]
 
-const defaultActiveSections = ['cover', 'pass', 'place', 'carousel', 'attendance']
-const defaultInactiveSections = ['video', 'family', 'gift', 'contact']
+const defaultActiveSections = ['cover', 'place', 'pass', 'attendance']
+const defaultInactiveSections = ['carousel', 'video', 'family', 'gift', 'contact']
 
 const PremiumInvitationPage = () => {
   const router = useRouter()
@@ -388,11 +388,12 @@ const PremiumInvitationPage = () => {
             <Row justify="center">
               <Col xs={24} sm={22} md={20} lg={16}>
                 {activeSectionOrder.map((id, index) => {
-                  const section = initialSections.find((s) => s.id === id)
+                  const baseId = id.split('-')[0]
+                  const section = initialSections.find((s) => s.id === baseId)
                   if (!section) return null
 
                   const { Component } = section
-                  const customTranslateX = id === 'cover' ? [0, 0] : [(index % 2 === 0 ? -3 : 3), 0]
+                  const customTranslateX = baseId === 'cover' ? [0, 0] : [(index % 2 === 0 ? -3 : 3), 0]
 
                   return (
                     <Parallax
