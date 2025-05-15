@@ -15,8 +15,8 @@ const PremiumInvitationContact = ({ isEditing, onDataChange, sectionData, global
     )
     setContacts(
       sectionData?.contacts || [
-        { name: "Carla", phone: "555-901-3030", avatar: "/assets/mujer.jpg" },
-        { name: "Luis", phone: "555-901-3030", avatar: "/assets/hombre.jpg" }
+        { name: "Carla", phone: "555-901-3030", avatar: "/assets/Mujer.jpg" },
+        { name: "Luis", phone: "555-901-3030", avatar: "/assets/Hombre.jpg" }
       ]
     )
   }, [sectionData])
