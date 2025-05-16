@@ -93,7 +93,7 @@ export const NewEvent = ({ createEvent, updateEvent, edit, hosts, invitationsDes
     setActiveTab(key)
   }
 
-  const showDesign = selectedInvitation || selectedPass || selectedRoom
+  const showDesign = (invitationType === "standard" && selectedInvitation) || selectedPass || selectedRoom
 
   const isShowingMap = activeTab === "3"
   const showDesignModalWidth = isShowingMap ? 1400 : 1000
