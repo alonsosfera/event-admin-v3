@@ -1,4 +1,4 @@
-import { Layout, Typography, Card, Collapse, Button, Divider, Row, Col, Upload, Progress, Modal, Spin, ColorPicker } from 'antd'
+import { Layout, Typography, Card, Collapse, Button, Divider, Row, Col, Upload, Progress, Modal, Spin, ColorPicker, Space } from 'antd'
 import { AudioOutlined, PictureOutlined, AppstoreAddOutlined, LinkOutlined } from '@ant-design/icons'
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd'
 import { useEffect, useState } from 'react'
@@ -398,21 +398,26 @@ const InvitationPremiumSideBar = ({
         centered
         maskClosable={false}
         keyboard={false}
-        style={{ textAlign: 'center', padding: 30 }}
       >
-      <Spin tip="Subiendo archivos..." size="large">
-        <div style={{ marginTop: 20 }}>
-          <Progress
-            type="circle"
-            percent={uploadProgress}
-            status="active"
-            strokeColor="#1890ff"
-          />
-        </div>
-      </Spin>
-    </Modal>
-
-
+        <Row align="middle" justify="center" gutter={32}>
+          <Col>
+            <Progress
+              type="circle"
+              percent={uploadProgress}
+              status="active"
+              strokeColor="#1890ff"
+            />
+          </Col>
+          <Col>
+            <Space direction="vertical" align="center">
+              <Spin size="large" />
+              <Typography.Text style={{ fontSize: 16, color: '#555' }}>
+                Guardando...
+              </Typography.Text>
+            </Space>
+          </Col>
+        </Row>
+      </Modal>
 
       <Row gutter={16} style={{ marginTop: 16, marginBottom: "16px" }}>
         <Col sm={24}>
