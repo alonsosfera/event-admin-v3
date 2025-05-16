@@ -1,4 +1,4 @@
-import { Layout, Typography, Card, Collapse, Button, Divider, Row, Col, Upload, Progress, Modal, Spin, ColorPicker } from 'antd'
+import { Layout, Typography, Card, Collapse, Button, Divider, Row, Col, Upload, Progress, Modal, Spin, ColorPicker, Space } from 'antd'
 import { AudioOutlined, PictureOutlined, AppstoreAddOutlined, LinkOutlined } from '@ant-design/icons'
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd'
 import { useEffect, useState } from 'react'
@@ -23,7 +23,9 @@ const InvitationPremiumSideBar = ({
   setHasUnsavedChanges,
   globalTypography,
   globalTitleColor,
-  globalSubtitleColor
+  globalSubtitleColor,
+  backgroundImage,
+  cardBackgroundImage
 }) => {
   const [isClient, setIsClient] = useState(false)
   const [titleColor, setTitleColor] = useState(globalTitleColor || '#2c3e50')
@@ -60,46 +62,71 @@ const InvitationPremiumSideBar = ({
     }
   }
    
-  const handleDragEnd = ({ source, destination, draggableId }) => {
-    if (!destination || draggableId === 'cover') return
-
-    const isSameList = source.droppableId === destination.droppableId
-    const getList = (id) => id === 'active' ? activeSectionOrder : inactiveSectionOrder
-    const setList = (id) => id === 'active' ? setActiveSectionOrder : setInactiveSectionOrder
-
-    const sourceList = [...getList(source.droppableId)]
-    const destinationList = isSameList ? sourceList : [...getList(destination.droppableId)]
-
-    const [moved] = sourceList.splice(source.index, 1)
-    let targetIndex = destination.index
-
-    if (destination.droppableId === 'active' && targetIndex === 0) {
-      targetIndex = 1
-    }
-
-    destinationList.splice(targetIndex, 0, moved)
-
-    if (destination.droppableId === 'active') {
-      const coverIndex = destinationList.indexOf('cover')
-      if (coverIndex > 0) {
-        destinationList.splice(coverIndex, 1)
-        destinationList.unshift('cover')
-      }
-    }
-
-    if (isSameList) {
-      setList(destination.droppableId)(destinationList)
-    } else {
-      setList(source.droppableId)(sourceList)
-      setList(destination.droppableId)(destinationList)
-    }
-
-    if (destination.droppableId === 'active') {
-      setTimeout(() => scrollToSection(draggableId), 300)
-    }
-
-    setHasUnsavedChanges(true);
+  const getNextAvailableNumber = (baseId, list) => {
+    const existingNumbers = list
+      .filter(id => id.startsWith(baseId))
+      .map(id => {
+        const match = id.match(/-(\d+)$/)
+        return match ? parseInt(match[1]) : 0
+      })
+    return Math.max(0, ...existingNumbers) + 1
   }
+
+  const handleDragEnd = ({ source, destination, draggableId }) => {
+  if (!destination || draggableId === 'cover') return
+
+  const isSameList = source.droppableId === destination.droppableId
+  const getList = (id) => id === 'active' ? activeSectionOrder : inactiveSectionOrder
+  const setList = (id) => id === 'active' ? setActiveSectionOrder : setInactiveSectionOrder
+
+  const sourceList = [...getList(source.droppableId)]
+  const destinationList = isSameList ? sourceList : [...getList(destination.droppableId)]
+
+  const baseId = draggableId.split('-')[0]
+  const isRepeatableSection = ['carousel', 'video', 'family'].includes(baseId)
+
+  if (!isRepeatableSection) {
+    // No repetibles: sólo mover sin duplicar
+    const [moved] = sourceList.splice(source.index, 1)
+    destinationList.splice(destination.index, 0, moved)
+  } else {
+    if (source.droppableId === 'active' && destination.droppableId === 'inactive') {
+      // Solo BORRAR si va de activas a disponibles (drop en inactive)
+      sourceList.splice(source.index, 1)
+    } else if (source.droppableId === 'inactive' && destination.droppableId === 'active') {
+      // Solo AGREGAR si va de disponibles a activas
+      const nextNumber = getNextAvailableNumber(baseId, destinationList)
+      const newSectionId = `${baseId}-${nextNumber}`
+      destinationList.splice(destination.index, 0, newSectionId)
+    } else if (isSameList) {
+      // Si se mueve dentro del mismo listado, solo reordenar
+      const [moved] = sourceList.splice(source.index, 1)
+      destinationList.splice(destination.index, 0, moved)
+    }
+  }
+
+  if (destination.droppableId === 'active') {
+    const coverIndex = destinationList.indexOf('cover')
+    if (coverIndex > 0) {
+      destinationList.splice(coverIndex, 1)
+      destinationList.unshift('cover')
+    }
+  }
+
+  if (isSameList) {
+    setList(destination.droppableId)(destinationList)
+  } else {
+    setList(source.droppableId)(sourceList)
+    setList(destination.droppableId)(destinationList)
+  }
+
+  if (destination.droppableId === 'active') {
+    setTimeout(() => scrollToSection(draggableId), 300)
+  }
+
+  setHasUnsavedChanges(true);
+}
+
 
   const handleTitleColorChange = (color) => {
     const newColor = color.toHexString()
@@ -121,6 +148,18 @@ const InvitationPremiumSideBar = ({
     setHasUnsavedChanges(true)
   }
 
+  const handleBackgroundColorChange = (color) => {
+    const newColor = color.toHexString()
+    onDataChange?.({ backgroundImage: newColor })
+    setHasUnsavedChanges(true)
+  }
+
+  const handleCardBackgroundColorChange = (color) => {
+    const newColor = color.toHexString()
+    onDataChange?.({ cardBackgroundImage: newColor })
+    setHasUnsavedChanges(true)
+  }
+
   const renderDroppableList = (droppableId, title, list) => (
     <div style={{ marginBottom: 24 }}>
       <Title level={5} style={{ marginBottom: 8, fontSize: 14 }}>{title}</Title>
@@ -137,7 +176,8 @@ const InvitationPremiumSideBar = ({
             }}
           >
             {list.map((id, index) => {
-              const section = sections.find(s => s.id === id)
+              const baseId = id.split('-')[0]
+              const section = sections.find(s => s.id === baseId)
               if (!section) return null
 
               const cardStyle = {
@@ -156,7 +196,7 @@ const InvitationPremiumSideBar = ({
                 fontSize: 11
               }
 
-              if (id === 'cover') {
+              if (baseId === 'cover') {
                 return (
                   <Card
                     key={id}
@@ -172,6 +212,10 @@ const InvitationPremiumSideBar = ({
                   </Card>
                 )
               }
+
+              const label = id.includes('-') 
+                ? `${section.label} ${id.split('-')[1]}`
+                : section.label
 
               return (
                 <Draggable draggableId={id} index={index} key={id}>
@@ -192,7 +236,7 @@ const InvitationPremiumSideBar = ({
                         ...provided.draggableProps.style
                       }}
                     >
-                      <Text strong>{section.label}</Text>
+                      <Text strong>{label}</Text>
                     </Card>
                   )}
                 </Draggable>
@@ -221,26 +265,47 @@ const InvitationPremiumSideBar = ({
               Elegir Canción
             </Button>
           </Upload>
-          <Upload
-            accept="image/*"
-            showUploadList={false}
-            beforeUpload={handleUpload('background')}
-            className="upload-full-width"
-          >
-            <Button icon={<PictureOutlined />} block>
-              Fondo General
-            </Button>
-          </Upload>
-          <Upload
-            accept="image/*"
-            showUploadList={false}
-            beforeUpload={handleUpload('card')}
-            className="upload-full-width"
-          >
-            <Button icon={<AppstoreAddOutlined />} block>
-              Fondo de las Cards
-            </Button>
-          </Upload>
+          <div>
+            <Text strong style={{ display: 'block', marginBottom: 8 }}>fondo general</Text>
+            <div style={{ display: 'flex', justifyContent: "center", gap: 8 }}>
+              <Upload
+                accept="image/*"
+                showUploadList={false}
+                beforeUpload={handleUpload('background')}
+                className="upload-full-width"
+            >
+              <Button icon={<PictureOutlined />} block>
+                Imagen
+              </Button>
+            </Upload>
+              <ColorPicker
+                value={backgroundImage}
+                onChange={handleBackgroundColorChange}
+                style={{ width: '100%' }}
+              />
+            </div>
+          </div>
+          
+          <div>
+            <Text strong style={{ display: 'block', marginBottom: 8 }}>Fondo de las secciones</Text>
+            <div style={{ display: 'flex', justifyContent: "center", gap: 8 }}>
+              <Upload
+                accept="image/*"
+                showUploadList={false}
+                beforeUpload={handleUpload('card')}
+                className="upload-full-width"
+            >
+              <Button icon={<AppstoreAddOutlined />} block>
+                Imagen
+              </Button>
+            </Upload>
+              <ColorPicker
+                value={cardBackgroundImage}
+                onChange={handleCardBackgroundColorChange}
+                style={{ width: '100%' }}
+              />
+            </div>
+          </div>
         </div>
       )
     },
@@ -333,21 +398,26 @@ const InvitationPremiumSideBar = ({
         centered
         maskClosable={false}
         keyboard={false}
-        style={{ textAlign: 'center', padding: 30 }}
       >
-      <Spin tip="Subiendo archivos..." size="large">
-        <div style={{ marginTop: 20 }}>
-          <Progress
-            type="circle"
-            percent={uploadProgress}
-            status="active"
-            strokeColor="#1890ff"
-          />
-        </div>
-      </Spin>
-    </Modal>
-
-
+        <Row align="middle" justify="center" gutter={32}>
+          <Col>
+            <Progress
+              type="circle"
+              percent={uploadProgress}
+              status="active"
+              strokeColor="#1890ff"
+            />
+          </Col>
+          <Col>
+            <Space direction="vertical" align="center">
+              <Spin size="large" />
+              <Typography.Text style={{ fontSize: 16, color: '#555' }}>
+                Guardando...
+              </Typography.Text>
+            </Space>
+          </Col>
+        </Row>
+      </Modal>
 
       <Row gutter={16} style={{ marginTop: 16, marginBottom: "16px" }}>
         <Col sm={24}>

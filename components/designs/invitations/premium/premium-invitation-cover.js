@@ -6,7 +6,7 @@ const { Title, Text } = Typography
 
 const PremiumInvitationCover = ({ isEditing, onDataChange, sectionData, eventDate, globalTypography }) => {
   
-  const [titleText, setTitleText] = useState(sectionData?.titleText || "Carla & Luis")
+  const [titleText, setTitleText] = useState(sectionData?.titleText || "Nuestra Boda")
   const [subtitleText, setSubtitleText] = useState(sectionData?.subtitleText || "¡Estás invitado a compartir este día tan especial con nosotros!")
   const [imageUrl, setImageUrl] = useState(sectionData?.image || "/assets/boda2.webp")
   const [titleColor, setTitleColor] = useState(sectionData?.titleColor || "#1677ff")

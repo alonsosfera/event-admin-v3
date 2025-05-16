@@ -37,8 +37,8 @@ const initialSections = [
   { id: 'attendance', label: 'Asistencia', Component: PremiumInvitationAttendance },
 ]
 
-const defaultActiveSections = ['cover', 'pass', 'place', 'carousel', 'attendance']
-const defaultInactiveSections = ['video', 'family', 'gift', 'contact']
+const defaultActiveSections = ['cover', 'place', 'pass', 'attendance']
+const defaultInactiveSections = ['carousel', 'video', 'family', 'gift', 'contact']
 
 const PremiumInvitationPage = () => {
   const router = useRouter()
@@ -62,7 +62,7 @@ const PremiumInvitationPage = () => {
   const [hasUnsavedChanges, setHasUnsavedChanges] = useState(null)
   const [globalTitleColor, setGlobalTitleColor] = useState('#4c4c4c')
   const [globalSubtitleColor, setGlobalSubtitleColor] = useState('#7f8c8d')
-  const [globalTypography, setGlobalTypography] = useState('Lora, serif')
+  const [globalTypography, setGlobalTypography] = useState('Roboto')
 
   useEffect(() => {
     import('webfontloader').then(WebFont => {
@@ -187,35 +187,45 @@ const PremiumInvitationPage = () => {
     let uploadedSectionBackgroundUrl = cardBackgroundImage
     let uploadedMusicUrl = musicUrl
 
-    if (sectionData.backgroundImageFile) {
-      uploadedBackgroundUrl = await uploadStorage(
-        sectionData.backgroundImageFile,
-        IMAGE_FOLDER,
-        '/api/storage/premium-image-song',
-        setUploadProgress,
-        token
-      )
-    }
+      if (sectionData.backgroundImageFile instanceof File) {
+        uploadedBackgroundUrl = await uploadStorage(
+          sectionData.backgroundImageFile,
+          IMAGE_FOLDER,
+          '/api/storage/premium-image-song',
+          setUploadProgress,
+          token
+        )
+      } else if (typeof backgroundImage === 'string' && !backgroundImage.startsWith('http')) {
+        uploadedBackgroundUrl = backgroundImage
+      } else if (backgroundImage === "/assets/background1.jpg") {
+        uploadedBackgroundUrl = undefined
+      }
 
-    if (sectionData.cardBackgroundImageFile) {
-      uploadedSectionBackgroundUrl = await uploadStorage(
-        sectionData.cardBackgroundImageFile,
-        IMAGE_FOLDER,
-        '/api/storage/premium-image-song',
-        setUploadProgress,
-        token
-      )
-    }
+      if (sectionData.cardBackgroundImageFile instanceof File) {
+        uploadedSectionBackgroundUrl = await uploadStorage(
+          sectionData.cardBackgroundImageFile,
+          IMAGE_FOLDER,
+          '/api/storage/premium-image-song',
+          setUploadProgress,
+          token
+        )
+      } else if (typeof cardBackgroundImage === 'string' && !cardBackgroundImage.startsWith('http')) {
+        uploadedSectionBackgroundUrl = cardBackgroundImage
+      } else if (cardBackgroundImage === "/assets/background1.jpg") {
+        uploadedSectionBackgroundUrl = undefined
+      }
 
-    if (sectionData.musicFile) {
-      uploadedMusicUrl = await uploadStorage(
-        sectionData.musicFile,
-        AUDIO_FOLDER,
-        '/api/storage/premium-image-song',
-        setUploadProgress,
-        token
-      )
-    }
+      if (sectionData.musicFile) {
+        uploadedMusicUrl = await uploadStorage(
+          sectionData.musicFile,
+          AUDIO_FOLDER,
+          '/api/storage/premium-image-song',
+          setUploadProgress,
+          token
+        )
+      } else if (musicUrl === "/assets/thousand-years.mp3") {
+        uploadedMusicUrl = undefined
+      }
 
     const processedSectionData = { ...sectionData }
 
@@ -375,6 +385,8 @@ const PremiumInvitationPage = () => {
           globalTypography={globalTypography}
           globalTitleColor={globalTitleColor}
           globalSubtitleColor={globalSubtitleColor}
+          backgroundImage={backgroundImage}
+          cardBackgroundImage={cardBackgroundImage}
         />
       )}
 
@@ -383,27 +395,42 @@ const PremiumInvitationPage = () => {
         {(isEditing || isPreviewShown) && (
           <PremiumInvitationPreview isEditing={isEditing} setIsEditing={setIsEditing} setIsPreviewShown={setIsPreviewShown} />
         )}
-        <div className="invitation-container" style={{ backgroundImage: `url(${backgroundImage})` }}>
+        <div
+          className="invitation-container"
+          style={ backgroundImage.startsWith('http') || backgroundImage.startsWith('blob:') || backgroundImage.startsWith('/assets')
+          ? { backgroundImage: `url(${backgroundImage})` }
+          : { backgroundColor: backgroundImage }
+        }
+        >
           <ParallaxProvider>
             <Row justify="center">
               <Col xs={24} sm={22} md={20} lg={16}>
                 {activeSectionOrder.map((id, index) => {
-                  const section = initialSections.find((s) => s.id === id)
+                  const baseId = id.split('-')[0]
+                  const section = initialSections.find((s) => s.id === baseId)
                   if (!section) return null
 
                   const { Component } = section
-                  const customTranslateX = id === 'cover' ? [0, 0] : [(index % 2 === 0 ? -3 : 3), 0]
 
                   return (
                     <Parallax
                       key={id}
-                      speed={0}
-                      translateX={customTranslateX}
+                      speed={0}   
                       opacity={[0, 5]}
                       easing="ease"
                     >
                       <div className={`section-${id}`} id={`section-${id}`}>
-                        <Card className='card-invitation' style={{ textAlign: "center", backgroundImage: `url(${cardBackgroundImage})` }}>
+                        <Card
+                          className='card-invitation'
+                          style={{
+                            textAlign: "center",
+                            ...(cardBackgroundImage
+                              ? (cardBackgroundImage.startsWith('http') || cardBackgroundImage.startsWith('blob:') || cardBackgroundImage.startsWith('/assets')
+                                ? { backgroundImage: `url(${cardBackgroundImage})` }
+                                : { backgroundColor: cardBackgroundImage })
+                              : {})
+                          }}
+                        >
                           <Component
                             eventDate={eventDate}
                             isEditing={isEditing}

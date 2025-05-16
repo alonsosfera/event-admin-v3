@@ -47,7 +47,7 @@ const PremiumInvitationPage = () => {
   const [invitationNotFound, setInvitationNotFound] = useState(false)
   const [globalTitleColor, setGlobalTitleColor] = useState('#4c4c4c')
   const [globalSubtitleColor, setGlobalSubtitleColor] = useState('#7f8c8d')
-  const [globalTypography, setGlobalTypography] = useState('')
+  const [globalTypography, setGlobalTypography] = useState('Roboto')
 
   const eventDate = invitated?.event?.eventDate
   
@@ -153,27 +153,40 @@ const PremiumInvitationPage = () => {
     <Layout className='layout-sidebar' style={{ minHeight: '100vh' }}>
       <Content>
         <PremiumInvitationMusicPlayer musicUrl={musicUrl} isPlaying={isPlaying} setIsPlaying={setIsPlaying} />
-        <div className="invitation-container" style={{ backgroundImage: `url(${backgroundImage})` }}>
+        <div 
+          className="invitation-container" 
+          style={ backgroundImage.startsWith('http') || backgroundImage.startsWith('blob:') || backgroundImage.startsWith('/assets')
+          ? { backgroundImage: `url(${backgroundImage})` } 
+          : { backgroundColor: backgroundImage } 
+        }>
           <ParallaxProvider>
             <Row justify="center">
               <Col xs={24} sm={22} md={20} lg={16}>
                 {activeSectionOrder.map((id, index) => {
-                  const section = initialSections.find((s) => s.id === id)
+                  const baseId = id.split('-')[0]
+                  const section = initialSections.find((s) => s.id === baseId)
                   if (!section) return null
 
                   const { Component } = section
-                  const customTranslateX = id === 'cover' ? [0, 0] : [(index % 2 === 0 ? -3 : 3), 0]
 
                   return (
                     <Parallax
                       key={id}
                       speed={0}
-                      translateX={customTranslateX}
                       opacity={[0, 5]}
                       easing="ease"
                     >
                       <div className={`section-${id}`} id={`section-${id}`}>
-                        <Card className='card-invitation' style={{ textAlign: "center", backgroundImage: `url(${cardBackgroundImage})` }}>
+                        <Card 
+                          className='card-invitation'
+                          style={{
+                            textAlign: "center",
+                            ...(cardBackgroundImage
+                              ? (cardBackgroundImage.startsWith('http') || cardBackgroundImage.startsWith('blob:') || cardBackgroundImage.startsWith('/assets')
+                                ? { backgroundImage: `url(${cardBackgroundImage})` }
+                                : { backgroundColor: cardBackgroundImage })
+                              : {})
+                          }}>
                           <Component
                             eventDate={eventDate}
                             invitated={invitated}

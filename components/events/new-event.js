@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react"
-import { Col, DatePicker, Form, Input, InputNumber, Modal, Row, Select, message, Tabs, Spin } from "antd"
+import { Col, DatePicker, Form, Input, InputNumber, Modal, Row, Select, message, Tabs, Spin, Divider } from "antd"
 
 import { RoomMapPreview } from "./room-map-preview"
 import { PassesListItem } from "../designs/passes/passes-list-item"
@@ -93,7 +93,7 @@ export const NewEvent = ({ createEvent, updateEvent, edit, hosts, invitationsDes
     setActiveTab(key)
   }
 
-  const showDesign = selectedInvitation || selectedPass || selectedRoom
+  const showDesign = (invitationType === "standard" && selectedInvitation) || selectedPass || selectedRoom
 
   const isShowingMap = activeTab === "3"
   const showDesignModalWidth = isShowingMap ? 1400 : 1000
@@ -141,6 +141,7 @@ export const NewEvent = ({ createEvent, updateEvent, edit, hosts, invitationsDes
                           placeholder="Fecha"
                           showTime={{ format: "hh:mm A" }}
                           style={{ width: "100%" }}
+                          needConfirm={false}
                         />
                       </Form.Item>
                     </Col>
@@ -190,6 +191,8 @@ export const NewEvent = ({ createEvent, updateEvent, edit, hosts, invitationsDes
                     </Col>
                   </Row>
                 </Col>
+
+                <Divider style={{ background: "#d9d9d9", margin: "0px 0px 5px 0px" }} />
 
                 <Col span={24}>
                   <Row gutter={16}>

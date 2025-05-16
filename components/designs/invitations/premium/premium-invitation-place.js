@@ -8,15 +8,15 @@ const PremiumInvitationPlace = ({ isEditing, onDataChange, sectionData, globalTi
   const [data, setData] = useState({
     section1Title: sectionData?.section1Title || "Ceremonia",
     section1Title2: sectionData?.section1Title2 || "Basílica de Guadalupe Monterrey",
-    section1Subtitle1: sectionData?.section1Subtitle1 || "20 de junio de 2025 18:00 hrs",
-    section1Subtitle2: sectionData?.section1Subtitle2 || "Guanajuato 715, Independencia, 64720 Monterrey, N.L.",
+    section1Subtitle1: sectionData?.section1Subtitle1 || "Ingresa la fecha",
+    section1Subtitle2: sectionData?.section1Subtitle2 || "Ingresa la dirección",
     section1Image: sectionData?.section1Image || "/assets/basílica.jpg",
 
     section2Title: sectionData?.section2Title || "Recepción",
     section2Title2: sectionData?.section2Title2 || "Salón La Joya",
     section2Subtitle1: sectionData?.section2Subtitle1 || "20 de junio de 2025 20:00 hrs",
-    section2Subtitle2: sectionData?.section2Subtitle2 || "Poner aqui la dirección real del salón",
-    section2Image: sectionData?.section2Image || "/assets/La_joya.jpg",
+    section2Subtitle2: sectionData?.section2Subtitle2 || "Úrsulo Galván #27, Col. Desarrollo Urbano Quetzalcóatl, 09700 Ciudad de México, CDMX",
+    section2Image: sectionData?.section2Image || "/assets/La_Joya.jpg",
   })
 
   const updateData = (key, value) => {
