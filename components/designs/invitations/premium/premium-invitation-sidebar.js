@@ -1,7 +1,10 @@
-import { Layout, Typography, Card, Collapse, Button, Divider, Row, Col, Upload, Progress, Modal, Spin } from 'antd'
-import { AudioOutlined, PictureOutlined, AppstoreAddOutlined } from '@ant-design/icons'
+import { Layout, Typography, Card, Collapse, Button, Divider, Row, Col, Upload, Progress, Modal, Spin, ColorPicker } from 'antd'
+import { AudioOutlined, PictureOutlined, AppstoreAddOutlined, LinkOutlined } from '@ant-design/icons'
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd'
 import { useEffect, useState } from 'react'
+import dynamic from 'next/dynamic'
+
+const FontPicker = dynamic(() => import('@/components/shared/font-picker'), { ssr: false })
 
 const { Sider } = Layout
 const { Text, Title } = Typography
@@ -17,9 +20,15 @@ const InvitationPremiumSideBar = ({
   saveInvitation,
   isUploading,
   uploadProgress,
-  setHasUnsavedChanges
+  setHasUnsavedChanges,
+  globalTypography,
+  globalTitleColor,
+  globalSubtitleColor
 }) => {
   const [isClient, setIsClient] = useState(false)
+  const [titleColor, setTitleColor] = useState(globalTitleColor || '#2c3e50')
+  const [subtitleColor, setSubtitleColor] = useState(globalSubtitleColor || '#7f8c8d')
+  const [fontFamily, setFontFamily] = useState(globalTypography || 'Poppins')
 
   useEffect(() => setIsClient(true), [])
 
@@ -90,6 +99,26 @@ const InvitationPremiumSideBar = ({
     }
 
     setHasUnsavedChanges(true);
+  }
+
+  const handleTitleColorChange = (color) => {
+    const newColor = color.toHexString()
+    setTitleColor(newColor)
+    onDataChange?.({ globalTitleColor: newColor })
+    setHasUnsavedChanges(true)
+  }
+
+  const handleSubtitleColorChange = (color) => {
+    const newColor = color.toHexString()
+    setSubtitleColor(newColor)
+    onDataChange?.({ globalSubtitleColor: newColor })
+    setHasUnsavedChanges(true)
+  }
+
+  const handleFontFamilyChange = (newFontFamily) => {
+    setFontFamily(newFontFamily)
+    onDataChange?.({ globalTypography: newFontFamily })
+    setHasUnsavedChanges(true)
   }
 
   const renderDroppableList = (droppableId, title, list) => (
@@ -212,6 +241,47 @@ const InvitationPremiumSideBar = ({
               Fondo de las Cards
             </Button>
           </Upload>
+        </div>
+      )
+    },
+    {
+      key: "2",
+      label: "🎨 Colores y tipografía",
+      children: (
+        <div className='collapse-buttons' style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
+          <div>
+            <Text strong style={{ display: 'block', marginBottom: 8 }}>Color de títulos</Text>
+            <ColorPicker
+              value={titleColor}
+              onChange={handleTitleColorChange}
+              style={{ width: '100%' }}
+            />
+          </div>
+          <div>
+            <Text strong style={{ display: 'block', marginBottom: 8 }}>Color de subtítulos</Text>
+            <ColorPicker
+              value={subtitleColor}
+              onChange={handleSubtitleColorChange}
+              style={{ width: '100%' }}
+            />
+          </div>
+          <div>
+            <Text strong style={{ display: 'block', marginBottom: 8 }}>
+              Tipo de letra
+              &nbsp;
+              <a
+                href="https://fonts.google.com/"
+                target="_blank"
+                rel="noreferrer"><LinkOutlined />
+              </a>
+            </Text>
+            <div style={{ display: 'flex', justifyContent: "center", gap: 8 }}>
+            <FontPicker
+              value={fontFamily}
+              onChange={handleFontFamilyChange}
+            />
+            </div>
+          </div>
         </div>
       )
     }

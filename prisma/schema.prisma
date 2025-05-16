@@ -136,6 +136,7 @@ model PremiumInvitation {
   backgroundUrl        String
   sectionBackgroundUrl String
   songUrl              String
+  styles               Json?
 
   eventId String? @unique
   event   Event?  @relation(fields: [eventId], references: [id], onDelete: Cascade)

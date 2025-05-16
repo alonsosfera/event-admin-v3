@@ -4,7 +4,7 @@ import { UploadOutlined, CloseOutlined, PlusOutlined } from "@ant-design/icons"
 
 const { Title, Text } = Typography
 
-const PremiumInvitationFamily = ({ isEditing, onDataChange, sectionData }) => {
+const PremiumInvitationFamily = ({ isEditing, onDataChange, sectionData, globalTitleColor, globalSubtitleColor, globalTypography }) => {
   const [title, setTitle] = useState("Nuestra Familia y Amigos")
   const [familyMembers, setFamilyMembers] = useState([])
 
@@ -63,7 +63,7 @@ const PremiumInvitationFamily = ({ isEditing, onDataChange, sectionData }) => {
     <div style={{ textAlign: 'center' }}>
       <Title
         level={1}
-        style={{ color: '#4c4c4c', marginBottom: '30px', fontWeight: 'bold' }}
+        style={{ color: globalTitleColor, marginBottom: '30px', fontWeight: 'bold', fontFamily: globalTypography }}
         editable={isEditing ? {
           triggerType: ['icon', 'text'],
           onChange: handleTitleChange
@@ -102,7 +102,7 @@ const PremiumInvitationFamily = ({ isEditing, onDataChange, sectionData }) => {
                 }}
               />
               <Text
-                style={{ fontSize: '20px', color: '#4c4c4c', fontWeight: 'bold', marginBottom: '5px' }}
+                style={{ fontSize: '20px', color: globalTitleColor, fontWeight: 'bold', marginBottom: '5px', fontFamily: globalTypography }}
                 editable={isEditing ? {
                   triggerType: ['icon', 'text'],
                   onChange: (val) => updateMember(index, "name", val)
@@ -111,7 +111,7 @@ const PremiumInvitationFamily = ({ isEditing, onDataChange, sectionData }) => {
                 {member.name}
               </Text>
               <Text
-                style={{ fontSize: '16px', color: '#7f8c8d' }}
+                style={{ fontSize: '16px', color: globalSubtitleColor, fontFamily: globalTypography }}
                 editable={isEditing ? {
                   triggerType: ['icon', 'text'],
                   onChange: (val) => updateMember(index, "role", val)
