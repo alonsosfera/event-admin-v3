@@ -4,7 +4,7 @@ import { Layout, Typography, Row, Col, Card, Spin, Modal } from 'antd'
 import { ParallaxProvider, Parallax } from 'react-scroll-parallax'
 import axios from 'axios'
 import { parseCookies } from "nookies"
-import { fileToArrayBuffer, arrayBufferToBase64 } from '@/components/designs/helpers'
+import { uploadStorage } from '@/helpers/upload-storage'
 
 import PremiumInvitationCover from '@/components/designs/invitations/premium/premium-invitation-cover'
 import PremiumInvitationPass from '@/components/designs/invitations/premium/premium-invitation-pass'
@@ -123,7 +123,7 @@ const PremiumInvitationPage = () => {
           setMusicUrl(data.songUrl || "/assets/thousand-years.mp3")
           setPremiumInvitationSections(data.sections)
           setEventDate(data.event.eventDate)
-          
+
           if (data.styles) {
             setGlobalTitleColor(data.styles.globalTitleColor || '#4c4c4c')
             setGlobalSubtitleColor(data.styles.globalSubtitleColor || '#7f8c8d')
@@ -176,129 +176,147 @@ const PremiumInvitationPage = () => {
     )
   }
 
-  const uploadStorage = async (file, folder, endpoint = '/api/storage/upload') => {
-    const buffer = await fileToArrayBuffer(file)
-    const fileBuffer = arrayBufferToBase64(buffer)
-    const sanitizedFileName = file.name.replace(/\s+/g, '-')
-
-    const response = await axios.post(endpoint, {
-      fileName: sanitizedFileName,
-      folder,
-      fileBuffer,
-    }, {
-      headers: { Authorization: `Bearer ${token}` },
-      onUploadProgress: (e) => {
-        if (e.total) {
-          const percent = Math.round((e.loaded * 100) / e.total)
-          setUploadProgress(percent)
-        }
-      }
-    })
-
-    return response.data.fileUrl
-  }
-
   const saveInvitation = async () => {
-    try {
-      setIsUploading(true)
-      setUploadProgress(0)
-      setHasUnsavedChanges(false);
 
-      let uploadedBackgroundUrl = backgroundImage
-      let uploadedSectionBackgroundUrl = cardBackgroundImage
-      let uploadedMusicUrl = musicUrl
+  try {
+    setIsUploading(true)
+    setUploadProgress(0)
+    setHasUnsavedChanges(false);
+
+    let uploadedBackgroundUrl = backgroundImage
+    let uploadedSectionBackgroundUrl = cardBackgroundImage
+    let uploadedMusicUrl = musicUrl
 
       if (sectionData.backgroundImageFile instanceof File) {
-        uploadedBackgroundUrl = await uploadStorage(sectionData.backgroundImageFile, IMAGE_FOLDER)
+        uploadedBackgroundUrl = await uploadStorage(
+          sectionData.backgroundImageFile,
+          IMAGE_FOLDER,
+          '/api/storage/premium-image-song',
+          setUploadProgress,
+          token
+        )
       } else if (typeof backgroundImage === 'string' && !backgroundImage.startsWith('http')) {
         uploadedBackgroundUrl = backgroundImage
       } else if (backgroundImage === "/assets/background1.jpg") {
         uploadedBackgroundUrl = undefined
       }
-  
+
       if (sectionData.cardBackgroundImageFile instanceof File) {
-        uploadedSectionBackgroundUrl = await uploadStorage(sectionData.cardBackgroundImageFile, IMAGE_FOLDER)
+        uploadedSectionBackgroundUrl = await uploadStorage(
+          sectionData.cardBackgroundImageFile,
+          IMAGE_FOLDER,
+          '/api/storage/premium-image-song',
+          setUploadProgress,
+          token
+        )
       } else if (typeof cardBackgroundImage === 'string' && !cardBackgroundImage.startsWith('http')) {
         uploadedSectionBackgroundUrl = cardBackgroundImage
       } else if (cardBackgroundImage === "/assets/background1.jpg") {
         uploadedSectionBackgroundUrl = undefined
       }
-  
+
       if (sectionData.musicFile) {
-        uploadedMusicUrl = await uploadStorage(sectionData.musicFile, AUDIO_FOLDER, "/api/storage/upload-song")
+        uploadedMusicUrl = await uploadStorage(
+          sectionData.musicFile,
+          AUDIO_FOLDER,
+          '/api/storage/premium-image-song',
+          setUploadProgress,
+          token
+        )
       } else if (musicUrl === "/assets/thousand-years.mp3") {
         uploadedMusicUrl = undefined
       }
 
-      const processedSectionData = { ...sectionData }
+    const processedSectionData = { ...sectionData }
 
-      for (const sectionId of activeSectionOrder) {
-        const section = sectionData[sectionId]
-        if (!section) continue
+    for (const sectionId of activeSectionOrder) {
+      const section = sectionData[sectionId]
+      if (!section) continue
 
-        const newSection = { ...section }
+      const newSection = { ...section }
 
-        for (const key in newSection) {
-          if (key.endsWith("File") && newSection[key] instanceof File) {
-            const fileKey = key
-            const baseKey = key.replace("File", "")
-
-            const uploadedUrl = await uploadStorage(newSection[fileKey], IMAGE_FOLDER)
-            newSection[baseKey] = uploadedUrl
-            delete newSection[fileKey]
-          }
-        }
-
-        if (Array.isArray(newSection.images)) {
-          newSection.images = await Promise.all(
-            newSection.images.map(async (imgObj) => {
-              if (imgObj?.file instanceof File) {
-                const uploadedUrl = await uploadStorage(imgObj.file, IMAGE_FOLDER)
-                return { ...imgObj, src: uploadedUrl, file: undefined }
-              }
-              return imgObj
-            })
+      for (const key in newSection) {
+        if (key.endsWith("File") && newSection[key] instanceof File) {
+          const uploadedUrl = await uploadStorage(
+            newSection[key],
+            IMAGE_FOLDER,
+            '/api/storage/premium-image-song',
+            setUploadProgress,
+            token
           )
+          newSection[key.replace("File", "")] = uploadedUrl
+          delete newSection[key]
         }
-
-        if (Array.isArray(newSection.familyMembers)) {
-          newSection.familyMembers = await Promise.all(
-            newSection.familyMembers.map(async (member) => {
-              if (member?.avatarFile instanceof File) {
-                const uploadedUrl = await uploadStorage(member.avatarFile, IMAGE_FOLDER)
-                return { ...member, avatar: uploadedUrl, avatarFile: undefined }
-              }
-              return member
-            })
-          )
-        }
-
-        if (Array.isArray(newSection.contacts)) {
-          newSection.contacts = await Promise.all(
-            newSection.contacts.map(async (contact) => {
-              if (contact?.avatarFile instanceof File) {
-                const uploadedUrl = await uploadStorage(contact.avatarFile, IMAGE_FOLDER)
-                return { ...contact, avatar: uploadedUrl, avatarFile: undefined }
-              }
-              return contact
-            })
-          )
-        }
-
-        processedSectionData[sectionId] = newSection
       }
 
-      const allSectionIds = [...activeSectionOrder, ...inactiveSectionOrder]
-      const sectionsPayload = allSectionIds.map((id, index) => {
-        const updated = processedSectionData[id]
-        const backup = premiumInvitationSections?.find(sec => sec.type === id)?.data
-        return {
-          type: id,
-          version: "1.0.0",
-          order: index,
-          data: updated || backup || {}
-        }
-      })
+      if (Array.isArray(newSection.images)) {
+        newSection.images = await Promise.all(
+          newSection.images.map(async (imgObj) => {
+            if (imgObj?.file instanceof File) {
+              const uploadedUrl = await uploadStorage(
+                imgObj.file,
+                IMAGE_FOLDER,
+                '/api/storage/premium-image-song',
+                setUploadProgress,
+                token
+              )
+              return { ...imgObj, src: uploadedUrl, file: undefined }
+            }
+            return imgObj
+          })
+        )
+      }
+
+      if (Array.isArray(newSection.familyMembers)) {
+        newSection.familyMembers = await Promise.all(
+          newSection.familyMembers.map(async (member) => {
+            if (member?.avatarFile instanceof File) {
+              const uploadedUrl = await uploadStorage(
+                member.avatarFile,
+                IMAGE_FOLDER,
+                '/api/storage/premium-image-song',
+                setUploadProgress,
+                token
+              )
+              return { ...member, avatar: uploadedUrl, avatarFile: undefined }
+            }
+            return member
+          })
+        )
+      }
+
+      if (Array.isArray(newSection.contacts)) {
+        newSection.contacts = await Promise.all(
+          newSection.contacts.map(async (contact) => {
+            if (contact?.avatarFile instanceof File) {
+              const uploadedUrl = await uploadStorage(
+                contact.avatarFile,
+                IMAGE_FOLDER,
+                '/api/storage/premium-image-song',
+                setUploadProgress,
+                token
+              )
+              return { ...contact, avatar: uploadedUrl, avatarFile: undefined }
+            }
+            return contact
+          })
+        )
+      }
+
+      processedSectionData[sectionId] = newSection
+    }
+
+    const allSectionIds = [...activeSectionOrder, ...inactiveSectionOrder]
+    const sectionsPayload = allSectionIds.map((id, index) => {
+      const updated = processedSectionData[id]
+      const backup = premiumInvitationSections?.find(sec => sec.type === id)?.data
+      return {
+        type: id,
+        version: "1.0.0",
+        order: index,
+        data: updated || backup || {}
+      }
+    })
 
       const metadata = {
         activeSections: activeSectionOrder,
@@ -339,7 +357,7 @@ const PremiumInvitationPage = () => {
       setUploadProgress(0)
     }
   }
-    
+
   return (
     <Layout className='layout-sidebar' style={{ minHeight: '100vh' }}>
       {isEditing && (
@@ -377,11 +395,11 @@ const PremiumInvitationPage = () => {
         {(isEditing || isPreviewShown) && (
           <PremiumInvitationPreview isEditing={isEditing} setIsEditing={setIsEditing} setIsPreviewShown={setIsPreviewShown} />
         )}
-        <div 
-          className="invitation-container" 
+        <div
+          className="invitation-container"
           style={ backgroundImage.startsWith('http') || backgroundImage.startsWith('blob:') || backgroundImage.startsWith('/assets')
-          ? { backgroundImage: `url(${backgroundImage})` } 
-          : { backgroundColor: backgroundImage } 
+          ? { backgroundImage: `url(${backgroundImage})` }
+          : { backgroundColor: backgroundImage }
         }
         >
           <ParallaxProvider>
@@ -424,7 +442,7 @@ const PremiumInvitationPage = () => {
                             globalTypography={globalTypography}
                             onDataChange={(data) => {
                               setHasUnsavedChanges(true)
-                              setSectionData(prev => ({ ...prev, [id]: data }))  
+                              setSectionData(prev => ({ ...prev, [id]: data }))
                             }}
                           />
                         </Card>

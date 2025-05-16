@@ -50,7 +50,7 @@ const PremiumInvitationPage = () => {
   const [globalTypography, setGlobalTypography] = useState('Roboto')
 
   const eventDate = invitated?.event?.eventDate
-  
+
   useEffect(() => {
     import('webfontloader').then(WebFont => {
       if (globalTypography) {
@@ -69,7 +69,7 @@ const PremiumInvitationPage = () => {
     const fetchPremiumInvitation = async () => {
       try {
         const { data } = await axios.get(`/api/premium-invitation/i/${invitationId}`)
-        
+
         if (!data || !data.event || !data.event.premiumInvitation) {
           setInvitationNotFound(true)
           return
@@ -78,11 +78,11 @@ const PremiumInvitationPage = () => {
         const premiumInvitation = data.event.premiumInvitation
         const invitated = data
         setInvitated(invitated)
-        
+
         setBackgroundImage(premiumInvitation.backgroundUrl || "/assets/background1.jpg")
         setCardBackgroundImage(premiumInvitation.sectionBackgroundUrl || "/assets/background1.jpg")
         setMusicUrl(premiumInvitation.songUrl || "/assets/thousand-years.mp3")
-        
+
         if (premiumInvitation.styles) {
           setGlobalTitleColor(premiumInvitation.styles.globalTitleColor || '#4c4c4c')
           setGlobalSubtitleColor(premiumInvitation.styles.globalSubtitleColor || '#7f8c8d')
@@ -153,11 +153,11 @@ const PremiumInvitationPage = () => {
     <Layout className='layout-sidebar' style={{ minHeight: '100vh' }}>
       <Content>
         <PremiumInvitationMusicPlayer musicUrl={musicUrl} isPlaying={isPlaying} setIsPlaying={setIsPlaying} />
-        <div 
-          className="invitation-container" 
+        <div
+          className="invitation-container"
           style={ backgroundImage.startsWith('http') || backgroundImage.startsWith('blob:') || backgroundImage.startsWith('/assets')
-          ? { backgroundImage: `url(${backgroundImage})` } 
-          : { backgroundColor: backgroundImage } 
+          ? { backgroundImage: `url(${backgroundImage})` }
+          : { backgroundColor: backgroundImage }
         }>
           <ParallaxProvider>
             <Row justify="center">
@@ -178,7 +178,7 @@ const PremiumInvitationPage = () => {
                       easing="ease"
                     >
                       <div className={`section-${id}`} id={`section-${id}`}>
-                        <Card 
+                        <Card
                           style={{
                             textAlign: "center",
                             ...(cardBackgroundImage

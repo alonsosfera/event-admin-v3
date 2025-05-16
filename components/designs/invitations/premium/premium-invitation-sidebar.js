@@ -44,24 +44,24 @@ const InvitationPremiumSideBar = ({
   const handleUpload = (type) => {
     return (file) => {
       const url = URL.createObjectURL(file)
-  
+
       if (type === 'background') {
         onDataChange?.({ backgroundImage: url, backgroundImageFile: file })
       }
-  
+
       if (type === 'card') {
         onDataChange?.({ cardBackgroundImage: url, cardBackgroundImageFile: file })
       }
-  
+
       if (type === 'audio') {
         onDataChange?.({ musicUrl: url, musicFile: file })
         setIsPlaying(true)
       }
-  
+
       return false
     }
   }
-   
+
   const handleDragEnd = ({ source, destination, draggableId }) => {
     if (!destination || draggableId === 'cover') return
 
@@ -255,7 +255,7 @@ const InvitationPremiumSideBar = ({
               />
             </div>
           </div>
-          
+
           <div>
             <Text strong style={{ display: 'block', marginBottom: 8 }}>Color de fondo de cards</Text>
             <div style={{ display: 'flex', justifyContent: "center", gap: 8 }}>
@@ -274,6 +274,47 @@ const InvitationPremiumSideBar = ({
                 onChange={handleCardBackgroundColorChange}
                 style={{ width: '100%' }}
               />
+            </div>
+          </div>
+        </div>
+      )
+    },
+    {
+      key: "2",
+      label: "🎨 Colores y tipografía",
+      children: (
+        <div className='collapse-buttons' style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
+          <div>
+            <Text strong style={{ display: 'block', marginBottom: 8 }}>Color de títulos</Text>
+            <ColorPicker
+              value={titleColor}
+              onChange={handleTitleColorChange}
+              style={{ width: '100%' }}
+            />
+          </div>
+          <div>
+            <Text strong style={{ display: 'block', marginBottom: 8 }}>Color de subtítulos</Text>
+            <ColorPicker
+              value={subtitleColor}
+              onChange={handleSubtitleColorChange}
+              style={{ width: '100%' }}
+            />
+          </div>
+          <div>
+            <Text strong style={{ display: 'block', marginBottom: 8 }}>
+              Tipo de letra
+              &nbsp;
+              <a
+                href="https://fonts.google.com/"
+                target="_blank"
+                rel="noreferrer"><LinkOutlined />
+              </a>
+            </Text>
+            <div style={{ display: 'flex', justifyContent: "center", gap: 8 }}>
+            <FontPicker
+              value={fontFamily}
+              onChange={handleFontFamilyChange}
+            />
             </div>
           </div>
         </div>
