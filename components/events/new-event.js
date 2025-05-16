@@ -141,6 +141,7 @@ export const NewEvent = ({ createEvent, updateEvent, edit, hosts, invitationsDes
                           placeholder="Fecha"
                           showTime={{ format: "hh:mm A" }}
                           style={{ width: "100%" }}
+                          needConfirm={false}
                         />
                       </Form.Item>
                     </Col>
