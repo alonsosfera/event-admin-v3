@@ -287,7 +287,7 @@ const InvitationPremiumSideBar = ({
           </div>
           
           <div>
-            <Text strong style={{ display: 'block', marginBottom: 8 }}>Color de fondo de cards</Text>
+            <Text strong style={{ display: 'block', marginBottom: 8 }}>Fondo de las secciones</Text>
             <div style={{ display: 'flex', justifyContent: "center", gap: 8 }}>
               <Upload
                 accept="image/*"
