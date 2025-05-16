@@ -266,7 +266,7 @@ const InvitationPremiumSideBar = ({
             </Button>
           </Upload>
           <div>
-            <Text strong style={{ display: 'block', marginBottom: 8 }}>fondo general</Text>
+            <Text strong style={{ display: 'block', marginBottom: 8 }}>Fondo general</Text>
             <div style={{ display: 'flex', justifyContent: "center", gap: 8 }}>
               <Upload
                 accept="image/*"
@@ -398,6 +398,7 @@ const InvitationPremiumSideBar = ({
         centered
         maskClosable={false}
         keyboard={false}
+        width={340}
       >
         <Row align="middle" justify="center" gutter={32}>
           <Col>

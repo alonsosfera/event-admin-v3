@@ -99,6 +99,7 @@ const PremiumInvitationCover = ({ isEditing, onDataChange, sectionData, eventDat
               fontSize: '50px',
               fontWeight: 'bold',
               color: titleColor,
+              textShadow: "1px 2px 4px black",
               fontFamily: globalTypography,
               margin: 0,
               '@media (maxWidth: 768px)': {
@@ -136,6 +137,7 @@ const PremiumInvitationCover = ({ isEditing, onDataChange, sectionData, eventDat
               fontSize: '20px',
               color: subtitleColor,
               display: 'block',
+              textShadow: "1px 1px black",
               fontFamily: globalTypography,
               '@media (maxWidth: 768px)': {
                 fontSize: '16px',
