@@ -27,6 +27,7 @@ export const CONFIG = {
     DCM_AWS_BUCKET_NAME: process.env.DCM_AWS_BUCKET_NAME,
     DCM_AWS_REGION: process.env.DCM_AWS_REGION,
     DCM_AWS_SECRET_KEY: process.env.DCM_AWS_SECRET_KEY,
-    DCM_AWS_ACCESS_KEY: process.env.DCM_AWS_ACCESS_KEY
+    DCM_AWS_ACCESS_KEY: process.env.DCM_AWS_ACCESS_KEY,
+    DCM_AWS_ENDPOINT: process.env.DCM_AWS_ENDPOINT
   }
 }

@@ -24,6 +24,7 @@ model Event {
   digitalInvitation  DigitalInvitation?
   digitalPass        DigitalPass?
   roomMap            RoomMap?
+  premiumInvitation  PremiumInvitation?
 }
 
 model Room {
@@ -128,4 +129,32 @@ model PasswordRecovery {
 
   userId String @unique
   user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
-} 
+}
+
+model PremiumInvitation {
+  id                   String @id @default(uuid())
+  backgroundUrl        String
+  sectionBackgroundUrl String
+  songUrl              String
+  styles               Json?
+
+  eventId String? @unique
+  event   Event?  @relation(fields: [eventId], references: [id], onDelete: Cascade)
+
+  sections  PremiumInvitationSection[]
+  createdAt DateTime                   @default(now())
+  updatedAt DateTime                   @updatedAt
+}
+
+model PremiumInvitationSection {
+  id                  String @id @default(uuid())
+  premiumInvitationId String
+  type                String // e.g., "cover", "photosCarousel"
+  version             String // e.g., "1", "2", "1.0.0"
+  order               Int
+  data                Json
+
+  premiumInvitation PremiumInvitation @relation(fields: [premiumInvitationId], references: [id], onDelete: Cascade)
+  createdAt         DateTime          @default(now())
+  updatedAt         DateTime          @updatedAt
+}

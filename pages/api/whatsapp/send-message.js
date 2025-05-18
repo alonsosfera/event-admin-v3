@@ -7,7 +7,7 @@ import { prisma } from "../../../lib/prisma"
 
 export const config = {
   api: {
-    bodyParser: false // Disables Next.js built-in bodyParser
+    bodyParser: false
   }
 }
 
@@ -23,7 +23,7 @@ export default async (req, res) => {
         return
       }
 
-      const { invitationId: [invitationId], phone: [phone], invitationName: [invitationName] } = fields
+      const { invitationId: [invitationId], phone: [phone], invitationName: [invitationName], premium: [premium] } = fields
       const { file: [file] } = files
 
       const fileName = `Invitacion_${invitationName.replaceAll(" ", "_")}.pdf`
@@ -66,7 +66,7 @@ export default async (req, res) => {
               parameters: [
                 {
                   type: "text",
-                  text: `i-${translator.fromUUID(invitationId)}`
+                  text: premium === 'true' ? `p/i-${translator.fromUUID(invitationId)}` : `i-${translator.fromUUID(invitationId)}`
                 }
               ]
             }

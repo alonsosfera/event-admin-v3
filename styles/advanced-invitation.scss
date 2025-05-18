@@ -1,0 +1,207 @@
+.invitation-container {
+  
+  .card-invitation {
+    position: relative;
+    border-radius: 8px;
+    overflow: hidden;
+  }
+
+  .ant-card {
+    border: 0px;
+    border-bottom: 10px solid black;
+  }
+
+  .section-cover{
+
+    .ant-image {
+      object-fit: contain;
+      width: 480px;
+      height: auto;
+    }
+
+    .ant-card .ant-card-body{
+      padding-top: 0;
+      padding-bottom: 0;
+    }
+  }
+
+  .text {
+    font-size: 20px;
+    color: #fff;
+    position: absolute;
+    width: 100%;
+    top: 76%;
+    left: 50%;
+    transform: translateX(-50%)
+  }
+
+  .wp-block-uagb-countdown {
+    display: flex;
+    justify-content: center;
+    text-align: center;
+    line-height: normal;
+    margin: 0;
+    padding: 20px 0;
+  }
+  
+  .countdown-container {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    flex-wrap: wrap;
+  }
+  
+  .countdown-item {
+    background-color: rgba(0, 0, 0, 0.5);
+    color: white; 
+    border-radius: 12px;
+    padding: 20px 10px;
+    text-align: center;
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.5);
+    width: 100px;
+  }
+  
+  .countdown-number {
+    font-size: 38px;
+    font-weight: bold;
+    display: block;
+  }
+  
+  .countdown-label {
+    font-size: 16px;
+    font-weight: 400;
+  }
+
+  .upload-full-width .ant-upload {
+      display: block;
+      width: 100%;
+  }
+
+//Carousel ADVANCE-INVITATION
+
+  .ant-carousel .slick-next,
+  .ant-carousel .slick-prev {
+    width: 30px;
+    height: 35px;
+    background-color: black;
+  }
+
+  .ant-carousel .slick-next::after,
+  .ant-carousel .slick-prev::after {
+      width: 20px;
+      height: 20px;
+      border-width: 4px 0 0 4px;
+      top: 20%;
+  }
+
+  .ant-carousel .slick-prev::after{
+    left: 30%;
+  }
+
+  .ant-carousel .slick-next::after{
+    left: 0%;
+  }
+
+  .image-container {
+    .delete-button {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      background-color: rgba(255, 0, 0, 0.5);
+      color: white;
+      border-radius: 50px;
+      width: 35px;
+      height: 35px;
+      cursor: pointer;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.3s ease;
+    }
+    
+    .delete-button:hover {
+      background-color: red
+  
+    }
+
+    .change-button {
+      position: absolute;
+      top: 10px;
+      left: 10px;
+      background-color: rgba(5, 31, 216, 0.5);
+      color: white;
+      border-radius: 50px;
+      width: 35px;
+      height: 35px;
+      cursor: pointer;
+      display: none;
+      justify-content: center;
+      align-items: center;
+      transition: all 0.3s ease;
+    }
+  
+    .change-button:hover {
+      background-color: blue
+    }
+
+  }
+
+  .image-container:hover .delete-button,
+  .image-container:hover .change-button {
+    display: flex;
+  }
+  
+  // Fin carousel Advance invitation
+
+  @media (max-width: 576px) {
+
+    .ant-image {
+      width: 100%;
+      height: auto;
+    }
+
+    .section-cover{
+      .ant-card .ant-card-body{
+        padding: 0;
+      }
+    }
+    
+    .countdown-container {
+      gap: 15px;
+    }
+  
+    .countdown-item {
+      padding: 15px 20px;
+      width: 70px;
+    }
+
+    .countdown-number {
+      font-size: 25px;
+      font-weight: bold;
+      display: block;
+    }
+    
+    .countdown-label {
+      font-size: 10px;
+      font-weight: 400;
+    }
+  }  
+    
+  @media (min-width: 576px) {
+    .text {
+      top: 80%;
+      left: 50%;
+      transform: translateX(-50%)
+    }
+  }
+ 
+}
+
+.layout-sidebar{
+  
+  .upload-full-width .ant-upload {
+    display: block;
+    width: 100%;
+  }
+
+}
