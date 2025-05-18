@@ -143,7 +143,8 @@ const EventDetails = ({ data, fullSize, fetchedEvent, setEvent, resetEvent }) =>
   }
 
   const handleRedirectToPremiumInvitation = () => {
-      router.push(`/premium-invitation/${fetchedEvent.id}`);
+    const url = `/premium-invitation/${fetchedEvent.id}`;
+    window.open(url, '_blank');
   };
 
   const invitedGuests = invitations.reduce((prev, current) => prev + current.numberGuests, 0)
@@ -205,7 +206,7 @@ const EventDetails = ({ data, fullSize, fetchedEvent, setEvent, resetEvent }) =>
                     <Link
                       href="#"
                       passHref
-                      onClick={handleDigitalModalToggle}
+                      onClick={fetchedEvent.digitalInvitation ? handleDigitalModalToggle : handleRedirectToPremiumInvitation}
                       style={{ display: "block" }}
                       >Editar invitación</Link>
                   </Col>

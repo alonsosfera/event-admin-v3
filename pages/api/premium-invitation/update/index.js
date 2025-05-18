@@ -36,7 +36,7 @@ export default async function handler(req, res) {
         styles: {
           globalTitleColor,
           globalSubtitleColor,
-          globalTypography,  
+          globalTypography,
         },
       },
     });
