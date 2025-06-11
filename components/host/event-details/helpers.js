@@ -2,9 +2,9 @@ import { message } from "antd"
 import axios from "axios"
 import JsPDF from "jspdf"
 import QRCode from "qrcode"
-import dayjs from "dayjs"
-import "dayjs/locale/es"
+import dayjs from "../../shared/time-zone"
 dayjs.locale("es")
+
 import { createInvitation } from "../../events/helpers"
 
 export const centerTextValue = (text, pixelsByLetter, length = 500, start = 150) => {
@@ -120,7 +120,7 @@ export const invitationPDF = async (event, invitation, pdf, dimensions) => {
   // Date and Time
   const dateCoordinate = itemsByKey?.Fecha
   const timeCoordinate = itemsByKey?.Hora
-  const momentDate = dayjs(eventDate)
+  const momentDate = dayjs.utc(eventDate).tz('America/Mexico_City')
   const date = momentDate.format("DD [de] MMMM")
   const time = momentDate.format("h:mm a")
 

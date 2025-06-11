@@ -1,5 +1,5 @@
 import { Col, Table } from "antd"
-import dayjs from "dayjs"
+import dayjs from "../shared/time-zone"
 import { withForm } from "../../helpers"
 
 const EventsTable = ({ data, rooms, selectRow }) => {
@@ -17,7 +17,7 @@ const EventsTable = ({ data, rooms, selectRow }) => {
           title="Nombre" />
         <Table.Column
           dataIndex="eventDate"
-          render={text => dayjs(text).format("DD/MM/YYYY hh:mm a")}
+          render={text => dayjs.utc(text).tz('America/Mexico_City').format("DD/MM/YYYY hh:mm a")}
           sorter={(a, b) => (a.eventDate || "").localeCompare(b.eventDate || "")}
           title="Fecha" />
         <Table.Column
