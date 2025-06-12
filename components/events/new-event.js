@@ -6,9 +6,14 @@ import { PassesListItem } from "../designs/passes/passes-list-item"
 import { InvitationsListItem } from "../designs/invitations/invitations-list-item"
 import { useService } from "../../hooks/use-service"
 import { getEventById } from "./helpers"
-import dayjs from "dayjs"
+import dayjs from "../shared/time-zone"
 import customParseFormat from "dayjs/plugin/customParseFormat"
+import tz from "dayjs/plugin/timezone"
+import utc from "dayjs/plugin/utc"
+
 dayjs.extend(customParseFormat)
+dayjs.extend(tz)
+dayjs.extend(utc)
 
 export const NewEvent = ({ createEvent, updateEvent, edit, hosts, invitationsDesigns, passDesigns, roomMaps, ...props }) => {
   const [form] = Form.useForm()
@@ -24,7 +29,7 @@ export const NewEvent = ({ createEvent, updateEvent, edit, hosts, invitationsDes
 
   useEffect(() => {
     if (edit) {
-      edit.eventDate = dayjs(edit.eventDate)
+      edit.eventDate = dayjs.utc(edit.eventDate).tz('America/Mexico_City')
       form.setFieldsValue(edit)
       eventRefetch(edit.id).then()
     }
@@ -50,7 +55,7 @@ export const NewEvent = ({ createEvent, updateEvent, edit, hosts, invitationsDes
     try {
       await form.validateFields()
       const values = await form.getFieldsValue()
-      values.eventDate =  values.eventDate ? values.eventDate.toISOString() : dayjs().toISOString()
+      values.eventDate = values.eventDate ? dayjs.utc(values.eventDate).tz('America/Mexico_City').toISOString() : dayjs.utc().tz('America/Mexico_City').toISOString()
 
       const { id, ...roomMap } = selectedRoom
       const { id: _1, ...digitalPass } = selectedPass

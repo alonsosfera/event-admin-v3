@@ -1,5 +1,5 @@
 import bcrypt from "bcrypt"
-import dayjs from "dayjs"
+import dayjs from "../../../components/shared/time-zone"
 import { prisma } from "../../../lib/prisma"
 
 export default async function handler(req, res) {
@@ -13,7 +13,7 @@ export default async function handler(req, res) {
 
       if (!userRecovery) {
         return res.status(404).json({ message: "No se encontró la solicitud de recuperación" })
-      } else if (dayjs(userRecovery.createdAt).add(1, "day").isBefore(dayjs())) {
+      } else if (dayjs.utc(userRecovery.createdAt).tz('America/Mexico_City').add(1, "day").isBefore(dayjs.utc().tz('America/Mexico_City'))) {
         await prisma.passwordRecovery.delete({ where: { id: recovery } })
         return res.status(400).json({ expired: true, message: "La solicitud de recuperación ha expirado, favor de solicitar una nueva." })
       }
