@@ -3,8 +3,7 @@ import { useEffect, useMemo, useState } from "react"
 import { parseCookies } from "nookies"
 import axios from "axios"
 import { SketchPicker } from "react-color"
-import dayjs from "dayjs"
-
+import dayjs from "../shared/time-zone"
 import { DesignSelector } from "../designs/design-selector"
 import { PassEditorLayout } from "./pass-editor-layout"
 import { fileToArrayBuffer, arrayBufferToBase64 } from "../designs/helpers"
@@ -14,8 +13,8 @@ const defaultItems = (event, fontColor, fontSize, textAlign = "center") => [
   { key: "Nombre de invitado", coordinateX: 80, coordinateY: 60, customConfig: { fontColor, fontSize, textAlign } },
   { key: "# de invitados", coordinateX: 80, coordinateY: 105, customConfig: { fontColor, fontSize, textAlign } },
   { key: "Mesa", coordinateX: 80, coordinateY: 150, customConfig: { fontColor, fontSize, textAlign } },
-  { key: "Fecha", label: dayjs(event.eventDate).format("DD [de] MMMM"), coordinateX: 80, coordinateY: 195, customConfig: { fontColor, fontSize, textAlign } },
-  { key: "Hora", label: dayjs(event.eventDate).format("hh:mm A"), coordinateX: 80, coordinateY: 240, customConfig: { fontColor, fontSize, textAlign } },
+  { key: "Fecha", label: dayjs.utc(event.eventDate).tz('America/Mexico_City').format("DD [de] MMMM"), coordinateX: 80, coordinateY: 195, customConfig: { fontColor, fontSize, textAlign } },
+  { key: "Hora", label: dayjs.utc(event.eventDate).tz('America/Mexico_City').format("hh:mm A"), coordinateX: 80, coordinateY: 240, customConfig: { fontColor, fontSize, textAlign } },
   { key: "QR_CODE", coordinateX: 250, coordinateY: 150, customConfig: { qrSize: 250 } }
 ]
 
@@ -63,9 +62,9 @@ export const DigitalPassModal = ({ isOpen, onCancel, onSubmit, event }) => {
           if (coord.key === "Nombre del evento") {
             return { ...coord, label: event.name }
           } else if (coord.key === "Fecha") {
-            return { ...coord, label: dayjs(event.eventDate).format("DD [de] MMMM") }
+            return { ...coord, label: dayjs.utc(event.eventDate).tz('America/Mexico_City').format("DD [de] MMMM") }
           } else if (coord.key === "Hora") {
-            return { ...coord, label: dayjs(event.eventDate).format("hh:mm a") }
+            return { ...coord, label: dayjs.utc(event.eventDate).tz('America/Mexico_City').format("hh:mm a") }
           }
           return coord
         }))
@@ -222,9 +221,9 @@ export const DigitalPassModal = ({ isOpen, onCancel, onSubmit, event }) => {
         if (coord.key === "Nombre del evento") {
           return { ...coord, label: event.name }
         } else if (coord.key === "Fecha") {
-          return { ...coord, label: dayjs(event.eventDate).format("DD [de] MMMM") }
+          return { ...coord, label: dayjs.utc(event.eventDate).tz('America/Mexico_City').format("DD [de] MMMM") }
         } else if (coord.key === "Hora") {
-          return { ...coord, label: dayjs(event.eventDate).format("hh:mm A") }
+          return { ...coord, label: dayjs.utc(event.eventDate).tz('America/Mexico_City').format("hh:mm A") }
         }
         return coord
       }))

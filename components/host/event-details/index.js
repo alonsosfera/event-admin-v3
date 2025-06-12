@@ -1,6 +1,6 @@
 import { Alert, Col, Row, Image} from "antd"
 import { useEffect, useState } from "react"
-import dayjs from "dayjs"
+import dayjs from "../../shared/time-zone"
 import JsPDF from "jspdf"
 import { withForm } from "../../../helpers"
 import { NewInvitation } from "./new-invitation"
@@ -170,7 +170,7 @@ const EventDetails = ({ data, fullSize, fetchedEvent, setEvent, resetEvent }) =>
             <Col xs={24} lg={14}><h1>Detalles de evento</h1>
               <Row style={{ padding: "0", marginBottom: "10px", marginTop: "10px" }} >
                 <Col xs={24} sm={8} md={8}><b>Nombre: </b>{fetchedEvent.name}</Col>
-                <Col xs={24} sm={8} md={8}><b>Fecha: </b>{dayjs(fetchedEvent.eventDate).format("DD/MM/YYYY hh:mm a")}</Col>
+                <Col xs={24} sm={8} md={8}><b>Fecha: </b>{dayjs.utc(fetchedEvent.eventDate).tz('America/Mexico_City').format("DD/MM/YYYY hh:mm a")}</Col>
                 <Col xs={24} sm={8} md={8}><b>Capacidad: </b>{fetchedEvent.assistance}</Col>
               </Row>
               <Row style={{ padding: "0" }} >

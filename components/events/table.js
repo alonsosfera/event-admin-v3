@@ -1,5 +1,5 @@
 import "jspdf-autotable"
-import dayjs from "dayjs"
+import dayjs, { parseDate } from "../shared/time-zone"
 import { useRef, useState } from "react"
 import { Button, Col, Popconfirm, Space, Table } from "antd"
 import { EditOutlined, DeleteOutlined, DownloadOutlined  } from "@ant-design/icons"
@@ -45,17 +45,17 @@ const EventsTable = ({ data, edit, remove, hosts }) => {
     )
   }
 
-  const now = dayjs()
+  const now = dayjs().tz('America/Mexico_City')
 
   const sortedData = data.sort((a, b) => {
-    const dateA = dayjs(a.eventDate)
-    const dateB = dayjs(b.eventDate)
+    const dateA = parseDate(a.eventDate)
+    const dateB = parseDate(b.eventDate)
 
     if (dateA.isAfter(now) && dateB.isBefore(now)) return -1
     if (dateA.isBefore(now) && dateB.isAfter(now)) return 1
 
     return dateA.diff(now) - dateB.diff(now)
-})
+  })
 
   return (
     <Col span={24}>
@@ -70,8 +70,15 @@ const EventsTable = ({ data, edit, remove, hosts }) => {
           render={renderEvent} />
         <Table.Column
           dataIndex="eventDate"
-          render={text => dayjs(text).format("DD/MM/YYYY hh:mm a")}
-          sorter={(a, b) => (a.eventDate || "").localeCompare(b.eventDate || "")}
+          render={text => {
+            const date = parseDate(text)
+            return date.format("DD/MM/YYYY hh:mm a")
+          }}
+          sorter={(a, b) => {
+            const dateA = parseDate(a.eventDate)
+            const dateB = parseDate(b.eventDate)
+            return dateA.valueOf() - dateB.valueOf()
+          }}
           title="Fecha" />
         <Table.Column
           dataIndex="assistance"
