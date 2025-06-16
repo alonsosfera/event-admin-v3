@@ -16,22 +16,38 @@ export const EditableFieldsList = ({
     return yDiff
   }
 
+  const getCustomConfig = (coordinate) => {
+    try {
+      const parsedConfig = JSON.parse(coordinate.customConfig || "{}")
+      return {
+        ...parsedConfig,
+        ...customConfig[coordinate.key]
+      }
+    } catch (e) {
+      return customConfig[coordinate.key] || {}
+    }
+  }
+
   return (
     <Col span={8}>
-      {coordinates.sort(sortCoordinates).map(coordinate => (
-        <InvitationField
-          key={coordinate.key}
-          label={coordinate.key}
-          value={state[coordinate.key] || ""}
-          linkValue={
-            customConfig[coordinate.key] ||
-            JSON.parse(coordinate.customConfig || "{}").link ||
-            ""
-          }
-          onChange={event => onValueChange(event, coordinate.key)}
-          onLinkChange={link => onLinkChange(coordinate.key, link)}
-        />
-      ))}
+      {coordinates.sort(sortCoordinates).map(coordinate => {
+        // Determinar si es el botón de confirmación
+        const isButton = coordinate.key === "confirmButton"
+        
+        return (
+          <InvitationField
+            key={coordinate.key}
+            label={coordinate.key}
+            value={state[coordinate.key] || ""}
+            linkValue={JSON.stringify({
+              ...getCustomConfig(coordinate),
+              isButton: isButton
+            })}
+            onChange={event => onValueChange(event, coordinate.key)}
+            onLinkChange={link => onLinkChange(coordinate.key, link)}
+          />
+        )
+      })}
     </Col>
   )
 }

@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react"
 import { SketchPicker } from "react-color"
-import { LeftCircleOutlined, LinkOutlined } from "@ant-design/icons"
+import { LeftCircleOutlined, LinkOutlined, CheckOutlined } from "@ant-design/icons"
 import { Alert, Button, Form, Input, InputNumber, Slider, Tooltip } from "antd"
 import dynamic from "next/dynamic"
 const FontPicker = dynamic(() => import("../../shared/font-picker"), { ssr: false })
@@ -88,6 +88,29 @@ export const InvitationConfigItem = ({ scaleFactor, selectedFile, onSubmit }) =>
       </Form.Item>
       <Form.Item>
         <Button style={{ width: "100%" }} onClick={onAddItem}><LeftCircleOutlined /> Agregar campo</Button>
+      </Form.Item>
+      <Form.Item>
+        <Button 
+          type="primary" 
+          style={{ width: "100%" }} 
+          onClick={() => onSubmit({
+            key: "confirmButton",
+            label: "Confirmar Asistencia",
+            customConfig: {
+              fontSize: 12,
+              fontColor: "#ffffff",
+              fontFamily: "Merienda, cursive",
+              isButton: true,
+              buttonStyle: {
+                backgroundColor: "#1890ff",
+                padding: "4px 8px",
+                borderRadius: "4px"
+              }
+            }
+          })}
+          icon={<CheckOutlined />}>
+          Agregar botón de confirmación
+        </Button>
       </Form.Item>
     </Form>
   )

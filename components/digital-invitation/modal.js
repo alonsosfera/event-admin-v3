@@ -14,9 +14,25 @@ export const DigitalInvitationModal = ({ isOpen, onCancel, onSubmit, event }) =>
   const { token } = parseCookies()
 
   const [isSaving, setIsSaving] = useState(false)
-  const [state, setState] = useState({})
+  const [state, setState] = useState({ confirmButton: "Confirmar Asistencia" })
   const [customConfig, setCustomConfig] = useState({})
-  const [updatedCoordinates, setUpdatedCoordinates] = useState([])
+  const [updatedCoordinates, setUpdatedCoordinates] = useState([{
+    key: "confirmButton",
+    label: "Confirmar Asistencia",
+    coordinateX: 200,
+    coordinateY: 200,
+    customConfig: JSON.stringify({
+      fontSize: 12,
+      fontColor: "#ffffff",
+      fontFamily: "Merienda, cursive",
+      isButton: true,
+      buttonStyle: {
+        backgroundColor: "#1890ff",
+        padding: "4px 8px",
+        borderRadius: "4px"
+      }
+    })
+  }])
   const [newItems, setNewItems] = useState([])
   const [deletedKeys, setDeletedKeys] = useState([])
   const [previewFile, setPreviewFile] = useState(null)
@@ -38,8 +54,24 @@ export const DigitalInvitationModal = ({ isOpen, onCancel, onSubmit, event }) =>
       setPreviewFile(null)
       setActiveSource(null)
       setNewItems([])
-      setUpdatedCoordinates([])
-      setState({})
+      setUpdatedCoordinates([{
+        key: "confirmButton",
+        label: "Confirmar Asistencia",
+        coordinateX: 200,
+        coordinateY: 200,
+        customConfig: JSON.stringify({
+          fontSize: 12,
+          fontColor: "#ffffff",
+          fontFamily: "Merienda, cursive",
+          isButton: true,
+          buttonStyle: {
+            backgroundColor: "#1890ff",
+            padding: "4px 8px",
+            borderRadius: "4px"
+          }
+        })
+      }])
+      setState({ confirmButton: "Confirmar Asistencia" })
       setCustomConfig({})
       setDeletedKeys([])
     }
@@ -48,8 +80,24 @@ export const DigitalInvitationModal = ({ isOpen, onCancel, onSubmit, event }) =>
   useEffect(() => {
     if (activeSource === "upload" && previewFile) {
       setNewItems([])
-      setUpdatedCoordinates([])
-      setState({})
+      setUpdatedCoordinates([{
+        key: "confirmButton",
+        label: "Confirmar Asistencia",
+        coordinateX: 200,
+        coordinateY: 200,
+        customConfig: JSON.stringify({
+          fontSize: 12,
+          fontColor: "#ffffff",
+          fontFamily: "Merienda, cursive",
+          isButton: true,
+          buttonStyle: {
+            backgroundColor: "#1890ff",
+            padding: "4px 8px",
+            borderRadius: "4px"
+          }
+        })
+      }])
+      setState({ confirmButton: "Confirmar Asistencia" })
       setCustomConfig({})
       setDeletedKeys([])
       setHasInitialized(false)
@@ -59,6 +107,27 @@ export const DigitalInvitationModal = ({ isOpen, onCancel, onSubmit, event }) =>
   useEffect(() => {
     if (!hasInitialized && isOpen) {
       if (coordinates.length > 0 && activeSource !== "upload") {
+        const hasConfirmButton = coordinates.some(c => c.key === "confirmButton")
+        if (!hasConfirmButton) {
+          const confirmButton = {
+            key: "confirmButton",
+            label: "Confirmar Asistencia",
+            coordinateX: 200,
+            coordinateY: 200,
+            customConfig: JSON.stringify({
+              fontSize: 12,
+              fontColor: "#ffffff",
+              fontFamily: "Merienda, cursive",
+              isButton: true,
+              buttonStyle: {
+                backgroundColor: "#1890ff",
+                padding: "4px 8px",
+                borderRadius: "4px"
+              }
+            })
+          }
+          coordinates.push(confirmButton)
+        }
         setUpdatedCoordinates(coordinates)
         const newState = coordinates.reduce((acc, c) => {
           acc[c.key] = c.label || ""
@@ -72,21 +141,6 @@ export const DigitalInvitationModal = ({ isOpen, onCancel, onSubmit, event }) =>
           return acc
         }, {})
         setCustomConfig(newConfig)
-
-        if (!coordinates.find(c => c.key === "confirmButton")) {
-          const confirmButton = {
-            key: "confirmButton",
-            label: "Confirmar Asistencia",
-            coordinateX: 400,
-            coordinateY: 400,
-            customConfig: JSON.stringify({
-              fontSize: 12,
-              fontColor: "ffffff",
-              fontFamily: "Merienda, cursive"
-            })
-          }
-          setUpdatedCoordinates(prev => [...prev, confirmButton])
-        }
       }
       setHasInitialized(true)
     }
@@ -117,6 +171,29 @@ export const DigitalInvitationModal = ({ isOpen, onCancel, onSubmit, event }) =>
     setNewItems([])
 
     const coords = selected.canvaMap?.coordinates || []
+    const hasConfirmButton = coords.some(c => c.key === "confirmButton")
+    
+    if (!hasConfirmButton) {
+      const confirmButton = {
+        key: "confirmButton",
+        label: "Confirmar Asistencia",
+        coordinateX: 200,
+        coordinateY: 200,
+        customConfig: JSON.stringify({
+          fontSize: 12,
+          fontColor: "#ffffff",
+          fontFamily: "Merienda, cursive",
+          isButton: true,
+          buttonStyle: {
+            backgroundColor: "#1890ff",
+            padding: "4px 8px",
+            borderRadius: "4px"
+          }
+        })
+      }
+      coords.push(confirmButton)
+    }
+
     setUpdatedCoordinates(coords)
 
     const newState = coords.reduce((acc, c) => {
@@ -154,7 +231,27 @@ export const DigitalInvitationModal = ({ isOpen, onCancel, onSubmit, event }) =>
   }
 
   const onLinkChange = (key, link) => {
-    setCustomConfig(prev => ({ ...prev, [key]: link }))
+    try {
+      const parsedConfig = JSON.parse(link)
+      setCustomConfig(prev => ({ ...prev, [key]: parsedConfig }))
+      
+      setUpdatedCoordinates(prev =>
+        prev.map(c =>
+          c.key === key
+            ? {
+                ...c,
+                customConfig: JSON.stringify({
+                  ...JSON.parse(c.customConfig || "{}"),
+                  ...parsedConfig,
+                  isButton: key === "confirmButton" ? true : parsedConfig.isButton
+                })
+              }
+            : c
+        )
+      )
+    } catch (e) {
+      console.error("Error al actualizar la configuración:", e)
+    }
   }
 
   const handlePositionChange = (key, newX, newY) => {
@@ -225,31 +322,23 @@ export const DigitalInvitationModal = ({ isOpen, onCancel, onSubmit, event }) =>
         fileUrl = uploadRes.data.fileUrl
       }
 
-      const coordsToSave = (newItems.length > 0 ? newItems : updatedCoordinates).map(c => ({
-        key: c.key,
-        label: c.label || state[c.key],
-        coordinateX: c.coordinateX,
-        coordinateY: c.coordinateY,
-        customConfig: JSON.stringify({
-          ...JSON.parse(c.customConfig || "{}"),
-          link: customConfig[c.key] || JSON.parse(c.customConfig || "{}").link
-        })
-      }))
+      const coordsToSave = (newItems.length > 0 ? newItems : updatedCoordinates).map(c => {
+        const parsedConfig = JSON.parse(c.customConfig || "{}")
+        return {
+          ...c,
+          label: c.label || state[c.key],
+          customConfig: JSON.stringify({
+            ...parsedConfig,
+            link: customConfig[c.key] || parsedConfig.link
+          })
+        }
+      })
 
-      // Use the more efficient endpoint that only updates digital invitation
-      // This reduces database load by only updating the relevant part instead of the entire event
       await axios.put(`/api/events/digital-invitation/${event.id}`, {
         digitalInvitation: {
-          id: event?.digitalInvitation?.id,
-          fileName: event?.digitalInvitation?.fileName || "invitation",
+          ...event?.digitalInvitation,
           fileUrl,
-          uploadTime: event?.digitalInvitation?.uploadTime || new Date(),
-          canvaMap: {
-            id: event?.digitalInvitation?.canvaMap?.id,
-            name: event?.digitalInvitation?.canvaMap?.name,
-            creationDate: event?.digitalInvitation?.canvaMap?.creationDate || new Date(),
-            coordinates: coordsToSave
-          }
+          canvaMap: { coordinates: coordsToSave }
         }
       }, {
         headers: { Authorization: `Bearer ${token}` }
@@ -294,7 +383,7 @@ export const DigitalInvitationModal = ({ isOpen, onCancel, onSubmit, event }) =>
           setSelectedDesignId={setSelectedInvitationId}
           setSelectedDesignUrl={setSelectedInvitationUrl}
           allDesigns={allInvitations}
-          setAllInvitations={setAllInvitations}
+          setAllDesigns={setAllInvitations}
           handleSelectDesign={handleSelectInvitation}
           currentPage={currentPage}
           setCurrentPage={setCurrentPage}
@@ -317,7 +406,7 @@ export const DigitalInvitationModal = ({ isOpen, onCancel, onSubmit, event }) =>
         />
       </Col>
     </Row>
-  ), [ previewFile, activeSource, selectedInvitationId, allInvitations, currentPage, updatedCoordinates ])
+  ), [previewFile, activeSource, selectedInvitationId, allInvitations, currentPage, updatedCoordinates])
 
   return (
     <Modal

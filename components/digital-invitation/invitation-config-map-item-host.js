@@ -25,68 +25,20 @@ const InvitationConfigMapItemHost = ({ item, scaleFactor, dragBoundFunc, onDragE
         y: item.coordinateY * scaleFactor - height / 2
       })
     }
-  }, [item, scaleFactor, item.label])
+  }, [item, scaleFactor, item.label, item.customConfig])
 
-  if (item.key === "confirmButton") {
-    const buttonWidth = 170
-    const buttonHeight = 25
-    const fontSize = 12
-    const textX = 20
-    const textY = 5
-    const checkX = 140
+  const customConfig = typeof item.customConfig === 'string' ? JSON.parse(item.customConfig) : item.customConfig
+  const isButton = customConfig?.isButton || item.key === "confirmButton"
 
-    return (
-      <Group
-        draggable
-        key={item.key}
-        x={position.x}
-        y={position.y}
-        ref={elementRef}
-        dragBoundFunc={pos => dragBoundFunc(pos, item)}
-        onDragMove={onDragMove}
-        onDragEnd={event => onDragEnd(event, item)}
-        name="object"
-        rotation={270}>
-        <Rect
-          width={buttonWidth}
-          height={buttonHeight}
-          fill="#1890ff"
-          cornerRadius={4}
-        />
-        <Text
-          text="Confirmar Asistencia"
-          fill="white"
-          fontSize={fontSize}
-          x={textX}
-          y={textY}
-        />
-        <Text
-          text="✓"
-          fill="white"
-          fontSize={fontSize}
-          x={checkX}
-          y={textY}
-        />
-        <Rect
-          y={-10}
-          x={-10}
-          width={20}
-          height={20}
-          cornerRadius={10}
-          style={{ cursor: "pointer" }}
-          fill="rgba(255, 255, 255, 0.8)"
-          onClick={() => onDeleteItem && onDeleteItem(item)}
-        />
-        <Text
-          y={-5}
-          x={-5}
-          text="X"
-          fontSize={12}
-          fill="#ff0000"
-          onClick={() => onDeleteItem && onDeleteItem(item)}
-        />
-      </Group>
-    )
+  const getButtonDimensions = () => {
+    const fontSize = customConfig.fontSize * scaleFactor
+    const textWidth = item.label.length * fontSize * 0.6
+    const textHeight = fontSize * 1.5
+    const padding = customConfig.buttonStyle?.padding?.split(' ') || [4, 8]
+    return {
+      width: textWidth + (parseInt(padding[1]) || 8) * 2,
+      height: textHeight + (parseInt(padding[0]) || 4) * 2
+    }
   }
 
   return (
@@ -100,29 +52,49 @@ const InvitationConfigMapItemHost = ({ item, scaleFactor, dragBoundFunc, onDragE
       onDragMove={onDragMove}
       onDragEnd={event => onDragEnd(event, item)}
       name="object">
-      <Text
-        key={item.key}
-        text={item.label || item.key}
-        fill={item.customConfig.fontColor}
-        fontFamily={item.customConfig.fontFamily || "Merienda, cursive"}
-        fontSize={item.customConfig.fontSize * scaleFactor}
-      />
+      {isButton ? (
+        <>
+          <Rect
+            width={getButtonDimensions().width}
+            height={getButtonDimensions().height}
+            fill={customConfig.buttonStyle?.backgroundColor || "#1890ff"}
+            cornerRadius={parseInt(customConfig.buttonStyle?.borderRadius) || 4}
+          />
+          <Text
+            key={item.key}
+            text={item.label}
+            fill={customConfig.fontColor || "#ffffff"}
+            fontFamily={customConfig.fontFamily || "Merienda, cursive"}
+            fontSize={customConfig.fontSize * scaleFactor}
+            x={parseInt(customConfig.buttonStyle?.padding?.split(' ')[1]) || customConfig.fontSize * scaleFactor * 0.3}
+            y={parseInt(customConfig.buttonStyle?.padding?.split(' ')[0]) || customConfig.fontSize * scaleFactor * 0.25}
+          />
+        </>
+      ) : (
+        <Text
+          key={item.key}
+          text={item.label || item.key}
+          fill={customConfig.fontColor}
+          fontFamily={customConfig.fontFamily || "Merienda, cursive"}
+          fontSize={customConfig.fontSize * scaleFactor}
+        />
+      )}
       
       <Rect
-        y={-10 * scaleFactor}
-        x={-10 * scaleFactor}
-        width={20 * scaleFactor}
-        height={20 * scaleFactor}
-        cornerRadius={10 * scaleFactor}
+        y={-10}
+        x={-10}
+        width={20}
+        height={20}
+        cornerRadius={10}
         style={{ cursor: "pointer" }}
         fill="rgba(255, 255, 255, 0.8)"
         onClick={() => onDeleteItem && onDeleteItem(item)}
       />
       <Text
-        y={-5 * scaleFactor}
-        x={-5 * scaleFactor}
+        y={-5}
+        x={-5}
         text="X"
-        fontSize={12 * scaleFactor}
+        fontSize={12}
         fill="#ff0000"
         onClick={() => onDeleteItem && onDeleteItem(item)}
       />
