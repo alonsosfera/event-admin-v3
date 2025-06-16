@@ -1,9 +1,13 @@
 import React, { useEffect, useLayoutEffect, useRef, useState } from "react"
 import WebFont from "webfontloader"
+import { Button, Modal, InputNumber, message } from "antd"
+import { CheckOutlined } from "@ant-design/icons"
+import axios from "axios"
 
-const InvitationsListItemText = ({ item, scaleFactor, inDigitalInvitation }) => {
+const InvitationsListItemText = ({ item, scaleFactor, inDigitalInvitation, invitationId, invitation }) => {
   const elementRef = useRef(null)
   const [position, setPosition] = useState({ x: 0, y: 0 })
+  const [confirmedGuests, setConfirmedGuests] = useState(invitation?.numberGuests)
 
   const calculatePosition = () => {
     if (elementRef.current) {
@@ -39,7 +43,7 @@ const InvitationsListItemText = ({ item, scaleFactor, inDigitalInvitation }) => 
     return () => window.removeEventListener("resize", handleResize)
   }, [item, scaleFactor])
 
-  const customConfig = JSON.parse(item.customConfig)
+  const customConfig = JSON.parse(item.customConfig || "{}")
 
   const handleClick = () => {
     if (customConfig.link) {
@@ -52,6 +56,73 @@ const InvitationsListItemText = ({ item, scaleFactor, inDigitalInvitation }) => 
       WebFont.load({ google: { families: [customConfig.fontFamily] } })
     }
   }, [customConfig.fontFamily])
+
+  const { confirm } = Modal
+
+  const showConfirm = () => {
+    let currentConfirmed = confirmedGuests
+
+    confirm({
+      title: "Confirmación",
+      content: (
+        <div>
+          <p>¿Confirmar invitados para {invitation?.invitationName}?</p>
+          <InputNumber
+            value={currentConfirmed}
+            min={1}
+            max={invitation?.numberGuests}
+            type="number"
+            onChange={value => { currentConfirmed = value; setConfirmedGuests(value) }} />
+        </div>
+      ),
+      onOk() {
+        handleConfirmation(currentConfirmed)
+      },
+      onCancel() {}
+    })
+  }
+
+  const handleConfirmation = async confirmed => {
+    if (!confirmed) return
+    try {
+      await axios.post("/api/invitations/confirm", {
+        invitationId,
+        confirmed
+      })
+      message.success("Confirmación enviada")
+    } catch (error) {
+      console.error("Error al confirmar la invitación:", error)
+    }
+  }
+
+  if (item.key === "confirmButton") {
+    return (
+      <div
+        ref={elementRef}
+        style={{
+          position: "absolute",
+          top: `${position.y}px`,
+          left: `${position.x}px`,
+          transform: "rotate(270deg)",
+          zIndex: 1000
+        }}>
+        <Button
+          style={{
+            alignItems: "center",
+            justifyContent: "center",
+            width: "100%",
+            maxWidth: "170px",
+            height: "25px"
+          }}
+          type="primary"
+          size="small"
+          icon={<CheckOutlined style={{ marginLeft: "8px" }} />}
+          onClick={showConfirm}>
+          Confirmar Asistencia
+        </Button>
+      </div>
+    )
+  }
 
   return (
     <div
@@ -68,7 +139,7 @@ const InvitationsListItemText = ({ item, scaleFactor, inDigitalInvitation }) => 
         textDecoration: customConfig.link ? "underline" : ""
       }}
       onClick={handleClick}>
-      {inDigitalInvitation ? item.label : item.label || item.key }
+      {inDigitalInvitation ? item.label : item.label || item.key}
     </div>
   )
 }

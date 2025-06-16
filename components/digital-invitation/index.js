@@ -100,36 +100,13 @@ export const DigitalInvitation = ({ event, invitationId, invitation, isFullscree
             inDigitalInvitation={true}
             key={coordinate.key}
             item={coordinate}
-            scaleFactor={scaleFactor} />
+            scaleFactor={scaleFactor}
+            invitationId={invitationId}
+            invitation={invitation} />
         ))}
         <div style={{ position: "absolute", bottom: "1px", left: "50%", transform: "translate(-50%, 0)", maxWidth: "100%" }}>
           <CounterInvitation date={eventDate} />
         </div>
-        {invitation && (
-          <div
-            style={{
-              position: "absolute",
-              transform: "rotate(270deg)",
-              bottom: "200px",
-              right: "-64px",
-              zIndex: 1000
-            }}>
-            <Button
-              style={{
-                alignItems: "center",
-                justifyContent: "center",
-                width: "100%",
-                maxWidth: "170px",
-                height: "25px"
-              }}
-              type="primary"
-              size="small"
-              icon={<CheckOutlined style={{ marginLeft: "8px" }} />}
-              onClick={showConfirm}>
-              Confirmar Asistencia
-            </Button>
-          </div>
-        )}
       </div>
     </div>
   )

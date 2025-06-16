@@ -4,17 +4,22 @@ import dynamic from "next/dynamic"
 import { getLineGuideStops, getObjectSnappingEdges,
   getGuides, drawGuides, adjustPositionBasedOnGuides } from "../../helpers/coordinatesGuide"
 import CounterInvitation from "../../helpers/counterInvitation"
+import { CheckOutlined } from "@ant-design/icons"
 
 const Stage = dynamic(() => import("react-konva").then(mod => mod.Stage), { ssr: false })
 const Layer = dynamic(() => import("react-konva").then(mod => mod.Layer), { ssr: false })
+const Group = dynamic(() => import("react-konva").then(mod => mod.Group), { ssr: false })
+const Rect = dynamic(() => import("react-konva").then(mod => mod.Rect), { ssr: false })
+const Text = dynamic(() => import("react-konva").then(mod => mod.Text), { ssr: false })
 const InvitationConfigMapItemHost = dynamic(() => import("./invitation-config-map-item-host"), { ssr: false })
 
 export const InvitationConfigMapHost = ({ event, onPositionChange, selectedInvitationUrl, onScaleFactorChange, onDeleteItem }) => {
-  const { eventDate ,digitalInvitation } = event || {}
+  const { eventDate, digitalInvitation } = event || {}
   const getDefaultItems = canvaMap => {
-    return canvaMap?.coordinates.map(coordinate => ({
-      ...coordinate, customConfig: JSON.parse(coordinate.customConfig)
-    })) || []
+    const coordinates = canvaMap?.coordinates || []
+    return coordinates.map(coordinate => ({
+      ...coordinate, customConfig: JSON.parse(coordinate.customConfig || "{}")
+    }))
   }
 
   const [scaleFactor, setScaleFactor] = useState(1)
@@ -81,7 +86,7 @@ export const InvitationConfigMapHost = ({ event, onPositionChange, selectedInvit
       parseInt(coordinateX / scaleFactor),
       parseInt(coordinateY / scaleFactor)
     )
-  }, [ onPositionChange, onUpdateItemPosition, scaleFactor])
+  }, [onPositionChange, onUpdateItemPosition, scaleFactor])
 
   const dragBoundFunc = (pos, item) => {
     const text = item.label || item.key

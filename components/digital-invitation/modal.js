@@ -72,6 +72,21 @@ export const DigitalInvitationModal = ({ isOpen, onCancel, onSubmit, event }) =>
           return acc
         }, {})
         setCustomConfig(newConfig)
+
+        if (!coordinates.find(c => c.key === "confirmButton")) {
+          const confirmButton = {
+            key: "confirmButton",
+            label: "Confirmar Asistencia",
+            coordinateX: 400,
+            coordinateY: 400,
+            customConfig: JSON.stringify({
+              fontSize: 12,
+              fontColor: "ffffff",
+              fontFamily: "Merienda, cursive"
+            })
+          }
+          setUpdatedCoordinates(prev => [...prev, confirmButton])
+        }
       }
       setHasInitialized(true)
     }
@@ -210,25 +225,31 @@ export const DigitalInvitationModal = ({ isOpen, onCancel, onSubmit, event }) =>
         fileUrl = uploadRes.data.fileUrl
       }
 
-      const coordsToSave = (newItems.length > 0 ? newItems : updatedCoordinates).map(c => {
-        const parsedConfig = JSON.parse(c.customConfig || "{}")
-        return {
-          ...c,
-          label: c.label || state[c.key],
-          customConfig: JSON.stringify({
-            ...parsedConfig,
-            link: customConfig[c.key] || parsedConfig.link
-          })
-        }
-      })
+      const coordsToSave = (newItems.length > 0 ? newItems : updatedCoordinates).map(c => ({
+        key: c.key,
+        label: c.label || state[c.key],
+        coordinateX: c.coordinateX,
+        coordinateY: c.coordinateY,
+        customConfig: JSON.stringify({
+          ...JSON.parse(c.customConfig || "{}"),
+          link: customConfig[c.key] || JSON.parse(c.customConfig || "{}").link
+        })
+      }))
 
       // Use the more efficient endpoint that only updates digital invitation
       // This reduces database load by only updating the relevant part instead of the entire event
       await axios.put(`/api/events/digital-invitation/${event.id}`, {
         digitalInvitation: {
-          ...event?.digitalInvitation,
+          id: event?.digitalInvitation?.id,
+          fileName: event?.digitalInvitation?.fileName || "invitation",
           fileUrl,
-          canvaMap: { coordinates: coordsToSave }
+          uploadTime: event?.digitalInvitation?.uploadTime || new Date(),
+          canvaMap: {
+            id: event?.digitalInvitation?.canvaMap?.id,
+            name: event?.digitalInvitation?.canvaMap?.name,
+            creationDate: event?.digitalInvitation?.canvaMap?.creationDate || new Date(),
+            coordinates: coordsToSave
+          }
         }
       }, {
         headers: { Authorization: `Bearer ${token}` }
