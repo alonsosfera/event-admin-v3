@@ -31,24 +31,22 @@ const InvitationField = ({ label, value, onChange, onLinkChange, linkValue }) =>
   }
 
   const handleButtonSizeChange = (newSize) => {
-    setButtonSize(newSize)
-    try {
-      const customConfig = JSON.parse(linkValue || "{}")
-      const newConfig = {
-        ...customConfig,
-        fontSize: newSize,
-        isButton: true,
-        buttonStyle: {
-          ...customConfig.buttonStyle,
-          padding: `${newSize * 0.3}px ${newSize * 0.6}px`,
-          borderRadius: `${newSize * 0.3}px`
-        }
-      }
-      onLinkChange(JSON.stringify(newConfig))
-    } catch (e) {
-      console.error("Error al actualizar el tamaño del botón:", e)
+  setButtonSize(newSize)
+  try {
+    const customConfig = JSON.parse(linkValue || "{}")
+    const newConfig = {
+      ...customConfig,
+      fontSize: newSize,
+      isButton: true
     }
+    console.log("Nuevo tamaño del botón:", newSize);
+    
+    onLinkChange(JSON.stringify(newConfig))
+  } catch (e) {
+    console.error("Error al actualizar el tamaño del botón:", e)
   }
+}
+
 
   if (isButton) {
     return (
@@ -57,13 +55,13 @@ const InvitationField = ({ label, value, onChange, onLinkChange, linkValue }) =>
           <Col span={16}>
             <div style={{ display: "flex", alignItems: "center" }}>
               <ArrowsAltOutlined style={{ marginRight: "8px" }} />
-              <span>Tamaño del botón</span>
+              <span>Tamaño de la confirmación</span>
             </div>
           </Col>
           <Col span={8}>
             <InputNumber
-              min={8}
-              max={48}
+              min={12}
+              max={200}
               value={buttonSize}
               onChange={handleButtonSizeChange}
               style={{ width: "100%" }}
@@ -71,8 +69,8 @@ const InvitationField = ({ label, value, onChange, onLinkChange, linkValue }) =>
           </Col>
           <Col span={24}>
             <Slider
-              min={8}
-              max={48}
+              min={12}
+              max={200}
               value={buttonSize}
               onChange={handleButtonSizeChange}
             />

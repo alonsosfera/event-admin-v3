@@ -13,6 +13,18 @@ export const DigitalInvitationModal = ({ isOpen, onCancel, onSubmit, event }) =>
   const translator = short()
   const { token } = parseCookies()
 
+  const buttonDesign = {
+    fontSize: 50,
+    fontColor: "#ffffff",
+    fontFamily: "Merienda, cursive",
+    isButton: true,
+    buttonStyle: {
+      backgroundColor: "#88C9DB",
+      padding: "5px 10px",
+      borderRadius: "4px",
+    }
+};
+
   const [isSaving, setIsSaving] = useState(false)
   const [state, setState] = useState({ confirmButton: "Confirmar Asistencia" })
   const [customConfig, setCustomConfig] = useState({})
@@ -22,16 +34,10 @@ export const DigitalInvitationModal = ({ isOpen, onCancel, onSubmit, event }) =>
     coordinateX: 200,
     coordinateY: 200,
     customConfig: JSON.stringify({
-      fontSize: 12,
-      fontColor: "#ffffff",
-      fontFamily: "Merienda, cursive",
-      isButton: true,
-      buttonStyle: {
-        backgroundColor: "#1890ff",
-        padding: "4px 8px",
-        borderRadius: "4px"
-      }
+      ...buttonDesign,
     })
+
+
   }])
   const [newItems, setNewItems] = useState([])
   const [deletedKeys, setDeletedKeys] = useState([])
@@ -45,6 +51,25 @@ export const DigitalInvitationModal = ({ isOpen, onCancel, onSubmit, event }) =>
   const [hasInitialized, setHasInitialized] = useState(false)
 
   const coordinates = event?.digitalInvitation?.canvaMap?.coordinates || []
+
+  // Función auxiliar para asegurar que el botón de confirmación esté en las coordenadas
+  const ensureConfirmButton = (coords) => {
+    const hasConfirmButton = coords.some(c => c.key === "confirmButton");
+
+    if (!hasConfirmButton) {
+      const confirmButton = {
+        key: "confirmButton",
+        label: "Confirmar Asistencia",
+        coordinateX: 200,
+        coordinateY: 200,
+         customConfig: JSON.stringify({
+          ...buttonDesign,
+        })
+      };
+      coords.push(confirmButton);
+    }
+    return coords;
+  };
 
   useEffect(() => {
     if (!isOpen) {
@@ -60,15 +85,7 @@ export const DigitalInvitationModal = ({ isOpen, onCancel, onSubmit, event }) =>
         coordinateX: 200,
         coordinateY: 200,
         customConfig: JSON.stringify({
-          fontSize: 12,
-          fontColor: "#ffffff",
-          fontFamily: "Merienda, cursive",
-          isButton: true,
-          buttonStyle: {
-            backgroundColor: "#1890ff",
-            padding: "4px 8px",
-            borderRadius: "4px"
-          }
+          ...buttonDesign,
         })
       }])
       setState({ confirmButton: "Confirmar Asistencia" })
@@ -86,15 +103,7 @@ export const DigitalInvitationModal = ({ isOpen, onCancel, onSubmit, event }) =>
         coordinateX: 200,
         coordinateY: 200,
         customConfig: JSON.stringify({
-          fontSize: 12,
-          fontColor: "#ffffff",
-          fontFamily: "Merienda, cursive",
-          isButton: true,
-          buttonStyle: {
-            backgroundColor: "#1890ff",
-            padding: "4px 8px",
-            borderRadius: "4px"
-          }
+          ...buttonDesign,
         })
       }])
       setState({ confirmButton: "Confirmar Asistencia" })
@@ -107,35 +116,16 @@ export const DigitalInvitationModal = ({ isOpen, onCancel, onSubmit, event }) =>
   useEffect(() => {
     if (!hasInitialized && isOpen) {
       if (coordinates.length > 0 && activeSource !== "upload") {
-        const hasConfirmButton = coordinates.some(c => c.key === "confirmButton")
-        if (!hasConfirmButton) {
-          const confirmButton = {
-            key: "confirmButton",
-            label: "Confirmar Asistencia",
-            coordinateX: 200,
-            coordinateY: 200,
-            customConfig: JSON.stringify({
-              fontSize: 12,
-              fontColor: "#ffffff",
-              fontFamily: "Merienda, cursive",
-              isButton: true,
-              buttonStyle: {
-                backgroundColor: "#1890ff",
-                padding: "4px 8px",
-                borderRadius: "4px"
-              }
-            })
-          }
-          coordinates.push(confirmButton)
-        }
-        setUpdatedCoordinates(coordinates)
-        const newState = coordinates.reduce((acc, c) => {
+        const updatedCoords = ensureConfirmButton([...coordinates]); // Usar la función aquí
+        setUpdatedCoordinates(updatedCoords)
+
+        const newState = updatedCoords.reduce((acc, c) => {
           acc[c.key] = c.label || ""
           return acc
         }, {})
         setState(newState)
 
-        const newConfig = coordinates.reduce((acc, c) => {
+        const newConfig = updatedCoords.reduce((acc, c) => {
           const parsed = JSON.parse(c.customConfig || "{}")
           if (parsed.link) acc[c.key] = parsed.link
           return acc
@@ -171,38 +161,16 @@ export const DigitalInvitationModal = ({ isOpen, onCancel, onSubmit, event }) =>
     setNewItems([])
 
     const coords = selected.canvaMap?.coordinates || []
-    const hasConfirmButton = coords.some(c => c.key === "confirmButton")
-    
-    if (!hasConfirmButton) {
-      const confirmButton = {
-        key: "confirmButton",
-        label: "Confirmar Asistencia",
-        coordinateX: 200,
-        coordinateY: 200,
-        customConfig: JSON.stringify({
-          fontSize: 12,
-          fontColor: "#ffffff",
-          fontFamily: "Merienda, cursive",
-          isButton: true,
-          buttonStyle: {
-            backgroundColor: "#1890ff",
-            padding: "4px 8px",
-            borderRadius: "4px"
-          }
-        })
-      }
-      coords.push(confirmButton)
-    }
+    const updatedCoords = ensureConfirmButton(coords); // Usar la función aquí
+    setUpdatedCoordinates(updatedCoords)
 
-    setUpdatedCoordinates(coords)
-
-    const newState = coords.reduce((acc, c) => {
+    const newState = updatedCoords.reduce((acc, c) => {
       acc[c.key] = c.label || ""
       return acc
     }, {})
     setState(newState)
 
-    const newConfig = coords.reduce((acc, c) => {
+    const newConfig = updatedCoords.reduce((acc, c) => {
       const parsed = JSON.parse(c.customConfig || "{}")
       if (parsed.link) acc[c.key] = parsed.link
       return acc
@@ -408,6 +376,7 @@ export const DigitalInvitationModal = ({ isOpen, onCancel, onSubmit, event }) =>
     </Row>
   ), [previewFile, activeSource, selectedInvitationId, allInvitations, currentPage, updatedCoordinates])
 
+  
   return (
     <Modal
       centered

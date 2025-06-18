@@ -34,9 +34,9 @@ const InvitationConfigMapItemHost = ({ item, scaleFactor, dragBoundFunc, onDragE
     const fontSize = customConfig.fontSize * scaleFactor
     const textWidth = item.label.length * fontSize * 0.6
     const textHeight = fontSize * 1.5
-    const padding = customConfig.buttonStyle?.padding?.split(' ') || [4, 8]
+    const padding = customConfig.buttonStyle?.padding?.split(' ') || [5, 10]
     return {
-      width: textWidth + (parseInt(padding[1]) || 8) * 2,
+      width: textWidth ,
       height: textHeight + (parseInt(padding[0]) || 4) * 2
     }
   }

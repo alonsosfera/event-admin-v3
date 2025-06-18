@@ -66,7 +66,7 @@ const InvitationsListItemText = ({ item, scaleFactor, inDigitalInvitation }) => 
     textDecoration: customConfig.link ? "underline" : "",
     ...(isButton && {
       backgroundColor: customConfig.buttonStyle?.backgroundColor || "#1890ff",
-      padding: `${4 * scaleFactor}px ${8 * scaleFactor}px`,
+      padding: "5px 10px",
       borderRadius: `${4 * scaleFactor}px`,
       color: "#ffffff",
       display: "inline-block",
