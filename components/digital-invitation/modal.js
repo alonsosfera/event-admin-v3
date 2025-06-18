@@ -52,7 +52,6 @@ export const DigitalInvitationModal = ({ isOpen, onCancel, onSubmit, event }) =>
 
   const coordinates = event?.digitalInvitation?.canvaMap?.coordinates || []
 
-  // Función auxiliar para asegurar que el botón de confirmación esté en las coordenadas
   const ensureConfirmButton = (coords) => {
     const hasConfirmButton = coords.some(c => c.key === "confirmButton");
 
@@ -116,7 +115,7 @@ export const DigitalInvitationModal = ({ isOpen, onCancel, onSubmit, event }) =>
   useEffect(() => {
     if (!hasInitialized && isOpen) {
       if (coordinates.length > 0 && activeSource !== "upload") {
-        const updatedCoords = ensureConfirmButton([...coordinates]); // Usar la función aquí
+        const updatedCoords = ensureConfirmButton([...coordinates])
         setUpdatedCoordinates(updatedCoords)
 
         const newState = updatedCoords.reduce((acc, c) => {
@@ -161,7 +160,7 @@ export const DigitalInvitationModal = ({ isOpen, onCancel, onSubmit, event }) =>
     setNewItems([])
 
     const coords = selected.canvaMap?.coordinates || []
-    const updatedCoords = ensureConfirmButton(coords); // Usar la función aquí
+    const updatedCoords = ensureConfirmButton(coords)
     setUpdatedCoordinates(updatedCoords)
 
     const newState = updatedCoords.reduce((acc, c) => {

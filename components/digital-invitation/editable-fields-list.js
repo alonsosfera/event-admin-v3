@@ -31,7 +31,6 @@ export const EditableFieldsList = ({
   return (
     <Col span={8}>
       {coordinates.sort(sortCoordinates).map(coordinate => {
-        // Determinar si es el botón de confirmación
         const isButton = coordinate.key === "confirmButton"
         
         return (
