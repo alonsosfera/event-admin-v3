@@ -33,11 +33,11 @@ const InvitationConfigMapItemHost = ({ item, scaleFactor, dragBoundFunc, onDragE
   const getButtonDimensions = () => {
     const fontSize = customConfig.fontSize * scaleFactor
     const textWidth = item.label.length * fontSize * 0.6
-    const textHeight = fontSize * 1.5
+    const textHeight = fontSize * 1.2
     const padding = customConfig.buttonStyle?.padding?.split(' ') || [5, 10]
     return {
-      width: textWidth ,
-      height: textHeight + (parseInt(padding[0]) || 4) * 2
+      width: textWidth + parseInt(padding[0]) || textWidth + 20,
+      height: textHeight + parseInt(padding[1]) || textHeight + 10
     }
   }
 
@@ -57,8 +57,7 @@ const InvitationConfigMapItemHost = ({ item, scaleFactor, dragBoundFunc, onDragE
           <Rect
             width={getButtonDimensions().width}
             height={getButtonDimensions().height}
-            fill={customConfig.buttonStyle?.backgroundColor || "#1890ff"}
-            cornerRadius={parseInt(customConfig.buttonStyle?.borderRadius) || 4}
+            fill={customConfig.buttonStyle?.backgroundColor || "#1890ff"}            
           />
           <Text
             key={item.key}
