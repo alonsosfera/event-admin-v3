@@ -198,28 +198,35 @@ export const DigitalInvitationModal = ({ isOpen, onCancel, onSubmit, event }) =>
   }
 
   const onLinkChange = (key, link) => {
-    try {
-      const parsedConfig = JSON.parse(link)
-      setCustomConfig(prev => ({ ...prev, [key]: parsedConfig }))
-      
-      setUpdatedCoordinates(prev =>
-        prev.map(c =>
-          c.key === key
-            ? {
-                ...c,
-                customConfig: JSON.stringify({
-                  ...JSON.parse(c.customConfig || "{}"),
-                  ...parsedConfig,
-                  isButton: key === "confirmButton" ? true : parsedConfig.isButton
-                })
-              }
-            : c
-        )
-      )
-    } catch (e) {
-      console.error("Error al actualizar la configuración:", e)
+  try {
+    let parsedConfig;
+    // Si el link es un JSON válido, lo parsea
+    if (link.trim().startsWith("{")) {
+      parsedConfig = JSON.parse(link);
+    } else {
+      // Si es solo un link, lo guarda como objeto
+      parsedConfig = { link };
     }
+    setCustomConfig(prev => ({ ...prev, [key]: parsedConfig }));
+
+    setUpdatedCoordinates(prev =>
+      prev.map(c =>
+        c.key === key
+          ? {
+              ...c,
+              customConfig: JSON.stringify({
+                ...JSON.parse(c.customConfig || "{}"),
+                ...parsedConfig,
+                isButton: key === "confirmButton" ? true : parsedConfig.isButton
+              })
+            }
+          : c
+      )
+    );
+  } catch (e) {
+    console.error("Error al actualizar la configuración:", e);
   }
+};
 
   const handlePositionChange = (key, newX, newY) => {
     if (newItems.length > 0) {

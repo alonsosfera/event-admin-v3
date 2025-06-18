@@ -32,21 +32,22 @@ export const EditableFieldsList = ({
     <Col span={8}>
       {coordinates.sort(sortCoordinates).map(coordinate => {
         const isButton = coordinate.key === "confirmButton"
-        
+        const config = getCustomConfig(coordinate)
         return (
           <InvitationField
             key={coordinate.key}
             label={coordinate.key}
             value={state[coordinate.key] || ""}
-            linkValue={JSON.stringify({
-              ...getCustomConfig(coordinate),
-              isButton: isButton
-            })}
+            linkValue={isButton ? JSON.stringify({
+                        ...getCustomConfig(coordinate),
+                        isButton: isButton
+                      }) : (config.link || "")}
+            isButton={isButton}
+            buttonConfig={isButton ? config : undefined}
             onChange={event => onValueChange(event, coordinate.key)}
-            onLinkChange={link => onLinkChange(coordinate.key, link)}
-          />
-        )
+            onLinkChange={link => onLinkChange(coordinate.key, link)} />
+          )
       })}
     </Col>
-  )
+   )
 }

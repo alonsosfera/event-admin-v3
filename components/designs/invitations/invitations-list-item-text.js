@@ -56,7 +56,12 @@ const InvitationsListItemText = ({
   const isButton = customConfig?.isButton
 
   const handleClick = () => {  
+    if (isButton) {
       showConfirm()
+      } else {
+        window.open(customConfig.link.link, "_blank")
+        
+      }
   }
 
   useEffect(() => {

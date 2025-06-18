@@ -10,16 +10,21 @@ const InvitationField = ({ label, value, onChange, onLinkChange, linkValue }) =>
 
   useEffect(() => {
     try {
-      const customConfig = JSON.parse(linkValue || "{}")
-      setIsButton(customConfig.isButton || false)
-      if (customConfig.isButton) {
-        setButtonSize(customConfig.fontSize || 12)
+      let customConfig;
+      if (typeof linkValue === "string" && linkValue.trim().startsWith("{")) {
+        customConfig = JSON.parse(linkValue);
       } else {
-        setLink(linkValue || "")
+        customConfig = { link: linkValue };
+      }
+      setIsButton(customConfig.isButton || false);
+      if (customConfig.isButton) {
+        setButtonSize(customConfig.fontSize || 12);
+      } else {
+        setLink(linkValue || "");
       }
     } catch (e) {
-      console.error("Error al parsear la configuración:", e)
-      setIsButton(false)
+      console.error("Error al parsear la configuración:", e);
+      setIsButton(false);
     }
   }, [linkValue])
 
