@@ -107,7 +107,9 @@ export const DigitalInvitation = ({ event, invitationId, invitation, isFullscree
             scaleFactor={scaleFactor}
             invitationId={invitationId}
             invitation={invitation}
-            onConfirmationChange={handleConfirmationChange} />
+            onConfirmationChange={handleConfirmationChange}
+            showConfirm={showConfirm}
+            handleConfirmation={handleConfirmation} />
         ))}
         <div style={{ position: "absolute", bottom: "1px", left: "50%", transform: "translate(-50%, 0)", maxWidth: "100%" }}>
           <CounterInvitation date={eventDate} />
