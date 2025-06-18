@@ -29,66 +29,74 @@ export const InvitationConfigItem = ({ scaleFactor, selectedFile, onSubmit }) =>
   }
 
   return (
-    <Form
-      form={form}
-      name="basic"
-      layout="vertical"
-      initialValues={{ fileName: selectedFile.fileName }}>
-      <Form.Item
-        name="key"
-        label="Valor del elemento"
-        rules={[{ required: true }]}>
-        <Input placeholder="Ej. Titulo, Padres, Iglesia, etc" />
-      </Form.Item>
-      <Form.Item
-        label="Tamaño de letra">
-        <Slider
-          min={12}
-          max={120}
-          onChange={onFontSizeChange}
-          value={typeof fontSize === "number" ? parseInt(fontSize * scaleFactor) : 12} />
-        <InputNumber
-          min={12}
-          max={120}
-          value={parseInt(fontSize * scaleFactor)}
-          onChange={onFontSizeChange} />
-      </Form.Item>
-      <Form.Item
-        label={
-          <>
-            Tipo de letra
-            &nbsp;
-            <a
-              href="https://fonts.google.com/"
-              target="_blank"
-              rel="noreferrer"><LinkOutlined />
-            </a>
-          </>}>
-        <FontPicker
-          value={fontFamily}
-          onChange={setFontFamily} />
-      </Form.Item>
-      <Form.Item
-        label="Color de letra">
-        <Tooltip
-          color="white"
-          trigger="click"
-          title={<SketchPicker color={fontColor || "#000"} onChangeComplete={color => setFontColor(color.hex)} />}>
-          <Button>Seleccionar color</Button>
-        </Tooltip>
-      </Form.Item>
-      <Form.Item>
-        <Alert
-          type="info"
-          message={
-            <span style={{ fontSize: `${fontSize * scaleFactor}px`, color: fontColor, fontFamily }}>
-              Ejemplo de texto
-            </span>
-          } />
-      </Form.Item>
-      <Form.Item>
-        <Button style={{ width: "100%" }} onClick={onAddItem}><LeftCircleOutlined /> Agregar campo</Button>
-      </Form.Item>
-    </Form>
+    <div
+      style={{
+        position: "relative",
+        border: "2px solid #dcdcdc",
+        borderRadius: "8px",
+        padding: "16px",
+      }}>
+      <Form
+        form={form}
+        name="basic"
+        layout="vertical"
+        initialValues={{ fileName: selectedFile.fileName }}>
+        <Form.Item
+          name="key"
+          label="Valor del elemento"
+          rules={[{ required: true }]}>
+          <Input placeholder="Ej. Titulo, Padres, Iglesia, etc" />
+        </Form.Item>
+        <Form.Item
+          label="Tamaño de letra">
+          <Slider
+            min={12}
+            max={120}
+            onChange={onFontSizeChange}
+            value={typeof fontSize === "number" ? parseInt(fontSize * scaleFactor) : 12} />
+          <InputNumber
+            min={12}
+            max={120}
+            value={parseInt(fontSize * scaleFactor)}
+            onChange={onFontSizeChange} />
+        </Form.Item>
+        <Form.Item
+          label={
+            <>
+              Tipo de letra
+              &nbsp;
+              <a
+                href="https://fonts.google.com/"
+                target="_blank"
+                rel="noreferrer"><LinkOutlined />
+              </a>
+            </>}>
+          <FontPicker
+            value={fontFamily}
+            onChange={setFontFamily} />
+        </Form.Item>
+        <Form.Item
+          label="Color de letra">
+          <Tooltip
+            color="white"
+            trigger="click"
+            title={<SketchPicker color={fontColor || "#000"} onChangeComplete={color => setFontColor(color.hex)} />}>
+            <Button>Seleccionar color</Button>
+          </Tooltip>
+        </Form.Item>
+        <Form.Item>
+          <Alert
+            type="info"
+            message={
+              <span style={{ fontSize: `${fontSize * scaleFactor}px`, color: fontColor, fontFamily }}>
+                Ejemplo de texto
+              </span>
+            } />
+        </Form.Item>
+        <Form.Item>
+          <Button style={{ width: "100%" }} onClick={onAddItem}><LeftCircleOutlined /> Agregar campo</Button>
+        </Form.Item>
+      </Form>
+    </div>  
   )
 }
