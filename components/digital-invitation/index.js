@@ -114,7 +114,7 @@ export const DigitalInvitation = ({ event, invitationId, invitation, isFullscree
         <div style={{ position: "absolute", bottom: "1px", left: "50%", transform: "translate(-50%, 0)", maxWidth: "100%" }}>
           <CounterInvitation date={eventDate} />
         </div>
-        {invitation && (
+        {invitation && !digitalInvitation.canvaMap.coordinates.some(coord => coord.key === "confirmButton") && (
           <div
             style={{
               position: "absolute",
