@@ -25,6 +25,10 @@ export const DigitalInvitation = ({ event, invitationId, invitation, isFullscree
     setScaleFactor(displayWidth / naturalWidth)
   }
 
+  const handleConfirmationChange = (confirmed) => {
+    setConfirmedGuests(confirmed)
+  }
+
   const { confirm } = Modal
 
   const showConfirm = () => {
@@ -100,7 +104,10 @@ export const DigitalInvitation = ({ event, invitationId, invitation, isFullscree
             inDigitalInvitation={true}
             key={coordinate.key}
             item={coordinate}
-            scaleFactor={scaleFactor} />
+            scaleFactor={scaleFactor}
+            invitationId={invitationId}
+            invitation={invitation}
+            onConfirmationChange={handleConfirmationChange} />
         ))}
         <div style={{ position: "absolute", bottom: "1px", left: "50%", transform: "translate(-50%, 0)", maxWidth: "100%" }}>
           <CounterInvitation date={eventDate} />

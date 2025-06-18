@@ -1,9 +1,25 @@
 import React, { useEffect, useLayoutEffect, useRef, useState } from "react"
 import WebFont from "webfontloader"
+import axios from "axios"
+import { Modal, InputNumber, message } from "antd"
 
-const InvitationsListItemText = ({ item, scaleFactor, inDigitalInvitation }) => {
+const InvitationsListItemText = ({ 
+  item, 
+  scaleFactor, 
+  inDigitalInvitation, 
+  invitationId, 
+  invitation, 
+  onConfirmationChange 
+}) => {
   const elementRef = useRef(null)
   const [position, setPosition] = useState({ x: 0, y: 0 })
+  const [confirmedGuests, setConfirmedGuests] = useState(invitation?.numberGuests)
+
+  useEffect(() => {
+    if (invitation) {
+      setConfirmedGuests(invitation.numberGuests)
+    }
+  }, [invitation])
 
   const calculatePosition = () => {
     if (elementRef.current) {
@@ -42,10 +58,49 @@ const InvitationsListItemText = ({ item, scaleFactor, inDigitalInvitation }) => 
   const customConfig = typeof item.customConfig === 'string' ? JSON.parse(item.customConfig) : item.customConfig
   const isButton = customConfig?.isButton
 
-  const handleClick = () => {
-    if (customConfig.link) {
-      window.open(customConfig.link, "_blank")
+  const { confirm } = Modal
+
+  const showConfirm = () => {
+    let currentConfirmed = confirmedGuests
+
+    confirm({
+      title: "Confirmación",
+      content: (
+        <div>
+          <p>¿Confirmar invitados para {invitation?.invitationName}?</p>
+          <InputNumber
+            value={currentConfirmed}
+            min={1}
+            max={invitation?.numberGuests}
+            type="number"
+            onChange={value => { currentConfirmed = value; setConfirmedGuests(value) }} />
+        </div>
+      ),
+      onOk() {
+        handleConfirmation(currentConfirmed)
+      },
+      onCancel() {}
+    })
+  }
+
+  const handleConfirmation = async confirmed => {
+    if (!confirmed) return
+    try {
+      await axios.post("/api/invitations/confirm", {
+        invitationId,
+        confirmed
+      })
+      message.success("Confirmación enviada")
+      if (onConfirmationChange) {
+        onConfirmationChange(confirmed)
+      }
+    } catch (error) {
+      console.error("Error al confirmar la invitación:", error)
     }
+  }
+
+  const handleClick = () => {
+      showConfirm()
   }
 
   useEffect(() => {
