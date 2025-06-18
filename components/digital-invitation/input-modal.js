@@ -1,12 +1,14 @@
 import React, { useState, useEffect } from "react"
 import { Input, Tooltip, Button, Slider, InputNumber, Row, Col } from "antd"
 import { LinkOutlined, CheckOutlined, ArrowsAltOutlined } from "@ant-design/icons"
+import { SketchPicker } from "react-color"
 
 const InvitationField = ({ label, value, onChange, onLinkChange, linkValue }) => {
   const [isTooltipVisible, setIsTooltipVisible] = useState(false)
   const [link, setLink] = useState(linkValue || "")
   const [buttonSize, setButtonSize] = useState(12)
   const [isButton, setIsButton] = useState(false)
+  const [buttonBg, setButtonBg] = useState("#1890ff")
 
   useEffect(() => {
     try {
@@ -19,6 +21,7 @@ const InvitationField = ({ label, value, onChange, onLinkChange, linkValue }) =>
       setIsButton(customConfig.isButton || false);
       if (customConfig.isButton) {
         setButtonSize(customConfig.fontSize || 12);
+        setButtonBg(customConfig.buttonStyle?.backgroundColor || "#1890ff");
       } else {
         setLink(linkValue || "");
       }
@@ -36,22 +39,39 @@ const InvitationField = ({ label, value, onChange, onLinkChange, linkValue }) =>
   }
 
   const handleButtonSizeChange = (newSize) => {
-  setButtonSize(newSize)
-  try {
-    const customConfig = JSON.parse(linkValue || "{}")
-    const newConfig = {
-      ...customConfig,
-      fontSize: newSize,
-      isButton: true
+    setButtonSize(newSize)
+    try {
+      const customConfig = JSON.parse(linkValue || "{}")
+      const newConfig = {
+        ...customConfig,
+        fontSize: newSize,
+        isButton: true
+      }
+      console.log("Nuevo tamaño del botón:", newSize);
+      
+      onLinkChange(JSON.stringify(newConfig))
+    } catch (e) {
+      console.error("Error al actualizar el tamaño del botón:", e)
     }
-    console.log("Nuevo tamaño del botón:", newSize);
-    
-    onLinkChange(JSON.stringify(newConfig))
-  } catch (e) {
-    console.error("Error al actualizar el tamaño del botón:", e)
   }
-}
 
+  const handleButtonBgChange = (color) => {
+    setButtonBg(color.hex || color)
+    try {
+      const customConfig = JSON.parse(linkValue || "{}")
+      const newConfig = {
+        ...customConfig,
+        isButton: true,
+        buttonStyle: {
+          ...(customConfig.buttonStyle || {}),
+          backgroundColor: color.hex || color
+        }
+      }
+      onLinkChange(JSON.stringify(newConfig))
+    } catch (e) {
+      console.error("Error al actualizar el color de fondo del botón:", e)
+    }
+  }
 
   if (isButton) {
     return (
@@ -79,6 +99,15 @@ const InvitationField = ({ label, value, onChange, onLinkChange, linkValue }) =>
               value={buttonSize}
               onChange={handleButtonSizeChange}
             />
+          </Col>
+          <Col span={24} style={{ marginTop: 16 }}>
+            
+            <Tooltip
+              color="white"
+              trigger="click"
+              title={<SketchPicker color={buttonBg} onChangeComplete={handleButtonBgChange} />}>
+              <Button>Seleccionar color</Button>
+            </Tooltip>
           </Col>
         </Row>
       </div>
