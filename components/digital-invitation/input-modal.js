@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react"
-import { Input, Tooltip, Button, Slider, InputNumber, Row, Col } from "antd"
+import { Input, Tooltip, Button, Slider, InputNumber, Row, Col, Divider } from "antd"
 import { LinkOutlined, CheckOutlined, ArrowsAltOutlined } from "@ant-design/icons"
 import { SketchPicker } from "react-color"
 
@@ -74,13 +74,22 @@ const InvitationField = ({ label, value, onChange, onLinkChange, linkValue }) =>
   }
 
   if (isButton) {
-    return (
-      <div style={{ marginBottom: "1rem", position: "relative" }}>
+  return (
+    <>
+      <Divider>Configuración del botón</Divider>
+      <div
+        style={{
+          position: "relative",
+          border: "2px solid #dcdcdc",
+          borderRadius: "8px",
+          padding: "16px",
+        }}
+      >
         <Row gutter={[8, 8]} align="middle">
           <Col span={16}>
             <div style={{ display: "flex", alignItems: "center" }}>
               <ArrowsAltOutlined style={{ marginRight: "8px" }} />
-              <span>Tamaño de la confirmación</span>
+              <span>Tamaño del botón</span>
             </div>
           </Col>
           <Col span={8}>
@@ -100,19 +109,21 @@ const InvitationField = ({ label, value, onChange, onLinkChange, linkValue }) =>
               onChange={handleButtonSizeChange}
             />
           </Col>
-          <Col span={24} style={{ marginTop: 16 }}>
-            
+          <Col span={24} style={{ marginTop: 16, textAlign: "center" }}>
             <Tooltip
               color="white"
               trigger="click"
-              title={<SketchPicker color={buttonBg} onChangeComplete={handleButtonBgChange} />}>
+              title={<SketchPicker color={buttonBg} onChangeComplete={handleButtonBgChange} />}
+            >
               <Button>Seleccionar color</Button>
             </Tooltip>
           </Col>
         </Row>
       </div>
-    )
-  }
+    </>
+  );
+}
+
 
   return (
     <div style={{ marginBottom: "1rem", position: "relative" }}>
