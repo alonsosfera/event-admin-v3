@@ -30,7 +30,13 @@ export const EditableFieldsList = ({
 
   return (
     <Col span={8}>
-      {coordinates.sort(sortCoordinates).map(coordinate => {
+      {[
+        ...coordinates
+          .filter(coordinate => coordinate.key !== "confirmButton")
+          .sort(sortCoordinates),
+        ...coordinates
+          .filter(coordinate => coordinate.key === "confirmButton")
+      ].map(coordinate => {
         const isButton = coordinate.key === "confirmButton"
         const config = getCustomConfig(coordinate)
         return (
@@ -46,7 +52,7 @@ export const EditableFieldsList = ({
             buttonConfig={isButton ? config : undefined}
             onChange={event => onValueChange(event, coordinate.key)}
             onLinkChange={link => onLinkChange(coordinate.key, link)} />
-          )
+        )
       })}
     </Col>
    )
