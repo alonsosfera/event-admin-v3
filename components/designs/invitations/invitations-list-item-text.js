@@ -56,12 +56,13 @@ const InvitationsListItemText = ({
   const isButton = customConfig?.isButton
 
   const handleClick = () => {  
-    if (isButton) {
+    if (isButton && invitation) {
       showConfirm()
-      } else {
-        window.open(customConfig.link.link, "_blank")
-        
-      }
+    } else if (isButton && !invitation) {
+      null
+    } else {
+      window.open(customConfig.link.link, "_blank")
+    }
   }
 
   useEffect(() => {
