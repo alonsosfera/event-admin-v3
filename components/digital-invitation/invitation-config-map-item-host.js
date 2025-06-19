@@ -79,25 +79,28 @@ const InvitationConfigMapItemHost = ({ item, scaleFactor, dragBoundFunc, onDragE
           fontSize={customConfig.fontSize * scaleFactor}
         />
       )}
-      
-      <Rect
-        y={-10}
-        x={-10}
-        width={20}
-        height={20}
-        cornerRadius={10}
-        style={{ cursor: "pointer" }}
-        fill="rgba(255, 255, 255, 0.8)"
-        onClick={() => onDeleteItem && onDeleteItem(item)}
-      />
-      <Text
-        y={-5}
-        x={-5}
-        text="X"
-        fontSize={12}
-        fill="#ff0000"
-        onClick={() => onDeleteItem && onDeleteItem(item)}
-      />
+      {!isButton && (
+        <>
+          <Rect
+            y={-10}
+            x={-10}
+            width={20}
+            height={20}
+            cornerRadius={10}
+            style={{ cursor: "pointer" }}
+            fill="rgba(255, 255, 255, 0.8)"
+            onClick={() => onDeleteItem && onDeleteItem(item)}
+          />
+          <Text
+            y={-5}
+            x={-5}
+            text="X"
+            fontSize={12}
+            fill="#ff0000"
+            onClick={() => onDeleteItem && onDeleteItem(item)}
+          />
+        </>
+      )}
     </Group>
   )
 }
