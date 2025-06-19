@@ -10,7 +10,7 @@ export const InvitationEditorLayout = ({ updatedCoordinates, newItems, state, cu
 
   return (
     <Row gutter={24}>
-      {updatedCoordinates.length > 0 ? (
+      {updatedCoordinates.length > 1 ? (
         <EditableFieldsList
           coordinates={updatedCoordinates}
           state={state}

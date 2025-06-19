@@ -241,8 +241,13 @@ export const DigitalInvitationModal = ({ isOpen, onCancel, onSubmit, event }) =>
   }
 
   const handleAddItem = (newItem) => {
-    const exists = newItems.some(item => item.key === newItem.key)
-    if (exists) {
+    const confirmButton =
+      (newItems.find(item => item.key === "confirmButton") ||
+       updatedCoordinates.find(item => item.key === "confirmButton"));
+    if (
+      (newItems.some(item => item.key === newItem.key)) ||
+      (newItem.key === "confirmButton")
+    ) {
       return notification.warning({
         message: "Este elemento ya existe",
         description: `"${newItem.key}" ya fue agregado.`,
@@ -251,7 +256,8 @@ export const DigitalInvitationModal = ({ isOpen, onCancel, onSubmit, event }) =>
     }
 
     setNewItems(prev => [
-      ...prev,
+      ...(confirmButton ? [confirmButton] : []),
+      ...prev.filter(item => item.key !== "confirmButton"),
       {
         key: newItem.key,
         coordinateX: 600,
@@ -366,10 +372,20 @@ export const DigitalInvitationModal = ({ isOpen, onCancel, onSubmit, event }) =>
       </Col>
 
       <Col xs={8} style={{ textAlign: "center" }}>
-        {updatedCoordinates.length > 0 && (
-          <Button type="primary" danger onClick={() => setUpdatedCoordinates([])}>Borrar elementos</Button>
+        {updatedCoordinates.length > 1 && (
+          <Button
+            type="primary"
+            danger
+            onClick={() => {
+              setUpdatedCoordinates(prev => prev.filter(item => item.key === "confirmButton"))
+              setNewItems(prev => prev.filter(item => item.key === "confirmButton"))
+            }}
+          >
+            Borrar elementos
+          </Button>
         )}
       </Col>
+
 
       <Col xs={16}>
         <Alert
