@@ -36,7 +36,7 @@ const InvitationConfigMapItemHost = ({ item, scaleFactor, dragBoundFunc, onDragE
     const textHeight = fontSize * 1.2
     const padding = customConfig.buttonStyle?.padding?.split(' ') || [5, 10]
     return {
-      width: textWidth + parseInt(padding[0]) || textWidth + 20,
+      width: textWidth + parseInt(padding[0]) || textWidth + 5,
       height: textHeight + parseInt(padding[1]) || textHeight + 10
     }
   }
@@ -51,7 +51,8 @@ const InvitationConfigMapItemHost = ({ item, scaleFactor, dragBoundFunc, onDragE
       dragBoundFunc={pos => dragBoundFunc(pos, item)}
       onDragMove={onDragMove}
       onDragEnd={event => onDragEnd(event, item)}
-      name="object">
+      name="object"
+      rotation={isButton ? 90 : 0}>
       {isButton ? (
         <>
           <Rect

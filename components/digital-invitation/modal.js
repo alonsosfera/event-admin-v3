@@ -31,7 +31,7 @@ export const DigitalInvitationModal = ({ isOpen, onCancel, onSubmit, event }) =>
   const [updatedCoordinates, setUpdatedCoordinates] = useState([{
     key: "confirmButton",
     label: "Confirmar Asistencia",
-    coordinateX: 200,
+    coordinateX: 600,
     coordinateY: 200,
     customConfig: JSON.stringify({
       ...buttonDesign,
@@ -59,7 +59,7 @@ export const DigitalInvitationModal = ({ isOpen, onCancel, onSubmit, event }) =>
       const confirmButton = {
         key: "confirmButton",
         label: "Confirmar Asistencia",
-        coordinateX: 200,
+        coordinateX: 600,
         coordinateY: 200,
          customConfig: JSON.stringify({
           ...buttonDesign,
@@ -81,7 +81,7 @@ export const DigitalInvitationModal = ({ isOpen, onCancel, onSubmit, event }) =>
       setUpdatedCoordinates([{
         key: "confirmButton",
         label: "Confirmar Asistencia",
-        coordinateX: 200,
+        coordinateX: 600,
         coordinateY: 200,
         customConfig: JSON.stringify({
           ...buttonDesign,
@@ -99,7 +99,7 @@ export const DigitalInvitationModal = ({ isOpen, onCancel, onSubmit, event }) =>
       setUpdatedCoordinates([{
         key: "confirmButton",
         label: "Confirmar Asistencia",
-        coordinateX: 200,
+        coordinateX: 600,
         coordinateY: 200,
         customConfig: JSON.stringify({
           ...buttonDesign,
@@ -254,7 +254,7 @@ export const DigitalInvitationModal = ({ isOpen, onCancel, onSubmit, event }) =>
       ...prev,
       {
         key: newItem.key,
-        coordinateX: 200,
+        coordinateX: 600,
         coordinateY: 200,
         label: newItem.key,
         customConfig: JSON.stringify(newItem.customConfig || {

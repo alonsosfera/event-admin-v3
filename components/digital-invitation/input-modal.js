@@ -95,7 +95,7 @@ const InvitationField = ({ label, value, onChange, onLinkChange, linkValue }) =>
           <Col span={8}>
             <InputNumber
               min={12}
-              max={200}
+              max={120}
               value={buttonSize}
               onChange={handleButtonSizeChange}
               style={{ width: "100%" }}
@@ -104,7 +104,7 @@ const InvitationField = ({ label, value, onChange, onLinkChange, linkValue }) =>
           <Col span={24}>
             <Slider
               min={12}
-              max={200}
+              max={120}
               value={buttonSize}
               onChange={handleButtonSizeChange}
             />
