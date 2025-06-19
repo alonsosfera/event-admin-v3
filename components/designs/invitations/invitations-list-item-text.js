@@ -64,7 +64,7 @@ const InvitationsListItemText = ({
       showConfirm()
     } else if (isButton && !invitation) {
       null
-    } else {
+    } else if (customConfig.link) {
       window.open(customConfig.link.link, "_blank")
     }
   }
