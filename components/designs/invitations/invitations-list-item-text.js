@@ -1,5 +1,6 @@
 import React, { useEffect, useLayoutEffect, useRef, useState } from "react"
 import WebFont from "webfontloader"
+import { CheckOutlined } from "@ant-design/icons"
 
 const InvitationsListItemText = ({ 
   item, 
@@ -11,6 +12,10 @@ const InvitationsListItemText = ({
   const elementRef = useRef(null)
   const [position, setPosition] = useState({ x: 0, y: 0 })
   const [confirmedGuests, setConfirmedGuests] = useState(invitation?.numberGuests)
+  const [isHovered, setIsHovered] = useState(false);
+
+  const customConfig = typeof item.customConfig === 'string' ? JSON.parse(item.customConfig) : item.customConfig
+  const isButton = customConfig?.isButton
 
   useEffect(() => {
     if (invitation) {
@@ -22,6 +27,7 @@ const InvitationsListItemText = ({
     if (elementRef.current) {
       const width = elementRef.current.clientWidth
       const height = elementRef.current.clientHeight
+
       setPosition({
         x: item.coordinateX * scaleFactor - width / 2,
         y: item.coordinateY * scaleFactor - height / 2
@@ -52,8 +58,6 @@ const InvitationsListItemText = ({
     return () => window.removeEventListener("resize", handleResize)
   }, [item, scaleFactor])
 
-  const customConfig = typeof item.customConfig === 'string' ? JSON.parse(item.customConfig) : item.customConfig
-  const isButton = customConfig?.isButton
 
   const handleClick = () => {  
     if (isButton && invitation) {
@@ -80,20 +84,14 @@ const InvitationsListItemText = ({
     color: customConfig?.fontColor || "black",
     fontSize: `${customConfig?.fontSize * scaleFactor}px`,
     cursor: customConfig.link || isButton ? "pointer" : "",
-    textDecoration: customConfig.link ? "underline" : "",
+    textDecoration: customConfig.link && !isButton ? "underline" : "",
+    whiteSpace: "nowrap",
     ...(isButton && {
-      backgroundColor: customConfig.buttonStyle?.backgroundColor || "#1890ff",
+      backgroundColor: isHovered ? "#00bfff" : (customConfig.buttonStyle?.backgroundColor || "#1890ff"),
       padding: "5px 10px",
-      borderRadius: `${4 * scaleFactor}px`,
-      color: "#ffffff",
-      display: "inline-block",
-      minWidth: `${120 * scaleFactor}px`,
-      boxShadow: "0 2px 4px rgba(0, 0, 0, 0.2)",
-      transition: "all 0.3s ease",
-      "&:hover": {
-        transform: "scale(1.05)",
-        boxShadow: "0 4px 8px rgba(0, 0, 0, 0.3)"
-      }
+      borderRadius: "5px",
+      transform: "rotate(90deg)",
+      transformOrigin: "top left",
     })
   }
 
@@ -101,8 +99,11 @@ const InvitationsListItemText = ({
     <div
       ref={elementRef}
       style={buttonStyle}
-      onClick={handleClick}>
+      onClick={handleClick}
+      onMouseEnter={() => setIsHovered(true)}
+      onMouseLeave={() => setIsHovered(false)}>
       {inDigitalInvitation ? item.label : item.label || item.key}
+      {isButton && <CheckOutlined style={{ marginLeft: "8px" }} />}
     </div>
   )
 }
