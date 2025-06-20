@@ -9,10 +9,41 @@ const InvitationConfigMap = dynamic(() => import("./invitation-config-map"), {
   ssr: false
 })
 
+const buttonDesign = {
+  fontSize: 50,
+  fontColor: "#ffffff",
+  fontFamily: "Merienda, cursive",
+  isButton: true,
+  buttonStyle: {
+    backgroundColor: "#88C9DB",
+    padding: "5px 10px",
+    borderRadius: "4px",
+  }
+};
+
+const ensureConfirmButton = (coords) => {
+  const hasConfirmButton = coords.some(c => c.key === "confirmButton");
+  if (!hasConfirmButton) {
+    const confirmButton = {
+      key: "confirmButton",
+      label: "Confirmar Asistencia",
+      coordinateX: 600,
+      coordinateY: 800,
+      customConfig: buttonDesign
+    };
+    coords.push(confirmButton);
+  }
+  return coords;
+};
+
 const getDefaultItems = canvaMap => {
-  return canvaMap?.coordinates.map(coordinate => ({
-    ...coordinate, customConfig: JSON.parse(coordinate.customConfig)
-  })) || []
+  let coords = canvaMap?.coordinates?.map(coordinate => ({
+    ...coordinate,
+    customConfig: typeof coordinate.customConfig === 'string' ? JSON.parse(coordinate.customConfig) : coordinate.customConfig
+  })) || [];
+  coords = ensureConfirmButton(coords);
+  return coords;
+  
 }
 
 export const InvitationConfigModal = ({ onClose, onSuccess, selectedFile }) => {
@@ -20,6 +51,8 @@ export const InvitationConfigModal = ({ onClose, onSuccess, selectedFile }) => {
   const [scaleFactor, setScaleFactor] = useState(null)
   const [fileName, setFileName] = useState(selectedFile.fileName)
   const [loading, setLoading] = useState(false)
+  const confirmButton = items.find(i => i.key === "confirmButton");
+  const confirmButtonConfig = confirmButton ? confirmButton.customConfig : buttonDesign;
 
   const onSave = async () => {
     setLoading(true)
@@ -81,6 +114,17 @@ export const InvitationConfigModal = ({ onClose, onSuccess, selectedFile }) => {
     setItems(prevState => prevState.map(i => i.key === item.key ? { ...i, customConfig: { ...i.customConfig, link } } : i))
   }
 
+  const onCustomConfigChange = (newConfig) => {
+  setItems(prev =>
+    prev.map(item =>
+      item.key === "confirmButton"
+        ? { ...item, customConfig: { ...item.customConfig, ...newConfig } }
+        : item
+    )
+  );
+};
+
+
   return (
     <Modal
       width={800}
@@ -120,7 +164,10 @@ export const InvitationConfigModal = ({ onClose, onSuccess, selectedFile }) => {
           <InvitationConfigItem
             onSubmit={onAddItem}
             scaleFactor={scaleFactor}
-            selectedFile={selectedFile} />
+            selectedFile={selectedFile} 
+            customConfig={confirmButtonConfig}
+            onCustomConfigChange={onCustomConfigChange}
+           />
         </Col>
       </Row>
     </Modal>

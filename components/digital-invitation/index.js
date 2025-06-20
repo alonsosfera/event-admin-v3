@@ -11,6 +11,7 @@ export const DigitalInvitation = ({ event, invitationId, invitation, isFullscree
   const { eventDate, digitalInvitation } = event || {}
   const [scaleFactor, setScaleFactor] = useState(1)
   const [confirmedGuests, setConfirmedGuests] = useState(invitation?.numberGuests)
+  
 
   useEffect(() => {
     if (invitation) {

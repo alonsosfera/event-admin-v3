@@ -22,7 +22,6 @@ export const InvitationConfigItem = ({ scaleFactor, selectedFile, onSubmit, cust
     }
   }, [customConfig, isButton]);
 
-  console.log(isButton, customConfig);
   
 
   useEffect(() => {
