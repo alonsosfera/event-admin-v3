@@ -153,31 +153,14 @@ const handleButtonBgChange = (color) => {
               padding: "16px",
             }}
           >
-            <Row gutter={[8, 8]} align="middle">
-              <Col span={16}>
+            <Row gutter={[30, 8]} align="middle">
+              <Col span={12}>
                 <div style={{ display: "flex", alignItems: "center" }}>
                   <ArrowsAltOutlined style={{ marginRight: "8px" }} />
-                  <span>Tamaño del botón</span>
+                  <span>Tamaño</span>
                 </div>
               </Col>
-              <Col span={8}>
-                <InputNumber
-                  min={12}
-                  max={120}
-                  value={buttonSize}
-                  onChange={handleButtonSizeChange}
-                  style={{ width: "100%" }}
-                />
-              </Col>
-              <Col span={24}>
-                <Slider
-                  min={12}
-                  max={120}
-                  value={buttonSize}
-                  onChange={handleButtonSizeChange}
-                />
-              </Col>
-              <Col span={24} style={{ marginTop: 16, textAlign: "center" }}>
+              <Col span={2} style={{ textAlign: "center" }}>
                 <Tooltip
                   color="white"
                   trigger="click"
@@ -188,8 +171,16 @@ const handleButtonBgChange = (color) => {
                     />
                   }
                 >
-                  <Button>Seleccionar color</Button>
+                  <Button>Color</Button>
                 </Tooltip>
+              </Col>
+              <Col span={24}>
+                <Slider
+                  min={12}
+                  max={120}
+                  value={buttonSize}
+                  onChange={handleButtonSizeChange}
+                />
               </Col>
             </Row>
           </div>
