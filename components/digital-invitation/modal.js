@@ -32,7 +32,7 @@ export const DigitalInvitationModal = ({ isOpen, onCancel, onSubmit, event }) =>
     key: "confirmButton",
     label: "Confirmar Asistencia",
     coordinateX: 600,
-    coordinateY: 200,
+    coordinateY: 800,
     customConfig: JSON.stringify({
       ...buttonDesign,
     })
@@ -60,7 +60,7 @@ export const DigitalInvitationModal = ({ isOpen, onCancel, onSubmit, event }) =>
         key: "confirmButton",
         label: "Confirmar Asistencia",
         coordinateX: 600,
-        coordinateY: 200,
+        coordinateY: 800,
          customConfig: JSON.stringify({
           ...buttonDesign,
         })
@@ -82,7 +82,7 @@ export const DigitalInvitationModal = ({ isOpen, onCancel, onSubmit, event }) =>
         key: "confirmButton",
         label: "Confirmar Asistencia",
         coordinateX: 600,
-        coordinateY: 200,
+        coordinateY: 800,
         customConfig: JSON.stringify({
           ...buttonDesign,
         })
@@ -99,7 +99,7 @@ export const DigitalInvitationModal = ({ isOpen, onCancel, onSubmit, event }) =>
       key: "confirmButton",
       label: "Confirmar Asistencia",
       coordinateX: 600,
-      coordinateY: 200,
+      coordinateY: 800,
       customConfig: JSON.stringify(buttonDesign)
     }
 
@@ -297,7 +297,7 @@ export const DigitalInvitationModal = ({ isOpen, onCancel, onSubmit, event }) =>
       {
         key: newItem.key,
         coordinateX: 600,
-        coordinateY: 200,
+        coordinateY: 800,
         label: newItem.key,
         customConfig: JSON.stringify(newItem.customConfig || {
           fontSize: 12,
