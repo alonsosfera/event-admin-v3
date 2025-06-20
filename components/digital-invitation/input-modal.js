@@ -47,7 +47,6 @@ const InvitationField = ({ label, value, onChange, onLinkChange, linkValue }) =>
         fontSize: newSize,
         isButton: true
       }
-      console.log("Nuevo tamaño del botón:", newSize);
       
       onLinkChange(JSON.stringify(newConfig))
     } catch (e) {
