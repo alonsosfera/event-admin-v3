@@ -24,6 +24,10 @@ export const InvitationEditorLayout = ({ updatedCoordinates, newItems, state, cu
             onSubmit={handleAddItem}
             scaleFactor={scaleFactor}
             selectedFile={selectedFile}
+            customConfig={customConfig?.confirmButton}
+            onCustomConfigChange={(newConfig) => {
+              onLinkChange("confirmButton", JSON.stringify(newConfig))
+            }}
           />
         </Col>
       )}
