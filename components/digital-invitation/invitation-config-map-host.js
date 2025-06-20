@@ -90,7 +90,7 @@ export const InvitationConfigMapHost = ({ event, onPositionChange, selectedInvit
     const isButton = item.customConfig.isButton
     
     const newX = isButton ? Math.max(0, Math.min(pos.x, displaySize.width)) : Math.max(0, Math.min(pos.x, displaySize.width - textWidth))
-    const newY = isButton ? Math.max(0, Math.min(pos.y, displaySize.height - textHeight)) : Math.max(0, Math.min(pos.y, displaySize.height - textHeight))
+    const newY = isButton ? Math.max(0, Math.min(pos.y, displaySize.height)) : Math.max(0, Math.min(pos.y, displaySize.height - textHeight))
     return { x: newX, y: newY }
   }
 

@@ -52,7 +52,7 @@ const InvitationConfigMapItemHost = ({ item, scaleFactor, dragBoundFunc, onDragE
       onDragMove={onDragMove}
       onDragEnd={event => onDragEnd(event, item)}
       name="object"
-      rotation={isButton ? 90 : 0}>
+      rotation={isButton ? -90 : 0}>
       {isButton ? (
         <>
           <Rect

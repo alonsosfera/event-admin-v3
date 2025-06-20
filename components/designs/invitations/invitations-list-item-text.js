@@ -90,7 +90,7 @@ const InvitationsListItemText = ({
       backgroundColor: isHovered ? "#00bfff" : (customConfig.buttonStyle?.backgroundColor || "#1890ff"),
       padding: "5px 10px",
       borderRadius: "5px",
-      transform: "rotate(90deg)",
+      transform: "rotate(-90deg)",
       transformOrigin: "top left",
     })
   }
