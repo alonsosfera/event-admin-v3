@@ -200,11 +200,9 @@ export const DigitalInvitationModal = ({ isOpen, onCancel, onSubmit, event }) =>
   const onLinkChange = (key, link) => {
   try {
     let parsedConfig;
-    // Si el link es un JSON válido, lo parsea
     if (link.trim().startsWith("{")) {
       parsedConfig = JSON.parse(link);
     } else {
-      // Si es solo un link, lo guarda como objeto
       parsedConfig = { link };
     }
     setCustomConfig(prev => ({ ...prev, [key]: parsedConfig }));
