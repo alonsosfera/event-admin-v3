@@ -94,23 +94,28 @@ export const DigitalInvitationModal = ({ isOpen, onCancel, onSubmit, event }) =>
   }, [isOpen])
 
   useEffect(() => {
-    if (activeSource === "upload" && previewFile) {
-      setNewItems([])
-      setUpdatedCoordinates([{
-        key: "confirmButton",
-        label: "Confirmar Asistencia",
-        coordinateX: 600,
-        coordinateY: 200,
-        customConfig: JSON.stringify({
-          ...buttonDesign,
-        })
-      }])
-      setState({ confirmButton: "Confirmar Asistencia" })
-      setCustomConfig({})
-      setDeletedKeys([])
-      setHasInitialized(false)
+  if (activeSource === "upload" && previewFile) {
+    const confirmButtonCoord = {
+      key: "confirmButton",
+      label: "Confirmar Asistencia",
+      coordinateX: 600,
+      coordinateY: 200,
+      customConfig: JSON.stringify(buttonDesign)
     }
-  }, [activeSource, previewFile])
+
+    setNewItems([])
+    setUpdatedCoordinates([confirmButtonCoord])
+    setState({ confirmButton: "Confirmar Asistencia" })
+
+    setCustomConfig({
+      confirmButton: { ...buttonDesign }
+    })
+
+    setDeletedKeys([])
+    setHasInitialized(false)
+  }
+}, [activeSource, previewFile])
+
 
   useEffect(() => {
     if (!hasInitialized && isOpen) {
@@ -125,10 +130,14 @@ export const DigitalInvitationModal = ({ isOpen, onCancel, onSubmit, event }) =>
         setState(newState)
 
         const newConfig = updatedCoords.reduce((acc, c) => {
-          const parsed = JSON.parse(c.customConfig || "{}")
-          if (parsed.link) acc[c.key] = parsed.link
+          try {
+            acc[c.key] = JSON.parse(c.customConfig || "{}")
+          } catch {
+            acc[c.key] = {}
+          }
           return acc
         }, {})
+
         setCustomConfig(newConfig)
       }
       setHasInitialized(true)
@@ -170,10 +179,14 @@ export const DigitalInvitationModal = ({ isOpen, onCancel, onSubmit, event }) =>
     setState(newState)
 
     const newConfig = updatedCoords.reduce((acc, c) => {
-      const parsed = JSON.parse(c.customConfig || "{}")
-      if (parsed.link) acc[c.key] = parsed.link
+      try {
+        acc[c.key] = JSON.parse(c.customConfig || "{}")
+      } catch {
+        acc[c.key] = {}
+      }
       return acc
     }, {})
+
     setCustomConfig(newConfig)
   }
 
@@ -205,8 +218,33 @@ export const DigitalInvitationModal = ({ isOpen, onCancel, onSubmit, event }) =>
     } else {
       parsedConfig = { link };
     }
-    setCustomConfig(prev => ({ ...prev, [key]: parsedConfig }));
 
+    const updatedConfig = {
+      ...parsedConfig,
+      isButton: key === "confirmButton" ? true : parsedConfig.isButton
+    };
+
+    setCustomConfig(prev => ({
+      ...prev,
+      [key]: {
+        ...(prev[key] || {}),
+        ...updatedConfig
+      }
+    }));
+
+    setNewItems(prev =>
+      prev.map(c =>
+        c.key === key
+          ? {
+              ...c,
+              customConfig: JSON.stringify({
+                ...JSON.parse(c.customConfig || "{}"),
+                ...updatedConfig
+              })
+            }
+          : c
+      )
+    );
     setUpdatedCoordinates(prev =>
       prev.map(c =>
         c.key === key
@@ -214,8 +252,7 @@ export const DigitalInvitationModal = ({ isOpen, onCancel, onSubmit, event }) =>
               ...c,
               customConfig: JSON.stringify({
                 ...JSON.parse(c.customConfig || "{}"),
-                ...parsedConfig,
-                isButton: key === "confirmButton" ? true : parsedConfig.isButton
+                ...updatedConfig
               })
             }
           : c
@@ -225,6 +262,7 @@ export const DigitalInvitationModal = ({ isOpen, onCancel, onSubmit, event }) =>
     console.error("Error al actualizar la configuración:", e);
   }
 };
+
 
   const handlePositionChange = (key, newX, newY) => {
     if (newItems.length > 0) {

@@ -13,7 +13,17 @@ export const InvitationConfigItem = ({ scaleFactor, selectedFile, onSubmit, cust
 
   const isButton = customConfig?.isButton
   const [buttonSize, setButtonSize] = useState(customConfig?.fontSize || 12)
-  const [buttonBg, setButtonBg] = useState(customConfig?.buttonStyle?.backgroundColor || "#1890ff")
+  const [buttonBg, setButtonBg] = useState(customConfig?.buttonStyle?.backgroundColor || "#1890ff") 
+
+  useEffect(() => {
+    if (isButton) {
+      setButtonSize(customConfig?.fontSize || 12);
+      setButtonBg(customConfig?.buttonStyle?.backgroundColor || "#1890ff");
+    }
+  }, [customConfig, isButton]);
+
+  console.log(isButton, customConfig);
+  
 
   useEffect(() => {
     setFontSize(12 / scaleFactor)
