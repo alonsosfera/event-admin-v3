@@ -11,6 +11,7 @@ export const DigitalInvitation = ({ event, invitationId, invitation, isFullscree
   const { eventDate, digitalInvitation } = event || {}
   const [scaleFactor, setScaleFactor] = useState(1)
   const [confirmedGuests, setConfirmedGuests] = useState(invitation?.numberGuests)
+  
 
   useEffect(() => {
     if (invitation) {
@@ -23,6 +24,10 @@ export const DigitalInvitation = ({ event, invitationId, invitation, isFullscree
     const displayWidth = e.target.width
 
     setScaleFactor(displayWidth / naturalWidth)
+  }
+
+  const handleConfirmationChange = (confirmed) => {
+    setConfirmedGuests(confirmed)
   }
 
   const { confirm } = Modal
@@ -100,12 +105,17 @@ export const DigitalInvitation = ({ event, invitationId, invitation, isFullscree
             inDigitalInvitation={true}
             key={coordinate.key}
             item={coordinate}
-            scaleFactor={scaleFactor} />
+            scaleFactor={scaleFactor}
+            invitationId={invitationId}
+            invitation={invitation}
+            onConfirmationChange={handleConfirmationChange}
+            showConfirm={showConfirm}
+            handleConfirmation={handleConfirmation} />
         ))}
         <div style={{ position: "absolute", bottom: "1px", left: "50%", transform: "translate(-50%, 0)", maxWidth: "100%" }}>
           <CounterInvitation date={eventDate} />
         </div>
-        {invitation && (
+        {invitation && !digitalInvitation.canvaMap.coordinates.some(coord => coord.key === "confirmButton") && (
           <div
             style={{
               position: "absolute",
