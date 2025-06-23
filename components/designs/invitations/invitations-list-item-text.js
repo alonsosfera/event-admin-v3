@@ -8,6 +8,7 @@ const InvitationsListItemText = ({
   inDigitalInvitation, 
   invitation,
   showConfirm,
+  invitationList
 }) => {
   const elementRef = useRef(null)
   const [position, setPosition] = useState({ x: 0, y: 0 })
@@ -79,17 +80,17 @@ const InvitationsListItemText = ({
     textAlign: "center",
     position: "absolute",
     top: `${position.y}px`,
-    left: `${position.x}px`,
+    left: invitationList && isButton ? `${position.x - 2}px`  : `${position.x}px`,
     fontFamily: customConfig.fontFamily || "Merienda, cursive",
     color: customConfig?.fontColor || "black",
     fontSize: `${customConfig?.fontSize * scaleFactor}px`,
-    cursor: customConfig.link || isButton ? "pointer" : "",
+    cursor: customConfig.link || isButton && !invitationList ? "pointer" : "",
     textDecoration: customConfig.link && !isButton ? "underline" : "",
     whiteSpace: "nowrap",
     ...(isButton && {
-      backgroundColor: isHovered ? "#00bfff" : (customConfig.buttonStyle?.backgroundColor || "#1890ff"),
-      padding: "5px 10px",
-      borderRadius: "5px",
+      backgroundColor: isHovered && !invitationList ? "#00bfff" : (customConfig.buttonStyle?.backgroundColor || "#1890ff"),
+      padding: invitationList ? "2px 4px" : "5px 10px",
+      borderRadius: invitationList ? "2px" : "5px",
       transform: "rotate(-90deg)",
       transformOrigin: "top left",
     })
