@@ -5,6 +5,7 @@ const InvitationsListItemText = dynamic(() => import("./invitations-list-item-te
 
 export const InvitationsListItem = ({ item, onClick, showTitle = false }) => {
   const [scaleFactor , setScaleFactor] = useState (1)
+  const invitationList = true
 
   const handleImageLoad = e => {
     const naturalWidth = e.target.naturalWidth
@@ -29,7 +30,8 @@ export const InvitationsListItem = ({ item, onClick, showTitle = false }) => {
             <InvitationsListItemText
               item={coordinate}
               key={coordinate.key}
-              scaleFactor={scaleFactor} />
+              scaleFactor={scaleFactor}
+              invitationList={invitationList} />
           ))}
         </div>
       }>
